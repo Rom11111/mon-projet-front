@@ -1,0 +1,10 @@
+<mat-card>
+    <mat-card-title>Liste des clients</mat-card-title>
+    <mat-list>
+        <mat-list-item *ngFor="let client of clients">
+            <mat-icon matListIcon>person</mat-icon>
+            <div matLine>{{ client.name }}</div>
+            <div matLine>{{ client.email }} — {{ client.phone }}</div>
+        </mat-list-item>
+    </mat-list>
+</mat-card>

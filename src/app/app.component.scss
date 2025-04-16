@@ -1,0 +1,28 @@
+/*.page-actuelle {
+    color: red;
+}
+*/
+
+mat-toolbar {
+    position: relative;
+    z-index: 5;
+    background-color: #93acc3;
+}
+
+.content {
+    padding: 24px;
+}
+
+mat-sidenav-container {
+    height: calc(100vh - 64px);
+
+}
+
+mat-sidenav,
+mat-sidenav-content {
+    transition:  all 500ms ease-in-out;
+}
+
+
+
+

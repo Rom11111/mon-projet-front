@@ -1,0 +1,47 @@
+
+
+<div class="row">
+    @for (product of products; track $index) {
+        <div class="col-6" mb-4>
+            <mat-card appearance="outlined" [class.occasion]="product.etat.id == 3">
+                <mat-card-header>
+                    <mat-card-title>{{ product.name }}</mat-card-title>
+                    <mat-card-subtitle>
+                        <span class="code">{{ product.code }}</span>
+
+
+                        @for(label of product.labelList; track $index) {
+                            <span class="label"[ngStyle]="{backgroundColor: label.color}">
+                                {{ label.name }}
+                            </span>
+                        }
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <img mat-card-image src="https://picsum.photos/id/{{product.id}}/600/400" alt="Photos">
+                <mat-card-content>
+                    <p>
+                        {{ product.description }}
+                    </p>
+                </mat-card-content>
+                <mat-card-actions>
+                    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_AMIN") {
+                        <button mat-button [routerLink]="['/modifier-produit', product.id]">Edit</button>
+                        <button mat-button>Delete</button>
+                    }
+                    <button mat-button>Buy</button>
+                </mat-card-actions>
+            </mat-card>
+
+        </div>
+    }
+    <!--@if (["ROLE_VENDEUR", "ROLE_CHEF_RAYON"].indexOf(auth.role!) != -1){-->
+    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_AMIN") {
+    <!--Ceci est une directive : on ajoute un comportement à un composant
+    déjà existant pour ne pas tout casser-->
+    <button mat-raised-button routerLink="/ajout-produit">
+        Ajouter un produit
+    </button>
+    }
+</div>
+
+

@@ -1,0 +1,19 @@
+mat-card {
+
+    &.occasion {
+        background-color: rgba(208, 87, 113, 0.79);
+    }
+
+
+    mat-card-subtitle {
+        .code {
+            font-style: italic;
+        }
+        .label {
+            padding: 2px;
+            border-radius: 50px;
+            background-color: darkolivegreen;
+            margin-left: 0.5em;
+        }
+    }
+}
