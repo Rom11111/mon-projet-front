@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -6,9 +6,10 @@ import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angula
 import {MatSelectModule} from '@angular/material/select';
 
 import {HttpClient} from '@angular/common/http';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NotificationService} from '../../services/notification.service';
+import {ProductService} from '../../services/crud/product.service';
 
 // ReactiveFormsModule utilisé pour valider le formulaire
 // FormsModule bloque le formulaire pour ne pas recharger la page
@@ -19,12 +20,14 @@ import {NotificationService} from '../../services/notification.service';
     templateUrl: './edit-product.component.html',
     styleUrl: './edit-product.component.scss'
 })
-export class EditProductComponent {
+export class EditProductComponent implements OnInit{
 
     formBuilder = inject(FormBuilder)
     http = inject(HttpClient)
     activatedRoute = inject(ActivatedRoute)
-    notification =inject(NotificationService)
+    notification = inject(NotificationService)
+    router = inject(Router)
+    productService = inject(ProductService)
 
     form = this.formBuilder.group({
         name: ["Nouveau produit", [Validators.required, Validators.maxLength(20), Validators.minLength(3)]],
@@ -34,12 +37,12 @@ export class EditProductComponent {
         price: [15.99, [Validators.required, Validators.min(0.1)]],
         // Validators.min(0.1) le prix doit être d'au moins 10 centimes.
         etat: [{id: 1}],
-        labelList: [[] as Label[]],
+        labels: [[] as Label[]],
     })
 
     etats: Etat[] = []
     labels: Label[] = []
-    editedProduct : Product | null = null;
+    editedProduct: Product | null = null;
 
 
     ngOnInit() {
@@ -71,26 +74,31 @@ export class EditProductComponent {
 
         if (this.form.valid) {
 
-
             // pour éditer
-            if(this.editedProduct)
-                this.http
-                    .put("http://localhost:8080/product" + this.editedProduct.id, this.form.value)
-                    .subscribe(resultat => console.log(resultat))
-            // gestion des notifications
-                    this.notification.show("Produit modifié")
-            } else {
-            // pour un ajout
-                this.http
-                    .post("http://localhost:8080/product", this.form.value)
-                    .subscribe(resultat => console.log(resultat))
-                    this.notification.show("Produit ajouté", "valid")
-        }
-    }
+            if (this.editedProduct){
+                this.productService
+                    .update(this.editedProduct.id, this.form.value)
+                    .subscribe({
+                        next : () => this.notification.show("Le produit a bien été modifié", "valid"),
+                        error: () => this.notification.show("Problème de communication", "error"),
+        })
 
+        } else {
+            this.productService
+                .save(this.form.value)
+                .subscribe({
+                    next : () => this.notification.show("Produit modifié"),
+                    error : () => this.notification.show("Problème de communication", "error"),
+                })
+
+        }
+
+        this.router.navigateByUrl("/accueil")
+    }
+}
 
     compareId(o1: { id: number }, o2: { id: number }) {
 
-        return o1.id === o2.id;
+        return o1.id === o2.id
     }
 }

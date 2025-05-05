@@ -1,10 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {RouterLink} from '@angular/router';
 import {NgStyle} from '@angular/common';
 import {AuthService} from '../../services/auth.service';
+import {ProductService} from '../../services/crud/product.service';
 
 
 @Component({
@@ -15,19 +16,19 @@ import {AuthService} from '../../services/auth.service';
     templateUrl: './accueil.component.html',
     styleUrl: './accueil.component.scss'
 })
-export class AccueilComponent {
 
-    http = inject(HttpClient)
-    products: Product[] = []
+export class AccueilComponent implements OnInit {
+
+
     auth = inject(AuthService)
+    productService = inject(ProductService)
+    products: Product[] = [];
 
     ngOnInit() {
+        this.productService.getAll()
 
-        const jwt = localStorage.getItem("jwt")
+        this.productService.products$.subscribe(
+            products => this.products = products)
 
-        {
-            this.http.get<Product[]>("http://localhost:8080/products")
-                .subscribe(products => this.products = products)
-        }
     }
 }

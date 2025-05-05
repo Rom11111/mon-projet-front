@@ -12,7 +12,7 @@ import {AuthService} from './services/auth.service';
     selector: 'app-root',
     standalone: true,
     imports: [RouterOutlet,
-        RouterLink, RouterLinkActive,
+        RouterLink,
         MatToolbarModule, MatButtonModule,
         MatIconModule, MatSidenavModule, CustomSidenavComponent,
     ],
