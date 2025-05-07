@@ -10,7 +10,8 @@ import {BookingComponent} from './pages/booking/booking.component';
 import {EquipmentsComponent} from './pages/equipments/equipments.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {loggedGuard} from './services/logged.guard';
-import {ClientListComponent} from './pages/clients/clients.component';
+import { ClientsComponent } from './pages/clients/clients.component';
+
 
 
 export const routes: Routes = [
@@ -20,7 +21,7 @@ export const routes: Routes = [
     {path: "dashboard", component: DashboardComponent},
     {path: "equipments", component: EquipmentsComponent},
     {path: "booking", component: BookingComponent},
-    {path: "clients", component: ClientListComponent},
+    {path: "clients", component: ClientsComponent},
     {path: "settings", component: SettingsComponent},
 
 

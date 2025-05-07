@@ -1,9 +1,8 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
+import {MatInputModule} from '@angular/material/input';
 import {HttpClient} from '@angular/common/http';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NotificationService} from '../../services/notification.service';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
@@ -12,7 +11,6 @@ import {Router} from '@angular/router';
     selector: 'app-login',
     imports: [
         ReactiveFormsModule,
-        MatFormField,
         FormsModule,
         MatButtonModule,
         MatInputModule
