@@ -1,27 +1,33 @@
 @if(auth.connected) {
-<mat-toolbar class="mat-elevation-z3">
-    <button mat-icon-button (click)="collapsed.set(!collapsed())">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <li class="nav-item">
-        <a class="nav-link" (click)="auth.signOut()" routerLink="/login">Logout</a>
-    </li>
-    <form>
-        <input class="form-control" type="text" placeholder="">
-    </form>
-</mat-toolbar>
-}
-<mat-sidenav-container>
-    @if(auth.connected) {
-    <mat-sidenav opened mode="side" [style.width]="sidenavWidth()">
-        <app-custom-sidenav [collapsed]="collapsed()"/>
-    </mat-sidenav>
-    }
-    <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
+    <mat-toolbar class="mat-elevation-z3 toolbar" color="primary">
+        <div class="toolbar-left">
+            <button mat-icon-button (click)="collapsed.set(!collapsed())">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
 
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+        <span class="toolbar-title">Mon Application</span>
+
+        <div class="toolbar-spacer"></div>
+
+        <div class="toolbar-right">
+            <button mat-icon-button (click)="auth.signOut()" matTooltip="Se déconnecter" routerLink="/login">
+                <mat-icon>logout</mat-icon>
+            </button>
+        </div>
+    </mat-toolbar>
+}
+    <mat-sidenav-container>
+        @if(auth.connected) {
+        <mat-sidenav opened mode="side" [style.width]="sidenavWidth()">
+            <app-custom-sidenav [collapsed]="collapsed()"/>
+        </mat-sidenav>
+        }
+        <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
+
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 
 
 

@@ -6,6 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {CustomSidenavComponent} from './components/custom-sidenav/custom-sidenav.component';
 import {AuthService} from './services/auth.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @Component({
@@ -14,7 +15,7 @@ import {AuthService} from './services/auth.service';
     imports: [RouterOutlet,
         RouterLink,
         MatToolbarModule, MatButtonModule,
-        MatIconModule, MatSidenavModule, CustomSidenavComponent,
+        MatIconModule, MatSidenavModule, CustomSidenavComponent, MatTooltip,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

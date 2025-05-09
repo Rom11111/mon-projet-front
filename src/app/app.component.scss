@@ -24,5 +24,28 @@ mat-sidenav-content {
 }
 
 
+.toolbar {
+    display: flex;
+    justify-content: space-between;
 
+    .toolbar-left,
+    .toolbar-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .toolbar-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-left: 1rem;
+    }
+
+    .toolbar-spacer {
+        flex: 1 1 auto;
+    }
+
+    button {
+        color: white;
+    }
+}
 

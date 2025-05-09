@@ -6,8 +6,9 @@ import {
     MatDialogContent,
     MatDialogTitle
 } from '@angular/material/dialog';
-import {Client} from '../../../models/client';
+
 import {MatButton} from '@angular/material/button';
+import {Client} from '../../models/client';
 
 
 @Component({

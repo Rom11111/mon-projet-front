@@ -29,6 +29,7 @@ export const routes: Routes = [
     {path: "ajout-produit", component: EditProductComponent},
     {path: "modifier-produit/:id", component: EditProductComponent},
     {path: "", redirectTo: "accueil", pathMatch: "full"},
+
     {path: "**", component: Page404Component},
 
 ];
