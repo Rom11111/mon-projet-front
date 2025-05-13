@@ -66,24 +66,17 @@
                         </mat-card>
                     </div>
                 }
+                <!--@if (["ROLE_VENDEUR", "ROLE_CHEF_RAYON"].indexOf(auth.role!) != -1){-->
                 @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
-                    <div class="col-12 mt-3">
-                        <button mat-raised-button color="accent" routerLink="/ajout-produit">
-                            Ajouter un produit
-                        </button>
-                    </div>
+                    <!--Ceci est une directive : on ajoute un comportement à un composant
+                    déjà existant pour ne pas tout casser-->
+                    <button mat-raised-button routerLink="/ajout-produit">
+                        Ajouter un produit
+                    </button>
                 }
             </div>
-
         </div>
-    }
-    <!--@if (["ROLE_VENDEUR", "ROLE_CHEF_RAYON"].indexOf(auth.role!) != -1){-->
-    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
-        <!--Ceci est une directive : on ajoute un comportement à un composant
-        déjà existant pour ne pas tout casser-->
-        <button mat-raised-button routerLink="/ajout-produit">
-            Ajouter un produit
-        </button>
+
     }
 </div>
 

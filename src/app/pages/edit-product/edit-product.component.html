@@ -56,6 +56,7 @@
     </mat-select>
 </mat-form-field>
 
+<app-file-chooser (selected)="onPhotoSelected($event)"></app-file-chooser>
 
 <button type="submit" mat-raised-button>
     <mat-icon [fontIcon]="editedProduct ? 'edit' : 'add'"></mat-icon>

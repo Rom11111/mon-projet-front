@@ -11,7 +11,7 @@ import {ProductService} from '../../services/crud/product.service';
 @Component({
     selector: 'app-accueil',
     imports: [
-        MatButtonModule, MatCardModule, RouterLink, NgStyle,
+        MatButtonModule, MatCardModule,
     ],
     templateUrl: './accueil.component.html',
     styleUrl: './accueil.component.scss'

@@ -11,8 +11,10 @@ import {RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {ProductService} from '../../services/crud/product.service';
 import {MatButton} from '@angular/material/button';
-import {CurrencyPipe, NgStyle} from '@angular/common';
-import {MatDialog} from '@angular/material/dialog';
+import {CurrencyPipe, NgIf, NgStyle} from '@angular/common';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+
+import {RentalService} from '../../services/rental.service';
 import {RentalDialogComponent} from '../rental-dialog/rental-dialog.component';
 
 
@@ -31,8 +33,10 @@ import {RentalDialogComponent} from '../rental-dialog/rental-dialog.component';
         RouterLink,
         NgStyle,
         CurrencyPipe,
-        MatDialog, // Ajout du module de dialogue
-        RentalDialogComponent // Ajout du composant de dialogue standalone
+        MatDialogModule, // Ajout du module de dialogue
+        RentalDialogComponent,
+        NgIf,
+        // Ajout du composant de dialogue standalone
     ],
     templateUrl: './equipments.component.html',
     styleUrl: './equipments.component.scss'
@@ -59,17 +63,20 @@ export class EquipmentsComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const userId = this.auth.currentUser.id;
-                this.rentalService.rentProduct(product.id, userId, result.startDate, result.endDate)
-                    .subscribe({
-                        next: () => {
-                            // Affiche une confirmation ou mets à jour l'état
-                            // Par exemple : this.refreshProducts();
-                        },
-                        error: () => {
-                            // Affiche une erreur
-                        }
-                    });
+                // Conversion de l'ID en number et ajout de la conversion de date
+                this.rentalService.rentProduct(
+                    Number(product.id),
+                    new Date(result.startDate),
+                    new Date(result.endDate)
+                ).subscribe({
+                    next: () => {
+                        // Affiche une confirmation
+                        alert('Location confirmée !');
+                    },
+                    error: () => {
+                        alert('Erreur lors de la location');
+                    }
+                });
             }
         });
     }

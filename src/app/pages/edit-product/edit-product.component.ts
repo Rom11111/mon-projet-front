@@ -10,13 +10,14 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NotificationService} from '../../services/notification.service';
 import {ProductService} from '../../services/crud/product.service';
+import {FileChooserComponent} from '../../components/file-chooser/file-chooser.component';
 
 // ReactiveFormsModule utilisé pour valider le formulaire
 // FormsModule bloque le formulaire pour ne pas recharger la page
 @Component({
     selector: 'app-edit-product',
     imports: [MatInputModule, MatButtonModule, MatIconModule,
-        MatSelectModule, ReactiveFormsModule, FormsModule],
+        MatSelectModule, ReactiveFormsModule, FormsModule, FileChooserComponent],
     templateUrl: './edit-product.component.html',
     styleUrl: './edit-product.component.scss'
 })
@@ -28,6 +29,7 @@ export class EditProductComponent implements OnInit{
     notification = inject(NotificationService)
     router = inject(Router)
     productService = inject(ProductService)
+    photo?: File | null = null;
 
     form = this.formBuilder.group({
         name: ["Nouveau produit", [Validators.required, Validators.maxLength(20), Validators.minLength(3)]],
@@ -84,12 +86,27 @@ export class EditProductComponent implements OnInit{
         })
 
         } else {
-            this.productService
-                .save(this.form.value)
-                .subscribe({
-                    next : () => this.notification.show("Produit modifié"),
-                    error : () => this.notification.show("Problème de communication", "error"),
-                })
+
+            const formData = new FormData();
+
+                formData.set("produit", new Blob([JSON.stringify(this.form.value)], {type: 'application/json'}));
+
+            if(this.photo){
+                formData.set("photo", this.photo)
+            }
+
+
+            this.http
+                .post("http://localhost:8080/product", this.form.value)
+                .subscribe(product => console.log("OK"))
+
+
+                //this.productService
+                //    .save(this.form.value)
+                //    .subscribe({
+                //        next: () => this.notification.show("Produit modifié"),
+                //        error: () => this.notification.show("Problème de communication", "error"),
+                //    })
 
         }
 
@@ -100,5 +117,9 @@ export class EditProductComponent implements OnInit{
     compareId(o1: { id: number }, o2: { id: number }) {
 
         return o1.id === o2.id
+    }
+
+    onPhotoSelected(file: File | null) {
+        this.photo = file
     }
 }

@@ -15,7 +15,7 @@ export class ProductService {
 
     getAll() {
 
-      this.http.get<Product[]>("http://localhost:8080/products")
+      return this.http.get<Product[]>("http://localhost:8080/products")
           .subscribe(products => this.products$.next(products))
     }
 
