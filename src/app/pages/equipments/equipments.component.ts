@@ -9,13 +9,14 @@ import {
 } from '@angular/material/card';
 import {RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
-import {ProductService} from '../../services/crud/product.service';
 import {MatButton} from '@angular/material/button';
-import {CurrencyPipe, NgIf, NgStyle} from '@angular/common';
+import {AsyncPipe, CurrencyPipe, NgIf, NgStyle} from '@angular/common';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 import {RentalService} from '../../services/rental.service';
 import {RentalDialogComponent} from '../rental-dialog/rental-dialog.component';
+import {ImgSecuredDirective} from '../../components/img-secured/img-secured.directive';
+import {ProductService} from '../../services/crud/product.service';
 
 
 @Component({
@@ -27,15 +28,15 @@ import {RentalDialogComponent} from '../rental-dialog/rental-dialog.component';
         MatCardActions,
         MatCardContent,
         MatCardHeader,
-        MatCardImage,
         MatCardSubtitle,
         MatCardTitle,
         RouterLink,
         NgStyle,
         CurrencyPipe,
         MatDialogModule, // Ajout du module de dialogue
-        RentalDialogComponent,
         NgIf,
+        ImgSecuredDirective,
+        AsyncPipe,
         // Ajout du composant de dialogue standalone
     ],
     templateUrl: './equipments.component.html',
@@ -51,9 +52,6 @@ export class EquipmentsComponent implements OnInit {
 
     ngOnInit() {
         this.productService.getAll();
-        this.productService.products$.subscribe(
-            products => this.products = products
-        );
     }
 
     openRentalDialog(product: Product) {

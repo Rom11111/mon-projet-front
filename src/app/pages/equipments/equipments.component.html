@@ -1,83 +1,43 @@
-
-
 <div class="row">
-    @for (product of products; track $index) {
-        <div class="col-6" mb-4>
+    @for (product of productService.products$|async; track $index) {
+        <div class="col-12 col-md-6 col-lg-3 mb-4">
             <mat-card appearance="outlined" [class.occasion]="product.etat.id == 3">
                 <mat-card-header>
                     <mat-card-title>{{ product.name }}</mat-card-title>
                     <mat-card-subtitle>
                         <span class="code">{{ product.code }}</span>
-
-
                         @for(label of product.labelList; track $index) {
-                            <span class="label"[ngStyle]="{backgroundColor: label.color}">
+                            <span class="label" [ngStyle]="{backgroundColor: label.color}">
                                 {{ label.name }}
                             </span>
                         }
                     </mat-card-subtitle>
                 </mat-card-header>
-                <img mat-card-image src="https://picsum.photos/id/{{product.id}}/600/400" alt="Photos">
+                <img ImgSecured src="'http://localhost:8080/product/image/{{product.id}} + '/600/400'" alt="Photos">
                 <mat-card-content>
-                    <p>
-                        {{ product.description }}
-                    </p>
+                    <p>{{ product.description }}</p>
+                    <p *ngIf="product.rentalPrice">Location : {{ product.rentalPrice | currency:'EUR' }}</p>
+                    <p *ngIf="!product.available" class="text-danger">Indisponible à la location</p>
                 </mat-card-content>
                 <mat-card-actions>
-                    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_AMIN") {
+                    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
                         <button mat-button [routerLink]="['/modifier-produit', product.id]">Edit</button>
                         <button mat-button>Delete</button>
                     }
-                    <button mat-button>Buy</button>
+                    <button mat-button color="primary"
+                            (click)="openRentalDialog(product)"
+                            [disabled]="!product.available">
+                        Louer
+                    </button>
                 </mat-card-actions>
             </mat-card>
-            <div class="row">
-                @for (product of products; track $index) {
-                    <div class="col-12 col-md-6 col-lg-3 mb-4">
-                        <mat-card appearance="outlined" [class.occasion]="product.etat.id == 3">
-                            <mat-card-header>
-                                <mat-card-title>{{ product.name }}</mat-card-title>
-                                <mat-card-subtitle>
-                                    <span class="code">{{ product.code }}</span>
-                                    @for(label of product.labelList; track $index) {
-                                        <span class="label" [ngStyle]="{backgroundColor: label.color}">
-                                {{ label.name }}
-                            </span>
-                                    }
-                                </mat-card-subtitle>
-                            </mat-card-header>
-                            <img mat-card-image [src]="'https://picsum.photos/id/' + product.id + '/600/400'" alt="Photos">
-                            <mat-card-content>
-                                <p>{{ product.description }}</p>
-                                <p *ngIf="product.rentalPrice">Location : {{ product.rentalPrice | currency:'EUR' }}</p>
-                                <p *ngIf="!product.available" class="text-danger">Indisponible à la location</p>
-                            </mat-card-content>
-                            <mat-card-actions>
-                                @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
-                                    <button mat-button [routerLink]="['/modifier-produit', product.id]">Edit</button>
-                                    <button mat-button>Delete</button>
-                                }
-                                <button mat-button color="primary"
-                                        (click)="openRentalDialog(product)"
-                                        [disabled]="!product.available">
-                                    Louer
-                                </button>
-                            </mat-card-actions>
-                        </mat-card>
-                    </div>
-                }
-                <!--@if (["ROLE_VENDEUR", "ROLE_CHEF_RAYON"].indexOf(auth.role!) != -1){-->
-                @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
-                    <!--Ceci est une directive : on ajoute un comportement à un composant
-                    déjà existant pour ne pas tout casser-->
-                    <button mat-raised-button routerLink="/ajout-produit">
-                        Ajouter un produit
-                    </button>
-                }
-            </div>
         </div>
-
+    }
+    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
+        <div class="col-12 mt-3">
+            <button mat-raised-button routerLink="/ajout-produit">
+                Ajouter un produit
+            </button>
+        </div>
     }
 </div>
-
-
