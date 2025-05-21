@@ -54,7 +54,7 @@ export class EditProductComponent implements OnInit{
                 // Si c'est une edition
                 if (parameters['id']) {
                     this.http
-                        .get<Product>('http://localhost:8080/product/' + parameters['id'])
+                        .get<Product>('environment.serverUrl +/product/' + parameters['id'])
                         .subscribe((product => {
                             this.form.patchValue(product)
                             this.editedProduct = product
@@ -64,10 +64,10 @@ export class EditProductComponent implements OnInit{
             })
 
         this.http
-            .get<Label[]>("http://localhost:8080/etats")
+            .get<Label[]>("environment.serverUrl +/etats")
             .subscribe(etats => this.etats = etats)
         this.http
-            .get<Label[]>("http://localhost:8080/labels")
+            .get<Label[]>("environment.serverUrl +/labels")
             .subscribe(labels => this.labels = labels)
 
     }
@@ -97,7 +97,7 @@ export class EditProductComponent implements OnInit{
 
 
             this.http
-                .post("http://localhost:8080/product", this.form.value)
+                .post("environment.serverUrl +/product", this.form.value)
                 .subscribe(product => console.log("OK"))
 
 

@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, catchError, of, tap, throwError} from 'rxjs';
 import {NotificationService} from '../notification.service';
+import {environment} from '../../../environments/environment';
 //import any = jasmine.any;
 
 @Injectable({
@@ -15,12 +16,12 @@ export class ProductService {
 
     getAll() {
 
-      return this.http.get<Product[]>("http://localhost:8080/products")
+      return this.http.get<Product[]>(environment.serverUrl + "products")
           .subscribe(products => this.products$.next(products))
     }
 
     save(product: any) {
-        return this.http.post("http://localhost:8080/produit", product).pipe(
+        return this.http.post("environment.serverUrl +/product", product).pipe(
             tap(() => this.getAll()),
             catchError(error => {
                 // Handle the error if needed
@@ -31,7 +32,7 @@ export class ProductService {
 
     update(id: number, product: any) {
 
-        return this.http.put("http://localhost:8080/produit/" + id, product).pipe(
+        return this.http.put("environment.serverUrl +/product/" + id, product).pipe(
             tap(() => this.getAll()),
             catchError(error => {
                 // Handle the error if needed

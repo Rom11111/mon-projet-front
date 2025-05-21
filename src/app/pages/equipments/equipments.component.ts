@@ -17,6 +17,7 @@ import {RentalService} from '../../services/rental.service';
 import {RentalDialogComponent} from '../rental-dialog/rental-dialog.component';
 import {ImgSecuredDirective} from '../../components/img-secured/img-secured.directive';
 import {ProductService} from '../../services/crud/product.service';
+import {environment} from '../../../environments/environment';
 
 
 @Component({
@@ -43,10 +44,12 @@ import {ProductService} from '../../services/crud/product.service';
     styleUrl: './equipments.component.scss'
 })
 export class EquipmentsComponent implements OnInit {
+
     auth = inject(AuthService);
     productService = inject(ProductService);
     rentalService = inject(RentalService);
     dialog = inject(MatDialog);
+    environment = environment;
 
     products: Product[] = [];
 
@@ -78,5 +81,6 @@ export class EquipmentsComponent implements OnInit {
             }
         });
     }
+
 }
 

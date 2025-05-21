@@ -1,1 +1,24 @@
-<p>signup works!</p>
+<div class="login-box">
+    <p>Login</p>
+    <form [formGroup]="form" (ngSubmit)="onLogin()">
+        <div class="user-box">
+            <input formControlName="email"  matInput>
+            <label>Email</label>
+            @if (form.get('email')?.hasError('required')) {
+                <span>L'email est requis</span>
+            } @else if (form.get('email')?.hasError('email')) {
+                <span>Le format est invalide</span>
+            }
+        </div>
+
+
+        <div class="user-box">
+            <input required="" formControlName="password" type="password" matInput>
+            <label>Password</label>
+        </div>
+        <button type="submit">
+            Se connecter
+        </button>
+    </form>
+    <p>Vous n'avez pas de compte ? <a href="" class="a2">S'enregistrer</a></p>
+</div>

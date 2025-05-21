@@ -13,7 +13,7 @@
                         }
                     </mat-card-subtitle>
                 </mat-card-header>
-                <img ImgSecured src="'http://localhost:8080/product/image/{{product.id}} + '/600/400'" alt="Photos">
+                <img ImgSecured mat-card-image [src]="environment.serverUrl + 'product/image/' + product.id + '/600/400'" alt="Photos">
                 <mat-card-content>
                     <p>{{ product.description }}</p>
                     <p *ngIf="product.rentalPrice">Location : {{ product.rentalPrice | currency:'EUR' }}</p>

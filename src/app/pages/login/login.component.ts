@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {NotificationService} from '../../services/notification.service';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -25,6 +26,7 @@ export class LoginComponent {
     notification = inject(NotificationService)
     auth = inject(AuthService)
     router = inject (Router)
+    private baseurl = `${environment.serverUrl}`
 
     form = this.formBuilder.group({
         email: ["a@a.com", [Validators.required, Validators.email]],
@@ -38,7 +40,7 @@ export class LoginComponent {
 
             this.http
             .post(
-            "http://localhost:8080/login",
+            this.baseurl +"login",
             this.form.value,
             {responseType: "text"})
             .subscribe({

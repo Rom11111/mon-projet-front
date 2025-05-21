@@ -7,7 +7,7 @@ import { Client } from '../models/client';  // Importation depuis le dossier mod
     providedIn: 'root'
 })
 export class ClientService {
-    private apiUrl = 'http://localhost:8080/api/users';  // URL de ton API
+    private apiUrl = 'environment.serverUrl +/api/users';  // URL de ton API
 
     constructor(private http: HttpClient) {}
 

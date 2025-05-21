@@ -11,12 +11,15 @@ import {EquipmentsComponent} from './pages/equipments/equipments.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {loggedGuard} from './services/logged.guard';
 import { ClientsComponent } from './pages/clients/clients.component';
+import {EmailValidationComponent} from './pages/email-validation/email-validation.component';
+import {SignupComponent} from './pages/signup/signup.component';
 
 
 
 export const routes: Routes = [
 
     {path: "login", component: LoginComponent},
+    {path: "signup", component: SignupComponent},
 
     {path: "dashboard", component: DashboardComponent},
     {path: "equipments", component: EquipmentsComponent},
@@ -24,7 +27,7 @@ export const routes: Routes = [
     {path: "clients", component: ClientsComponent},
     {path: "settings", component: SettingsComponent},
 
-
+    {path: "validate-mail/:token", component: EmailValidationComponent},
     {path: "accueil", component: AccueilComponent, canActivate:[ loggedGuard] },
     {path: "ajout-produit", component: EditProductComponent},
     {path: "modifier-produit/:id", component: EditProductComponent},
