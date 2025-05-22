@@ -1,0 +1,11 @@
+<!-- Voir les différentes possibilité du bouton -->
+<input  #fileChooser type="file"
+        (change)="onFileSelected($event)">
+<!-- $event récupère différents evenements -->
+<div (click)="fileChooser.click()">
+    <mat-icon fontIcon="upload_file"></mat-icon>
+</div>
+
+<span class="nom-fichier">
+    {{file?.name ?? 'Aucun fichier sélectionné'}}
+</span>

@@ -1,25 +1,14 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import {
-    MatCell, MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow, MatHeaderRowDef,
-    MatRow, MatRowDef, MatTable,
-    MatTableDataSource, MatTableModule,
-
-} from '@angular/material/table';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatCard} from '@angular/material/card';
 import {CommonModule} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {DashboardService} from '../../services/dashboard.service';
 import {RentalService} from '../../services/rental.service';
-import {MatFormField, MatLabel} from '@angular/material/input';
 import {
     trigger,
-    state,
     style,
     transition,
     animate,
@@ -46,8 +35,6 @@ interface Rental {
         MatTableModule,
         MatSortModule,
         MatPaginatorModule,
-        MatFormField,
-        MatLabel,
     ],
     animations: [
         trigger('fadeSlideIn', [

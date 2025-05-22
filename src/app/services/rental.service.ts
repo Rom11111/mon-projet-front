@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {environment} from '../../environments/environment.development';
 
 export interface Rental {
     client: string;
@@ -15,8 +16,8 @@ export interface Rental {
 })
 export class RentalService {
 
-    private apiUrl = 'http://localhost:8080/api/rentals/recent\n' +
-        '\n'; // adapte à ton URL
+    private apiUrl = environment.serverUrl + 'api/rentals/recent\n' +
+        '\n'; // adapte à mon URL
 
     constructor(private http: HttpClient) { }
 
