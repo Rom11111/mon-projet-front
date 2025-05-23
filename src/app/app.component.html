@@ -1,5 +1,9 @@
-@if(auth.connected) {
-    <mat-toolbar class="mat-elevation-z3 toolbar" color="primary">
+<div class="mat-app-background" style="min-height: 100vh;">
+    <mat-toolbar
+        *ngIf="auth.connected"
+        class="mat-elevation-z3 toolbar"
+        color="primary"
+    >
         <div class="toolbar-left">
             <button mat-icon-button (click)="collapsed.set(!collapsed())">
                 <mat-icon>menu</mat-icon>
@@ -7,31 +11,41 @@
         </div>
 
         <span class="toolbar-title">LocaTech</span>
-
         <div class="toolbar-spacer"></div>
 
         <div class="toolbar-right">
-            <button mat-icon-button (click)="auth.signOut()" matTooltip="Se déconnecter" routerLink="/login">
+            <!-- Toggle dark mode -->
+            <button
+                mat-icon-button
+                (click)="toggleDarkMode()"
+                [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'"
+            >
+                <mat-icon>{{ darkMode() ? 'dark_mode' : 'light_mode' }}</mat-icon>
+            </button>
+
+            <button
+                mat-icon-button
+                (click)="auth.signOut()"
+                matTooltip="Se déconnecter"
+                routerLink="/login"
+            >
                 <mat-icon>logout</mat-icon>
             </button>
         </div>
     </mat-toolbar>
-}
-    <mat-sidenav-container>
-        @if(auth.connected) {
-        <mat-sidenav opened mode="side" [style.width]="sidenavWidth()">
-            <app-custom-sidenav [collapsed]="collapsed()"/>
-        </mat-sidenav>
-        }
-        <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
 
+    <mat-sidenav-container>
+        <mat-sidenav
+            *ngIf="auth.connected"
+            opened
+            mode="side"
+            [style.width]="sidenavWidth()"
+        >
+            <app-custom-sidenav [collapsed]="collapsed()" />
+        </mat-sidenav>
+
+        <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
             <router-outlet></router-outlet>
         </mat-sidenav-content>
     </mat-sidenav-container>
-
-
-
-<!-- Balise utilisée par Angular pour afficher le contenu des routes.
-C’est ici que les composants correspondant aux routes définies dans le
-`routerLink` seront affichés. -->
-
+</div>

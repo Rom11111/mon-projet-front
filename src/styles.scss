@@ -1,48 +1,49 @@
-// Import d'Angular Material et aliasage sous "mat"
-@use "@angular/material" as mat;
-@import "./app/themes/greentheme.css";
+@use '@angular/material' as mat;
 
-
-/*// Inclusion des styles de base d'Angular Material
-@include mat.core();
-
-// Définition d'une palette de couleurs primaire à partir de la palette indigo
-// Remplacer "define-palette" par "m2-define-palette" pour Angular Material 18
-$myapp-theme-primary: mat.m2-define-palette(mat.$m2-indigo-palette, A400, A100, A700);
-
-// Définition de la palette d'accent et de la palette d'avertissement (warn)
-// En utilisant le même préfixe "m2-define-palette"
-$myapp-theme-accent: mat.m2-define-palette(mat.$m2-indigo-palette);
-$myapp-theme-warn: mat.m2-define-palette(mat.$m2-red-palette);
-
-// Création d'un thème clair global en utilisant la nouvelle fonction "m2-define-light-theme"
-// La configuration inclut les palettes de couleurs primaire, accent et warnng
-$myapp-theme: mat.m2-define-light-theme((
+// Thème clair
+$light-theme-config: (
     color: (
-        primary: $myapp-theme-primary,
-        accent: $myapp-theme-accent,
-        warn: $myapp-theme-warn,
+        primary: mat.$blue-palette,
+        tertiary: mat.$violet-palette,
+        theme-type: light,
     ),
-));
+    typography: Roboto,
+    density: 0,
+);
 
-// Application de tous les styles des composants Angular Material avec le thème défini
-@include mat.all-component-themes($myapp-theme);
-*/
+// Thème sombre
+$dark-theme-config: (
+    color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$violet-palette,
+        theme-type: dark,
+    ),
+    typography: Roboto,
+    density: 0,
+);
 
-mat-snack-bar-container {
-    &.valid .mat-mdc-snackbar-surface {
-        background-color: green;
-    }
+// Appliquer le thème clair par défaut
+:root,
+html:not(.dark-theme) {
+    @include mat.theme($light-theme-config);
+    color-scheme: light;
+}
 
-    &.error .mat-mdc-snackbar-surface {
-        background-color: #b50404;
-    }
+// Appliquer le thème sombre si la classe .dark-theme est présente sur <html>
+html.dark-theme {
+    @include mat.theme($dark-theme-config);
+    color-scheme: dark;
+    background: var(--mat-sys-color-surface);
+}
 
-    &.warning .mat-mdc-snackbar-surface {
-        background-color: #ff8242;
-    }
+// Fond principal
+.mat-app-background {
+    min-height: 100vh;
+    background: var(--mat-sys-color-surface);
+    transition: background 0.3s;
+}
 
-    &.info .mat-mdc-snackbar-surface {
-        background-color: #4675c6;
-    }
+// Personnalisation toolbar (optionnel)
+.toolbar {
+    border-bottom: 1px solid var(--mat-sys-color-outline-variant);
 }
