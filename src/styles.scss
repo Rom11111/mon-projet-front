@@ -26,14 +26,14 @@ $dark-theme-config: (
 :root,
 html:not(.dark-theme) {
     @include mat.theme($light-theme-config);
-    color-scheme: light;
+    //color-scheme: light;
 }
 
 // Appliquer le thème sombre si la classe .dark-theme est présente sur <html>
 html.dark-theme {
     @include mat.theme($dark-theme-config);
-    color-scheme: dark;
-    background: var(--mat-sys-color-surface);
+    //color-scheme: dark;
+    //background: var(--mat-sys-color-surface);
 }
 
 // Fond principal
