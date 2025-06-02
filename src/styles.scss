@@ -1,49 +1,32 @@
 @use '@angular/material' as mat;
 
-// Thème clair
-$light-theme-config: (
-    color: (
-        primary: mat.$blue-palette,
-        tertiary: mat.$violet-palette,
-        theme-type: light,
-    ),
-    typography: Roboto,
-    density: 0,
-);
 
-// Thème sombre
-$dark-theme-config: (
-    color: (
-        primary: mat.$blue-palette,
-        tertiary: mat.$violet-palette,
-        theme-type: dark,
-    ),
-    typography: Roboto,
-    density: 0,
-);
-
-// Appliquer le thème clair par défaut
-:root,
-html:not(.dark-theme) {
-    @include mat.theme($light-theme-config);
-    //color-scheme: light;
+html {
+    @include mat.theme(
+                (
+    color: mat.$azure-palette,
+            typography: Roboto,
+        )
+    );
 }
 
-// Appliquer le thème sombre si la classe .dark-theme est présente sur <html>
-html.dark-theme {
-    @include mat.theme($dark-theme-config);
-    //color-scheme: dark;
-    //background: var(--mat-sys-color-surface);
+.darkMode {
+    @include  mat.theme(
+        (
+            color : (
+            primary: mat.$azure-palette,
+                theme-type: dark,
+            ),
+        )
+    );
 }
 
-// Fond principal
-.mat-app-background {
+.content {
+    padding: 24px;
     min-height: 100vh;
-    background: var(--mat-sys-color-surface);
-    transition: background 0.3s;
+
+    background-color: #dfd5d5;
+    color: var(--mat-sys-on-bacground);
 }
 
-// Personnalisation toolbar (optionnel)
-.toolbar {
-    border-bottom: 1px solid var(--mat-sys-color-outline-variant);
-}
+

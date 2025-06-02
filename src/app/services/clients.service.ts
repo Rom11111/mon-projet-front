@@ -15,4 +15,9 @@ export class ClientService {
     getClients(): Observable<Client[]> {
         return this.http.get<Client[]>(this.apiUrl);  // Récupération des utilisateurs
     }
+
+    deleteClient(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/clients/${id}`);
+    }
+
 }

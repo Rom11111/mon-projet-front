@@ -57,6 +57,12 @@ export class CustomSidenavComponent {
         },
 
         {
+            icon: "user-cog.svg",
+            label: "Team",
+            route: "team",
+        },
+
+        {
             icon: "message-square.svg",
             label: "Contact",
             route: "contact",
@@ -69,34 +75,6 @@ export class CustomSidenavComponent {
 
     ]);
 
-    constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-        // Enregistrez chaque icône SVG
-        this.matIconRegistry.addSvgIcon(
-            'layout-dashboard',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/dashboard.svg')
-        );
-        this.matIconRegistry.addSvgIcon(
-            'monitor',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/monitor.svg')
-        );
-        this.matIconRegistry.addSvgIcon(
-            'calendar-check',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/calendar.svg')
-        );
-        this.matIconRegistry.addSvgIcon(
-            'users',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/users.svg')
-        );
-        this.matIconRegistry.addSvgIcon(
-            'message-square',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/message.svg')
-        );
-        this.matIconRegistry.addSvgIcon(
-            'settings',
-            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/settings.svg')
-        );
-    }
-
-    tracksByIndex(index: number, item: MenuItem) {return index; }
+        tracksByIndex(index: number, item: MenuItem) {return index; }
     profilePicSize = computed(() => this.sideNavCollapsed() ? '32' : '100');
 }

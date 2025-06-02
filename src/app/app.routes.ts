@@ -14,6 +14,7 @@ import { ClientsComponent } from './pages/clients/clients.component';
 import {EmailValidationComponent} from './pages/email-validation/email-validation.component';
 import {SignupComponent} from './pages/signup/signup.component';
 import {ContactComponent} from './pages/contact/contact.component';
+import {TeamComponent} from './pages/team/team.component';
 
 export const routes: Routes = [
 
@@ -24,7 +25,8 @@ export const routes: Routes = [
     {path: "equipments", component: EquipmentsComponent},
     {path: "booking", component: BookingComponent},
     {path: "clients", component: ClientsComponent},
-    { path: "contact", component: ContactComponent },
+    {path: "team", component: TeamComponent},
+    {path: "contact", component: ContactComponent },
     {path: "settings", component: SettingsComponent},
 
     {path: "validate-mail/:token", component: EmailValidationComponent},

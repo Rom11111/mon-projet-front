@@ -1,47 +1,44 @@
-<div class="search-filters">
-    <!-- Champ de recherche -->
-    <mat-form-field appearance="fill" class="search-field">
-        <mat-label>Rechercher un client</mat-label>
-        <input matInput [(ngModel)]="search" placeholder="Rechercher par nom">
-    </mat-form-field>
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher un client">
+</mat-form-field>
+<button mat-raised-button color="primary" (click)="onAdd()">
+    <mat-icon>add</mat-icon>
+    Ajouter un client
+</button>
 
-    <!-- Sélecteur de filtre par rôle -->
-    <mat-form-field appearance="fill" class="filter-field">
-        <mat-label>Filtrer par rôle</mat-label>
-        <mat-select [(ngModel)]="roleFilter">
-            <mat-option value="">Tous les rôles</mat-option>
-            <mat-option value="ADMIN">Administrateur</mat-option>
-            <mat-option value="TECH">Technicien</mat-option>
-            <mat-option value="CLIENT">Client</mat-option>
-        </mat-select>
-    </mat-form-field>
+<table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
+        <td mat-cell *matCellDef="let client">{{client.firstname}}</td>
+    </ng-container>
+    <ng-container matColumnDef="lastname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+        <td mat-cell *matCellDef="let client">{{client.lastname}}</td>
+    </ng-container>
+    <ng-container matColumnDef="company">
+        <th mat-header-cell *matHeaderCellDef>Entreprise</th>
+        <td mat-cell *matCellDef="let client">{{client.company}}</td>
+    </ng-container>
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let client">{{client.email}}</td>
+    </ng-container>
 
-    <!-- Sélecteur de tri -->
-    <mat-form-field appearance="fill" class="sort-field">
-        <mat-label>Trier par</mat-label>
-        <mat-select [(ngModel)]="sortOrder">
-            <mat-option value="asc">Ordre alphabétique (A-Z)</mat-option>
-            <mat-option value="desc">Ordre alphabétique (Z-A)</mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
-
-<!-- Liste des clients -->
-<div class="client-list">
-    <mat-card *ngFor="let client of filteredAndSortedClients" class="client-card">
-        <mat-card-header>
-            <img mat-card-avatar [src]="client.photoUrl" alt="Avatar" class="avatar">
-            <mat-card-title>{{ client.firstname }} {{ client.lastname }}</mat-card-title>
-            <mat-card-subtitle>{{ client.role }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-            <div class="client-info">
-                <p><strong>Email:</strong> {{ client.email }}</p>
-                <p><strong>Adresse:</strong> {{ client.address }}</p>
-            </div>
-        </mat-card-content>
-        <mat-card-actions>
-            <button mat-button (click)="selectClient(client)">Voir détails</button>
-        </mat-card-actions>
-    </mat-card>
-</div>
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let client">
+            <button mat-icon-button (click)="onView(client)">
+                <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button (click)="onEdit(client)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="onDelete(client)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>

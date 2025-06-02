@@ -1,100 +1,121 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+    MatCell, MatCellDef,
+    MatColumnDef,
+    MatHeaderCell, MatHeaderCellDef,
+    MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+    MatTable,
+    MatTableDataSource
+} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { ClientService } from '../../services/clients.service';
+import { Client } from '../../models/client';
+import {MatFormField, MatInput} from '@angular/material/input';
+import {MatIcon} from '@angular/material/icon';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatDialog} from '@angular/material/dialog';
+import {ClientDetailsDialogComponent} from './client-details-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-import {ClientService} from '../../services/clients.service'; // Mise à jour du chemin
-import {Client} from '../../models/client';
-
-import {MatCard} from '@angular/material/card';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
-import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
-import {MatButton} from '@angular/material/button'; // Importation de l'interface depuis models
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import {MatOption} from '@angular/material/core';
-import {MatSelect} from '@angular/material/select';
 
 @Component({
     selector: 'app-clients',
     templateUrl: './clients.component.html',
     imports: [
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatListModule,
-        MatCard,
+        MatTable,
+        MatPaginator,
         MatFormField,
+        MatColumnDef,
+        MatHeaderCell,
+        MatCell,
         MatInput,
-        MatLabel,
-        FormsModule,
-        MatFormField,
-        NgForOf,
+        MatHeaderRow,
+        MatRow,
+        MatCellDef,
+        MatRowDef,
+        MatHeaderRowDef,
+        MatHeaderCellDef,
+        MatSort,
+        MatIcon,
+        MatIconButton,
         MatButton,
-        MatOption,
-        MatSelect
     ],
     styleUrls: ['./clients.component.scss']
 })
 export class ClientsComponent implements OnInit {
-    search = '';
-    clients: Client[] = [];
-    selectedClient: Client | null = null;
+    displayedColumns: string[] = ['firstname', 'lastname', 'company', 'email', 'actions'];
+    dataSource = new MatTableDataSource<Client>();
 
-    roleFilter: string = '';
-    sortOrder: 'asc' | 'desc' = 'asc';
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
 
-    constructor(private clientService: ClientService) {}
+    constructor(private clientService: ClientService,
+                private dialog: MatDialog,
+                private _snackBar: MatSnackBar
 
-    ngOnInit() {
-        this.clientService.getClients().subscribe((data: Client[]) => {
-            this.clients = data.map((c, i) => ({
-                ...c,
-                photoUrl: `https://i.pravatar.cc/100?img=${i + 1}`,
-                status: i % 2 === 0 ? 'Active' : 'Inactive'  // Pour l'exemple
-            }));
+    ) {}
+
+
+    onAdd(): void {
+        this.dialog.open(ClientDetailsDialogComponent, {
+            width: '500px',
+            data: {} as Client
         });
     }
 
-    // Retourne les clients filtrés et triés
-    get filteredAndSortedClients() {
-        let filteredClients = this.clients.filter(client => {
-            const matchesSearch = client.firstname.toLowerCase().includes(this.search.toLowerCase()) ||
-                client.lastname.toLowerCase().includes(this.search.toLowerCase());
-            const matchesRole = this.roleFilter ? client.role === this.roleFilter : true;
-            return matchesSearch && matchesRole;
+    onView(client: Client): void {
+        this.dialog.open(ClientDetailsDialogComponent, {
+            width: '500px',
+            data: client
         });
+    }
 
-        // Tri des clients, avec les admins en premier
-        if (this.sortOrder === 'asc') {
-            filteredClients.sort((a, b) => {
-                if (a.role === 'ADMIN' && b.role !== 'ADMIN') {
-                    return -1; // Placer les admins en premier
-                } else if (a.role !== 'ADMIN' && b.role === 'ADMIN') {
-                    return 1;
+    onEdit(client: any): void {
+        // Logique pour éditer un client
+        console.log('Éditer client:', client);
+    }
+
+    onDelete(client: any): void {
+        const confirmation = confirm('Êtes-vous sûr de vouloir supprimer ce client ?');
+
+        if (confirmation) {
+            this.clientService.deleteClient(client.id).pipe(
+                catchError(error => {
+                    console.error('Erreur lors de la suppression:', error);
+                    return of(null);
+                })
+            ).subscribe(
+                () => {
+                    // Rafraîchir la liste des clients après suppression
+                    this.loadClients();
+                    // Message de confirmation
+                    // Si vous utilisez Material Snackbar :
+                    this._snackBar.open('Client supprimé avec succès', 'Fermer', {
+                        duration: 3000,
+                        horizontalPosition: 'center',
+                        verticalPosition: 'bottom'
+                    });
                 }
-                return a.lastname.localeCompare(b.lastname); // Tri par nom
-            });
-        } else {
-            filteredClients.sort((a, b) => {
-                if (a.role === 'ADMIN' && b.role !== 'ADMIN') {
-                    return -1; // Placer les admins en premier
-                } else if (a.role !== 'ADMIN' && b.role === 'ADMIN') {
-                    return 1;
-                }
-                return b.lastname.localeCompare(a.lastname); // Tri inverse par nom
-            });
+            );
         }
-
-        return filteredClients;
     }
 
-    selectClient(client: Client) {
-        this.selectedClient = client;
+
+        ngOnInit() {
+        this.clientService.getClients().subscribe((data: Client[]) => {
+            // Filtrer uniquement les clients
+            this.dataSource.data = data.filter(c => c.role === 'CLIENT');
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        });
     }
 
-    closeDetails() {
-        this.selectedClient = null;
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 }
-

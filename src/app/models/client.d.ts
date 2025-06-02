@@ -2,7 +2,8 @@ export interface Client {
     id: number;
     firstname: string;
     lastname: string;
-    address: string;
+    company: string;
+    companyAddress: string;
     email: string;
     password: string;  // tu peux ne pas l'utiliser pour l'affichage, mais il est dans ton modèle
     role: 'CLIENT' | 'TECH' | 'ADMIN';  // Correspond au rôle de l'utilisateur
