@@ -47,7 +47,7 @@ export class LoginComponent {
             next : jwt => {
                 this.auth.connected = true // à revoir
                 this.auth.decodeJwt(jwt)
-                this.router.navigateByUrl("/accueil") // Une fois connecté, dirige vers la page d'accueil
+                this.router.navigateByUrl("/dashboard") // Une fois connecté, dirige vers la page d'accueil
             }, // stock sur le navigateur
             error : error => {
                 if(error.status === 401) {

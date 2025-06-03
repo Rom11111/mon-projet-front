@@ -1,4 +1,11 @@
 <div class="row">
+    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
+        <div class="col-12 mt-3">
+            <button mat-raised-button routerLink="/ajout-produit">
+                Ajouter un produit
+            </button>
+        </div>
+    }
     @for (product of productService.products$|async; track $index) {
         <div class="col-12 col-md-6 col-lg-3 mb-4">
             <mat-card appearance="outlined" [class.occasion]="product.etat.id == 3">
@@ -24,20 +31,15 @@
                         <button mat-button [routerLink]="['/modifier-produit', product.id]">Edit</button>
                         <button mat-button>Delete</button>
                     }
+                    @if (auth.role == "ROLE_CLIENT") {
                     <button mat-button color="primary"
                             (click)="openRentalDialog(product)"
                             [disabled]="!product.available">
                         Louer
                     </button>
+                    }
                 </mat-card-actions>
             </mat-card>
-        </div>
-    }
-    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
-        <div class="col-12 mt-3">
-            <button mat-raised-button routerLink="/ajout-produit">
-                Ajouter un produit
-            </button>
         </div>
     }
 </div>

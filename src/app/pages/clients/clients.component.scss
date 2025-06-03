@@ -1,18 +1,22 @@
-// Style pour l'en-tête avec la recherche et le bouton
-.table-header {
+// Style pour le conteneur et la barre de recherche
+.container {
+    padding: 20px;
+}
+
+.search-add-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    margin-bottom: 20px;
     gap: 20px;
 }
 
-.table-header mat-form-field {
+.search-add-container mat-form-field {
     flex: 1;
     max-width: 300px;
 }
 
-.table-header button[mat-raised-button] {
+.search-add-container button[mat-raised-button] {
     background-color: #3f51b5;
     color: white;
     font-weight: bold;
@@ -23,7 +27,7 @@
     padding: 0 20px;
 }
 
-.table-header button[mat-raised-button]:hover {
+.search-add-container button[mat-raised-button]:hover {
     background-color: #303f9f;
 }
 
@@ -70,7 +74,7 @@ td.mat-cell button[mat-icon-button] mat-icon {
 }
 
 // Bouton voir (bleu)
-button[mat-icon-button] mat-icon {
+button[mat-icon-button]:first-child mat-icon {
     color: #3f51b5;
 }
 
@@ -79,10 +83,7 @@ button[mat-icon-button]:nth-child(2) mat-icon {
     color: #ff9800;
 }
 
-// Bouton supprimer (rouge)
-button[mat-icon-button]:nth-child(3) mat-icon {
-    color: #f44336;
-}
+// Bouton supprimer (déjà en rouge via color="warn")
 
 // Style pour le paginateur
 mat-paginator {

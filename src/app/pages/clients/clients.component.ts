@@ -1,48 +1,56 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    MatCell, MatCellDef,
-    MatColumnDef,
-    MatHeaderCell, MatHeaderCellDef,
-    MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ClientService } from '../../services/clients.service';
-import { Client } from '../../models/client';
-import {MatFormField, MatInput} from '@angular/material/input';
-import {MatIcon} from '@angular/material/icon';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatTooltip} from '@angular/material/tooltip';
-import {MatDialog} from '@angular/material/dialog';
-import {ClientDetailsDialogComponent} from './client-details-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatTable,
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef
+} from '@angular/material/table';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+import { ClientService } from '../../services/clients.service';
+import { Client } from '../../models/client';
+import { ClientDetailsDialogComponent } from './client-details-dialog.component';
 
 @Component({
     selector: 'app-clients',
     templateUrl: './clients.component.html',
     imports: [
-        MatTable,
-        MatPaginator,
-        MatFormField,
-        MatColumnDef,
-        MatHeaderCell,
+        MatButton,
         MatCell,
-        MatInput,
-        MatHeaderRow,
-        MatRow,
         MatCellDef,
-        MatRowDef,
-        MatHeaderRowDef,
+        MatColumnDef,
+        MatFormField,
+        MatHeaderCell,
         MatHeaderCellDef,
-        MatSort,
+        MatHeaderRow,
+        MatHeaderRowDef,
         MatIcon,
         MatIconButton,
-        MatButton,
+        MatInput,
+        MatPaginator,
+        MatRow,
+        MatRowDef,
+        MatSort,
+        MatTable,
+        MatTooltip,
+        MatLabel,
+
     ],
     styleUrls: ['./clients.component.scss']
 })
@@ -53,12 +61,20 @@ export class ClientsComponent implements OnInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
-    constructor(private clientService: ClientService,
-                private dialog: MatDialog,
-                private _snackBar: MatSnackBar
-
+    constructor(
+        private clientService: ClientService,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar
     ) {}
 
+    ngOnInit(): void {
+        this.loadClients();
+    }
+
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
 
     onAdd(): void {
         this.dialog.open(ClientDetailsDialogComponent, {
@@ -74,48 +90,50 @@ export class ClientsComponent implements OnInit {
         });
     }
 
-    onEdit(client: any): void {
-        // Logique pour éditer un client
+    onEdit(client: Client): void {
         console.log('Éditer client:', client);
+        this.dialog.open(ClientDetailsDialogComponent, {
+            width: '500px',
+            data: { ...client }
+        });
     }
 
-    onDelete(client: any): void {
-        const confirmation = confirm('Êtes-vous sûr de vouloir supprimer ce client ?');
+    onDelete(client: Client): void {
+        const dialogRef = this.dialog.open(ClientDetailsDialogComponent, {
+            width: '400px',
+            data: {
+                title: 'Confirmation de suppression',
+                message: 'Êtes-vous sûr de vouloir supprimer ce client ?'
+            }
+        });
 
-        if (confirmation) {
-            this.clientService.deleteClient(client.id).pipe(
-                catchError(error => {
-                    console.error('Erreur lors de la suppression:', error);
-                    return of(null);
-                })
-            ).subscribe(
-                () => {
-                    // Rafraîchir la liste des clients après suppression
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.clientService.deleteClient(client.id).pipe(
+                    catchError(error => {
+                        this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                        return of(null);
+                    })
+                ).subscribe(() => {
                     this.loadClients();
-                    // Message de confirmation
-                    // Si vous utilisez Material Snackbar :
-                    this._snackBar.open('Client supprimé avec succès', 'Fermer', {
+                    this.snackBar.open('Client supprimé avec succès', 'Fermer', {
                         duration: 3000,
                         horizontalPosition: 'center',
                         verticalPosition: 'bottom'
                     });
-                }
-            );
-        }
+                });
+            }
+        });
     }
 
-
-        ngOnInit() {
+    private loadClients(): void {
         this.clientService.getClients().subscribe((data: Client[]) => {
-            // Filtrer uniquement les clients
             this.dataSource.data = data.filter(c => c.role === 'CLIENT');
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         });
-    }
-
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 }

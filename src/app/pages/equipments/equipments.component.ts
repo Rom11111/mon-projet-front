@@ -18,6 +18,7 @@ import {RentalDialogComponent} from '../rental-dialog/rental-dialog.component';
 import {ImgSecuredDirective} from '../../components/img-secured/img-secured.directive';
 import {ProductService} from '../../services/crud/product.service';
 import {environment} from '../../../environments/environment';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @Component({
@@ -38,6 +39,8 @@ import {environment} from '../../../environments/environment';
         NgIf,
         ImgSecuredDirective,
         AsyncPipe,
+        MatIconModule,
+
         // Ajout du composant de dialogue standalone
     ],
     templateUrl: './equipments.component.html',
