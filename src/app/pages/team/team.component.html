@@ -1,0 +1,45 @@
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event)"
+           placeholder="Rechercher un membre">
+</mat-form-field>
+<mat-form-field appearance="outline">
+<mat-label>Catégorie</mat-label>
+<mat-select [(value)]="selectedCategory" (selectionChange)="applyCategoryFilter($event.value)">
+    <mat-option value="">Toutes</mat-option>
+    <mat-option *ngFor="let cat of category" [value]="cat">{{ cat }}</mat-option>
+</mat-select>
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
+        <td mat-cell *matCellDef="let member">{{member.firstname}}</td>
+    </ng-container>
+    <ng-container matColumnDef="lastname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+        <td mat-cell *matCellDef="let member">{{member.lastname}}</td>
+    </ng-container>
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let member">{{member.email}}</td>
+    </ng-container>
+    <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Rôle</th>
+        <td mat-cell *matCellDef="let member">{{member.role}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator #paginator
+  [length]="dataSource.data.length"
+  [pageIndex]="0"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 20]"
+  aria-label="Select page">
+</mat-paginator>
+<!-- Nombre total d'éléments à paginer (longueur de la source de données) -->
+<!-- Index de la page affichée au démarrage (0 = première page) -->
+<!-- Nombre d'éléments affichés par page par défaut -->
+<!-- Options proposées à l'utilisateur pour changer la taille de page -->
+<!-- Texte d'accessibilité pour les lecteurs d'écran -->
