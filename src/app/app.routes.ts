@@ -6,7 +6,7 @@ import {EditProductComponent} from './pages/edit-product/edit-product.component'
 import {LoginComponent} from './pages/login/login.component';
 
 import {SettingsComponent} from './pages/settings/settings.component';
-import {BookingComponent} from './pages/rental/rental.component';
+import {RentalComponent} from './pages/rental/rental.component';
 import {EquipmentsComponent} from './pages/equipments/equipments.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {loggedGuard} from './services/logged.guard';
@@ -23,7 +23,7 @@ export const routes: Routes = [
 
     {path: "dashboard", component: DashboardComponent, canActivate:[ loggedGuard]},
     {path: "equipments", component: EquipmentsComponent},
-    {path: "booking", component: BookingComponent},
+    {path: "rental", component: RentalComponent},
     {path: "clients", component: ClientsComponent},
     {path: "team", component: TeamComponent},
     {path: "contact", component: ContactComponent },

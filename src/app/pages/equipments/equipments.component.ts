@@ -73,13 +73,8 @@ export class EquipmentsComponent implements OnInit {
                     new Date(result.startDate),
                     new Date(result.endDate)
                 ).subscribe({
-                    next: () => {
-                        // Affiche une confirmation
-                        alert('Location confirmée !');
-                    },
-                    error: () => {
-                        alert('Erreur lors de la location');
-                    }
+                    next: () => alert('Location confirmée !'),
+                    error: () => alert('Erreur lors de la location')
                 });
             }
         });

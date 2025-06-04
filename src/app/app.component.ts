@@ -44,16 +44,5 @@ export class AppComponent {
         this.auth.connected = false;
     }
 
-    toggleDarkMode() {
-        this.darkMode.update((v) => !v);
-        const isDark = this.darkMode();
-        const html = document.documentElement;
-        if (isDark) {
-            html.classList.add('dark-theme');
-            this.overlay.getContainerElement().classList.add('dark-theme');
-        } else {
-            html.classList.remove('dark-theme');
-            this.overlay.getContainerElement().classList.remove('dark-theme');
-        }
-    }
+
 }

@@ -1,10 +1,14 @@
-import {Component, computed, input, Input, signal} from '@angular/core';
+import {Component, computed, inject, input, Input, signal} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {MatLineModule} from '@angular/material/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
+import {AuthService} from '../../services/auth.service';
+import {OverlayContainer} from '@angular/cdk/overlay';
 
 export type MenuItem = {
     icon: string;
@@ -23,15 +27,42 @@ export type MenuItem = {
         RouterLink,
         RouterLinkActive,
         NgOptimizedImage,
+        MatIconButton,
+        MatTooltip,
     ],
     templateUrl: './custom-sidenav.component.html',
     styleUrl: './custom-sidenav.component.scss'
 })
 export class CustomSidenavComponent {
+
+
+    darkMode = signal(false);
+
+    auth = inject(AuthService);
+    overlay = inject(OverlayContainer);
+
         sideNavCollapsed = signal(false);
         @Input() set collapsed(val: boolean){
             this.sideNavCollapsed.set(val);
         }
+
+    toggleDarkMode() {
+        this.darkMode.update((v) => !v);
+        const isDark = this.darkMode();
+        const html = document.documentElement;
+        if (isDark) {
+            html.classList.add('dark-theme');
+            this.overlay.getContainerElement().classList.add('dark-theme');
+        } else {
+            html.classList.remove('dark-theme');
+            this.overlay.getContainerElement().classList.remove('dark-theme');
+        }
+    }
+
+    onSignOut() {
+        localStorage.removeItem("jwt");
+        this.auth.connected = false;
+    }
 
     menuItems = signal<MenuItem[]>([
         {
@@ -48,7 +79,7 @@ export class CustomSidenavComponent {
         {
             icon: "calendar-check.svg",
             label: "Réservations",
-            route: "booking",
+            route: "rental",
         },
         {
             icon: "users.svg",

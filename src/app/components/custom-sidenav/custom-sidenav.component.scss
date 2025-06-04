@@ -2,16 +2,17 @@
     transition: all 500ms ease-in-out;
 }
 
-
+.sidenav-logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .sidenav-header {
     padding-top: 24px;
     text-align: center;
 
-    > img {
-        border-radius: 100%;
-        object-fit: cover;
-        margin-bottom: 10px;
-    }
+
 
     .header-text {
         height: 3rem;
@@ -62,5 +63,13 @@
         position: absolute;
         left: 20px;
         top: 13%;
+    }
+}
+
+.profile-pic {
+    > img {
+        border-radius: 100%;
+        object-fit: cover;
+        margin-bottom: 10px;
     }
 }

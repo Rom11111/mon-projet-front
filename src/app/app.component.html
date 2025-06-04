@@ -1,38 +1,5 @@
 <div class="mat-app-background" style="min-height: 100vh;">
-    <mat-toolbar
-        *ngIf="auth.connected"
-        class="mat-elevation-z3 toolbar"
-        color="primary"
-    >
-        <div class="toolbar-left">
-            <button mat-icon-button (click)="collapsed.set(!collapsed())">
-                <mat-icon>menu</mat-icon>
-            </button>
-        </div>
 
-        <span class="toolbar-title">LocaTech</span>
-        <div class="toolbar-spacer"></div>
-
-        <div class="toolbar-right">
-            <!-- Toggle dark mode -->
-            <button
-                mat-icon-button
-                (click)="toggleDarkMode()"
-                [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'"
-            >
-                <mat-icon>{{ darkMode() ? 'dark_mode' : 'light_mode' }}</mat-icon>
-            </button>
-
-            <button
-                mat-icon-button
-                (click)="auth.signOut()"
-                matTooltip="Se déconnecter"
-                routerLink="/login"
-            >
-                <mat-icon>logout</mat-icon>
-            </button>
-        </div>
-    </mat-toolbar>
 
     <mat-sidenav-container>
         <mat-sidenav

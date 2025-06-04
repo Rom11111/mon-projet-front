@@ -1,8 +1,10 @@
+<div class="sidenav-logo" [class.hide-logo]="sideNavCollapsed()">
+    <h1>Logo</h1>
+</div>
 <div class="sidenav-header">
-    <img [width]="profilePicSize()" [height]="profilePicSize()" ngSrc="Photo-Rodriguez-Romain.png" alt=""/>
     <div class="header-text" [class.hide-header-text]="sideNavCollapsed()">
-        <h2>Mon Dashboard</h2>
-        <p>Romain</p>
+
+
     </div>
     <div class="menu-item-content">
         @for(item of menuItems(); track $index){
@@ -18,6 +20,29 @@
                 <span matListItemTitle *ngIf="!sideNavCollapsed()">{{ item.label }}</span>
             </a>
         }
+    </div>
+    <div>
+        <div class="profile-pic">
+            <img [width]="profilePicSize()" [height]="profilePicSize()" ngSrc="Photo-Rodriguez-Romain.png" alt=""/>
+        </div>
+        <p>Romain</p>
+        <div class="toolbar-right">
+            <!-- Toggle dark mode -->
+            <button
+                mat-icon-button
+                (click)="toggleDarkMode()"
+                [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'"
+            >
+                <mat-icon>{{ darkMode() ? 'dark_mode' : 'light_mode' }}</mat-icon>
+            </button>
+        <button
+            mat-icon-button
+            (click)="auth.signOut()"
+            matTooltip="Se déconnecter"
+            routerLink="/login"
+        >
+            <mat-icon>logout</mat-icon>
+        </button>
     </div>
 
 </div>
