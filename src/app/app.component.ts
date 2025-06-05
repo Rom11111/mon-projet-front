@@ -15,13 +15,11 @@ import {NgIf} from '@angular/common';
     standalone: true,
     imports: [
         RouterOutlet,
-        RouterLink,
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
         MatSidenavModule,
         CustomSidenavComponent,
-        MatTooltip,
         NgIf
     ],
     templateUrl: './app.component.html',

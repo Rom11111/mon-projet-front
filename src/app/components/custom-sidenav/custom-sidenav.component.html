@@ -1,26 +1,24 @@
-<div class="sidenav-logo" [class.hide-logo]="sideNavCollapsed()">
-    <h1>Logo</h1>
+<div class="sidenav-logo">
+    <img src="assets/images/altaTech.svg" alt="Alta Tech Logo">
 </div>
+
+
 <div class="sidenav-header">
-    <div class="header-text" [class.hide-header-text]="sideNavCollapsed()">
 
-
-    </div>
     <div class="menu-item-content">
         @for(item of menuItems(); track $index){
-            <a mat-list-item
+            <a class="menu-item"
                [routerLink]="item.route"
                routerLinkActive="selected-menu-item"
                #rla="routerLinkActive"
-               [activated]="rla.isActive">
-                <!-- Utilisation de mat-icon pour les SVG -->
-
+               [class.active]="rla.isActive">
                 <img ngSrc="assets/icons/{{item.icon}}" class="menu-icon" alt="" width="30" height="30" />
                 <!-- Texte de l'élément -->
-                <span matListItemTitle *ngIf="!sideNavCollapsed()">{{ item.label }}</span>
+                <span class="menu-label">{{ item.label }}</span>
             </a>
         }
     </div>
+
     <div>
         <div class="profile-pic">
             <img [width]="profilePicSize()" [height]="profilePicSize()" ngSrc="Photo-Rodriguez-Romain.png" alt=""/>
@@ -31,18 +29,22 @@
             <button
                 mat-icon-button
                 (click)="toggleDarkMode()"
-                [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'"
-            >
-                <mat-icon>{{ darkMode() ? 'dark_mode' : 'light_mode' }}</mat-icon>
+                [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'">
+                <img
+                    [src]="darkMode() ? 'assets/icons/sun.svg' : 'assets/icons/moon.svg'"
+                    alt="Icône de thème"
+                    class="theme-icon" />
             </button>
-        <button
-            mat-icon-button
-            (click)="auth.signOut()"
-            matTooltip="Se déconnecter"
-            routerLink="/login"
-        >
-            <mat-icon>logout</mat-icon>
-        </button>
+            <button
+                mat-icon-button
+                (click)="auth.signOut()"
+                matTooltip="Se déconnecter"
+                routerLink="/login">
+                <img
+                    src="assets/icons/logout.svg"
+                    alt="Déconnexion"
+                    class="theme-icon" />
+            </button>
+        </div>
     </div>
-
 </div>

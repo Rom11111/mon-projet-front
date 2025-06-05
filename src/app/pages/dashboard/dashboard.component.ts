@@ -18,6 +18,7 @@ import {
     query,
     stagger
 } from '@angular/animations';
+import {AuthService} from '../../services/auth.service';
 
 export interface Rental {
     id: number;
@@ -72,6 +73,9 @@ export interface Rental {
     ]
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+    // Nom de l'utilisateur pour le message de bienvenue
+    userName: string = '';
+
     // Stats du dashboard
     activeRentals = 0;
     availableEquipments = 0;
@@ -96,11 +100,24 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private dashboardService: DashboardService,
         private rentalService: RentalService,
-        private snackBar: MatSnackBar
-    ) {}
+        private snackBar: MatSnackBar,
+        public auth: AuthService
+
+) {}
 
     ngOnInit(): void {
-        // Récupérer les stats du dashboard
+
+        // Récupérer le nom de l'utilisateur depuis le service d'authentification
+        this.auth.getCurrentUser().subscribe(user => {
+            if (user) {
+                this.userName = user.firstName;
+            }
+        });
+
+
+
+
+// Récupérer les stats du dashboard
         this.dashboardService.getStats()
             .pipe(takeUntil(this.destroy$))
             .subscribe({

@@ -1,6 +1,6 @@
-<div class="mat-app-background" style="min-height: 100vh;">
 
 
+<div class="mat-app-background">
     <mat-sidenav-container>
         <mat-sidenav
             *ngIf="auth.connected"
@@ -8,7 +8,7 @@
             mode="side"
             [style.width]="sidenavWidth()"
         >
-            <app-custom-sidenav [collapsed]="collapsed()" />
+            <app-custom-sidenav [collapsed]="collapsed()"></app-custom-sidenav>
         </mat-sidenav>
 
         <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
@@ -16,3 +16,4 @@
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>
+

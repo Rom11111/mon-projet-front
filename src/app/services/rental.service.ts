@@ -9,7 +9,7 @@ import {environment} from '../../environments/environment';
     providedIn: 'root'
 })
 export class RentalService {
-    private apiUrl =  environment.serverUrl + '/api/rentals'; // adapte à ton backend
+    private apiUrl =  environment.serverUrl + 'rentals'; // adapte à ton backend
 
     constructor(private http: HttpClient) {}
 

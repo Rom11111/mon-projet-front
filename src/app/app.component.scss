@@ -1,66 +1,26 @@
-// ====================
-// Toolbar
-// ====================
-mat-toolbar {
-    position: relative;
-    z-index: 5;
-    background-color: #092f4c;
-}
 
-.toolbar {
-    position: relative; // Pour le centrage absolu du titre
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 
-    .toolbar-left,
-    .toolbar-right {
-        display: flex;
-        align-items: center;
-        z-index: 1; // Les boutons restent cliquables
-    }
-
-    .toolbar-title {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 1.5rem;
-        font-weight: 500;
-        text-align: center;
-        pointer-events: none; // Le titre ne bloque pas les clics
-        width: max-content;
-        z-index: 0;
-    }
-
-    .toolbar-spacer {
-        flex: 1 1 auto;
-    }
-
-    button {
-        color: white;
-    }
-}
 
 // ====================
 // Sidenav & Content
 // ====================
 mat-sidenav-container {
-    height: calc(100vh - 64px); // Adapter si ta toolbar fait une autre hauteur
+    height: 100vh; // Utilise 100% de la hauteur de la fenêtre
+    position: absolute; // Assure que le conteneur prend toute la hauteur disponible
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
-mat-sidenav,
-mat-sidenav-content {
-    transition: all 500ms ease-in-out;
-}
 
-.content {
-    padding: 24px;
-}
 
-// ====================
-// Page actuelle (désactivé pour l'instant)
-// ====================
-// .page-actuelle {
-//   color: red;
-// }
+
+
+ //====================
+ //Page actuelle (désactivé pour l'instant)
+ //====================
+ .page-actuelle {
+   color: red;
+ }
 
