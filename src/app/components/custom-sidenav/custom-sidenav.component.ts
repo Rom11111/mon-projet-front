@@ -5,7 +5,7 @@ import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MatIconButton} from '@angular/material/button';
+import {MatIconAnchor, MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
 import {AuthService} from '../../services/auth.service';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -29,6 +29,7 @@ export type MenuItem = {
         NgOptimizedImage,
         MatIconButton,
         MatTooltip,
+        MatIconAnchor,
     ],
     templateUrl: './custom-sidenav.component.html',
     styleUrl: './custom-sidenav.component.scss'
@@ -64,13 +65,13 @@ export class CustomSidenavComponent {
         this.auth.connected = false;
     }
 
-    menuItems = signal<MenuItem[]>([
+    // GROUPE 1 : Liens de navigation principaux
+    mainMenuItems = signal<MenuItem[]>([
         {
             icon: "layout-dashboard.svg",
             label: "Dashboard",
             route: "dashboard",
         },
-
         {
             icon: "monitor.svg",
             label: "Équipements",
@@ -86,26 +87,23 @@ export class CustomSidenavComponent {
             label: "Clients",
             route: "clients",
         },
+    ]);
 
+    // GROUPE 2 : Liens secondaires
+    secondaryMenuItems = signal<MenuItem[]>([
         {
             icon: "user-cog.svg",
             label: "Team",
             route: "team",
         },
-
         {
             icon: "message-square.svg",
             label: "Contact",
             route: "contact",
         },
-        {
-            icon: "settings.svg",
-            label: "Réglages",
-            route: "settings",
-        },
-
     ]);
 
-        tracksByIndex(index: number, item: MenuItem) {return index; }
+
+    tracksByIndex(index: number, item: MenuItem) {return index; }
     profilePicSize = computed(() => this.sideNavCollapsed() ? '32' : '100');
 }

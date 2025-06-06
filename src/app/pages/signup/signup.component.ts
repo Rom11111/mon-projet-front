@@ -1,60 +1,73 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
-import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../services/notification.service';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-login',
+    selector: 'app-signup',
+    standalone: true,
     imports: [
+        CommonModule,
+        RouterModule,
         ReactiveFormsModule,
-        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatButtonModule,
-        MatInputModule
+        MatIconModule
     ],
     templateUrl: './signup.component.html',
-    styleUrl: './signup.component.scss'
+    styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent {
+    private fb = inject(FormBuilder);
+    private router = inject(Router);
+    private authService = inject(AuthService);
 
-    formBuilder = inject(FormBuilder)
-    http = inject(HttpClient)
-    notification = inject(NotificationService)
-    auth = inject(AuthService)
-    router = inject (Router)
+    public form: FormGroup;
+    public onError = '';
 
-    form = this.formBuilder.group({
-        email: ["z@z.com", [Validators.required, Validators.email]],
-        password: ["root", [Validators.required]],
+    constructor() {
+        this.form = this.fb.group({
+            firstName: ['', [Validators.required]],
+            lastName: ['', [Validators.required]],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(8)]],
+            confirmPassword: ['', [Validators.required]]
+        }, {
+            validators: this.passwordsMatchValidator
+        });
+    }
 
+    passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+        const password = control.get('password')?.value;
+        const confirmPassword = control.get('confirmPassword')?.value;
+        return password === confirmPassword ? null : { mismatch: true };
+    }
 
-    })
-
-    onLogin() {
-        if (this.form.valid) {
-
-            this.http
-                .post(
-                    "environment.serveUrl +signup",
-                    this.form.value,)
-                .subscribe({
-                    next : jwt => {
-                        this.auth.connected = true // à revoir
-                        this.router.navigateByUrl("/login")
-                        this.notification.show("Un lien de confirmation vous a été envoyé sur l'adresse email que vous avez fourni," +
-                        "cliquez sur ce lien avant de vous connecter","warning")
-                    }, // stock sur le navigateur
-                    error : error => {
-                        if(error.status === 409) {
-                            //reçois des erreurs à partir de 300
-                            this.notification.show("Cet email est déjà utilisé", "error")
-                        }
-
-                    }
-                })
+    submit() {
+        if (this.form.invalid) {
+            return;
         }
+        // On ne garde que les champs nécessaires pour l'API
+        const { firstName, lastName, email, password } = this.form.value;
+
+        this.authService.register({ firstName, lastName, email, password }).subscribe({
+            next: () => {
+                // Redirection vers la page de login après une inscription réussie
+                this.router.navigate(['/login']);
+            },
+            error: (err) => {
+                // Gestion des erreurs (par exemple, si l'email existe déjà)
+                this.onError = 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.';
+                console.error(err);
+            }
+        });
     }
 }

@@ -3,131 +3,118 @@
     flex-direction: column;
     height: 100%;
     background-color: #2c2626;
+    transition: width 300ms ease-in-out;
 }
 
-:host * {
-    transition: all 500ms ease-in-out;
-}
-
-.sidenav-logo {
+.sidenav-container {
     display: flex;
-    justify-content: center;
-
-    img {
-        max-width: 100%;
-        height: auto;
-        width: 300px;
-    }
+    flex-direction: column;
+    height: 100%;
 }
 
 .sidenav-header {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding-top: 24px;
+    padding: 16px;
     text-align: center;
-    overflow: hidden;
+    img {
+        max-width: 100%;
+        height: auto;
+        width: 180px;
+    }
 }
 
-.menu-item-content {
-    flex: 1;
+.sidenav-nav {
+    flex-grow: 1;
     overflow-y: auto;
+    padding-top: 16px;
 
     .menu-item {
         position: relative;
         display: flex;
-        flex-direction: row;
-        align-items: center;  // Changé de align-content à align-items
-        justify-content: flex-start;  // Changé pour aligner le contenu à gauche
-        padding: 10px 0;
-        color: white;  // Ajouté pour la couleur du texte
-        text-decoration: none;  // Supprime le soulignement des liens
-        padding-left: 60px;  // Espace pour l'icône
+        align-items: center;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        gap: 16px;
 
         &:hover {
-            background: rgba(255, 255, 255, 0.05);  // Effet de survol léger
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        &.active {
+        &.selected-menu-item {
             border-left: 3px solid #cccccc;
             background: rgba(0, 0, 0, 0.1);
         }
     }
 
-    img {
-        position: absolute;
-        left: 20px;
-        top: 50%;  // Centrer verticalement
-        transform: translateY(-50%);  // Correction pour un centrage parfait
+    .menu-divider {
+        margin: 16px 24px;
+        border-color: rgba(255, 255, 255, 0.1);
     }
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('/assets/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype-variations');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-}
-
-.theme-icon {
-    width: 30px;
-    height: 30px;
-    filter: brightness(0) invert(100%);
 }
 
 .menu-label {
     font-family: 'Inter', sans-serif;
     font-weight: 500;
     font-size: 14px;
-    letter-spacing: -0.01em;
-    color: white;  // Ajouté pour s'assurer que le texte est visible sur le fond sombre
+    color: white;
 }
 
 .menu-icon {
-    filter: brightness(0) invert(100%);
-    fill: currentColor;
-    display: inline-block;
+    filter: brightness(0) invert(1);
+    flex-shrink: 0; // Empêche l'icône de se réduire
 }
 
-.selected-menu-item {
-    border-left: 3px solid #cccccc !important;  // Important pour s'assurer qu'il surpasse d'autres styles
-    background: rgba(0, 0, 0, 0.1) !important;
-}
+.sidenav-footer {
+    padding: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 
-.profile-pic {
-    margin-top: auto;
-    padding-bottom: 16px;
+    .profile-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
 
-    > img {
-        border-radius: 100%;
-        object-fit: cover;
-        margin-bottom: 10px;
+        .profile-pic img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-info p {
+            margin: 0;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap; // Empêche le texte de passer à la ligne
+        }
+    }
+
+    .actions-section {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
     }
 }
 
-.toolbar-right {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 16px;
-}
-
-// Style pour le bouton d'icône sans Material
-.icon-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border-radius: 50%;
-
-    &:hover {
-        background: rgba(255, 255, 255, 0.1);
+// Styles pour le mode réduit
+:host.collapsed {
+    .sidenav-header {
+        justify-content: center;
     }
-
-    &:active {
-        background: rgba(255, 255, 255, 0.2);
+    .menu-item {
+        justify-content: center;
+        padding: 12px 0;
+    }
+    .sidenav-footer {
+        .profile-section {
+            justify-content: center;
+        }
+        .actions-section {
+            flex-direction: column;
+            gap: 8px;
+        }
     }
 }
