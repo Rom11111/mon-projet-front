@@ -177,3 +177,11 @@
     color: #aaa;
     border-radius: 5px;
 }
+
+.signup-container {
+    background-image: url('/assets/images/login-signup-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}

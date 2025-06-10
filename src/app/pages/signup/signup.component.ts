@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
     selector: 'app-signup',
@@ -63,11 +64,17 @@ export class SignupComponent {
                 // Redirection vers la page de login après une inscription réussie
                 this.router.navigate(['/login']);
             },
-            error: (err) => {
-                // Gestion des erreurs (par exemple, si l'email existe déjà)
-                this.onError = 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.';
+            error: (err: HttpErrorResponse) => {
+                if (err.status === 409) {
+                    this.onError = 'Cet email est déjà utilisé. Veuillez en choisir un autre.';
+                } else if (err.status === 400) {
+                    this.onError = 'Les données fournies sont invalides. Veuillez vérifier vos informations.';
+                } else {
+                    this.onError = 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.';
+                }
                 console.error(err);
             }
+
         });
     }
 }

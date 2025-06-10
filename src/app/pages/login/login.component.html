@@ -1,19 +1,20 @@
+<div class="login-container">
 
-
-
-
-<div class="login-box">
+    <div class="login-box">
+        <div class="logo-container">
+            <img src="assets/images/altaTech.svg" alt="Logo de l'entreprise" class="login-logo">
+        </div>
         <p>Login</p>
         <form [formGroup]="form" (ngSubmit)="onLogin()">
-                <div class="user-box">
-                    <input formControlName="email"  matInput>
-                    <label>Email</label>
-                    @if (form.get('email')?.hasError('required')) {
-                        <span>L'email est requis</span>
-                    } @else if (form.get('email')?.hasError('email')) {
-                        <span>Le format est invalide</span>
-                    }
-                </div>
+            <div class="user-box">
+                <input formControlName="email" matInput>
+                <label>Email</label>
+                @if (form.get('email')?.hasError('required')) {
+                    <span>L'email est requis</span>
+                } @else if (form.get('email')?.hasError('email')) {
+                    <span>Le format est invalide</span>
+                }
+            </div>
 
 
             <div class="user-box">
@@ -26,3 +27,4 @@
         </form>
         <p>Vous n'avez pas de compte ? <a href="" class="a2">S'enregistrer</a></p>
     </div>
+</div>

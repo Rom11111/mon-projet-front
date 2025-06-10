@@ -24,7 +24,7 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { ClientService } from '../../services/clients.service';
-import { Client } from '../../models/client';
+import { Client } from '../../models/user';
 import { ClientDetailsDialogComponent } from './client-details-dialog.component';
 
 @Component({

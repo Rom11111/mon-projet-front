@@ -10,10 +10,12 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ClientService } from '../../services/clients.service';
-import { Client } from '../../models/client';
+
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {NgForOf} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
+import {Client} from '../../models/client';
 
 @Component({
     selector: 'app-team',
@@ -37,7 +39,8 @@ import {NgForOf} from '@angular/common';
         MatSelect,
         MatOption,
         NgForOf,
-        MatLabel
+        MatLabel,
+        MatIcon
     ],
     styleUrls: ['./team.component.scss']
 })

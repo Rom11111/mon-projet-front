@@ -1,5 +1,5 @@
-type Label = {
-    id : number,
-    name : string,
-    color : string,
-}
+// type Label = {
+//     id : number,
+//     name : string,
+//     color : string,
+// }

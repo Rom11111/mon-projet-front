@@ -1,19 +1,19 @@
 
 
-<div class="mat-app-background">
-    <mat-sidenav-container>
-        <mat-sidenav
-            *ngIf="auth.connected"
-            opened
-            mode="side"
-            [style.width]="sidenavWidth()"
-        >
-            <app-custom-sidenav [collapsed]="collapsed()"></app-custom-sidenav>
-        </mat-sidenav>
 
-        <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
-            <router-outlet></router-outlet>
-        </mat-sidenav-content>
-    </mat-sidenav-container>
-</div>
+<mat-sidenav-container class="mat-app-background">
+    <mat-sidenav
+        *ngIf="auth.connected"
+        opened
+        mode="side"
+        [style.width]="sidenavWidth()"
+    >
+        <app-custom-sidenav [collapsed]="collapsed()"></app-custom-sidenav>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
 

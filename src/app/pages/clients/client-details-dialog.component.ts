@@ -8,7 +8,7 @@ import {
 } from '@angular/material/dialog';
 
 import {MatButton} from '@angular/material/button';
-import {Client} from '../../models/client';
+import {Client} from '../../models/user';
 
 
 @Component({
