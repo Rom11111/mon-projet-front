@@ -1,4 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="onAddProduct()">
+<div class="form-container">
+  <form [formGroup]="form" (ngSubmit)="onAddProduct()">
 
     <!-- Conteneur du champ de formulaire avec Angular Material -->
 <mat-form-field>
@@ -47,14 +48,14 @@
     </mat-select>
 </mat-form-field>
 
-<mat-form-field>
-    <mat-label>Labels</mat-label>
-    <mat-select formControlName="labelList" multiple [compareWith]="compareId">
-        @for (label of labels; track $index) {
-            <mat-option [value]="label">{{label.name}}</mat-option>
-        }
-    </mat-select>
-</mat-form-field>
+<!--<mat-form-field>-->
+<!--    <mat-label>Labels</mat-label>-->
+<!--    <mat-select formControlName="labelList" multiple [compareWith]="compareId">-->
+<!--        @for (label of labels; track $index) {-->
+<!--            <mat-option [value]="label">{{label.name}}</mat-option>-->
+<!--        }-->
+<!--    </mat-select>-->
+<!--</mat-form-field>-->
 
 <app-file-chooser (selected)="onPhotoSelected($event)"></app-file-chooser>
 
@@ -65,3 +66,4 @@
 
 
 </form>
+</div>

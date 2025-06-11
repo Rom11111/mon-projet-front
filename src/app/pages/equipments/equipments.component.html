@@ -1,5 +1,5 @@
 <div class="row">
-    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
+    @if (auth.role == UserRole.TECH || auth.role == UserRole.ADMIN) {
         <div class="col-12 mt-3">
             <button mat-raised-button routerLink="/ajout-produit">
                 Ajouter un produit
@@ -27,11 +27,11 @@
                     <p *ngIf="!product.available" class="text-danger">Indisponible à la location</p>
                 </mat-card-content>
                 <mat-card-actions>
-                    @if (auth.role == "ROLE_TECH" || auth.role == "ROLE_ADMIN") {
+                    @if (auth.role == UserRole.TECH || auth.role == UserRole.ADMIN) {
                         <button mat-button [routerLink]="['/modifier-produit', product.id]">Edit</button>
                         <button mat-button>Delete</button>
                     }
-                    @if (auth.role == "ROLE_CLIENT") {
+                    @if (auth.role == UserRole.CLIENT) {
                     <button mat-button color="primary"
                             (click)="openRentalDialog(product)"
                             [disabled]="!product.available">

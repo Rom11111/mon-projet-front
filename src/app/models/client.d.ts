@@ -1,4 +1,4 @@
-import { User } from './user.model';
+import { User } from './user';
 
 export interface Client extends User {
     company: string;

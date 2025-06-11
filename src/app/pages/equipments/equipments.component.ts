@@ -19,6 +19,7 @@ import {ImgSecuredDirective} from '../../components/img-secured/img-secured.dire
 import {ProductService} from '../../services/crud/product.service';
 import {environment} from '../../../environments/environment';
 import {MatIconModule} from '@angular/material/icon';
+import {UserRole} from '../../models/userRole.enum';
 
 
 @Component({
@@ -80,5 +81,6 @@ export class EquipmentsComponent implements OnInit {
         });
     }
 
+    protected readonly UserRole = UserRole;
 }
 

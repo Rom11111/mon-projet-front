@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // Récupérer le nom de l'utilisateur depuis le service d'authentification
         this.auth.getCurrentUser().subscribe(user => {
             if (user) {
-                this.userName = user.firstName;
+                this.userName = user.firstname;
             }
         });
 

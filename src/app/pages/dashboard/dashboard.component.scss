@@ -3,8 +3,12 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
+    background-color: #101010;
 }
 
+.welcome-message {
+    color: #f25c05;
+}
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -45,30 +49,31 @@
 
 // Couleurs inspirées de DashboardPack
 .success {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    background: #232323;
 }
 
 .primary {
-    background: linear-gradient(135deg, #3f51b5 0%, #5a55ae 100%);
+    background: #232323;
 }
 
 .warning {
-    background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+    background: #232323;
 }
 
 .danger {
-    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    background: #232323;
 }
 
 .accent {
-    background: linear-gradient(135deg, #b721ff 0%, #21d4fd 100%);
+    background: #232323;
 }
 
 .table-card {
     padding: 24px;
-    background-color: #fff;
+    background: #232323;
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+
 
     h3 {
         margin-bottom: 16px;

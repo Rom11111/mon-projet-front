@@ -6,9 +6,11 @@ import {Router} from '@angular/router';
 
 
 // Importez les interfaces depuis votre fichier auth.d.ts
-import '../models/auth.d.ts';
+
 import {Auth} from '../models/auth';
-import {User, UserRole} from '../models/user.js';
+import {UserRole} from '../models/userRole.enum';
+import {User} from '../models/user';
+
 
 @Injectable({
     providedIn: 'root'
@@ -66,7 +68,7 @@ export class AuthService {
     /**
      * Décode le JWT et met à jour l'état de l'utilisateur
      */
-    private decodeJwt(jwt: string): void {
+    public decodeJwt(jwt: string): void {
         localStorage.setItem("jwt", jwt);
 
         try {
@@ -200,11 +202,11 @@ export class AuthService {
 
         try {
             switch (this.role) {
-                case 'ADMIN':
+                case UserRole.ADMIN:
                     return await this.router.navigate(['/admin']);
-                case 'TECH':
+                case UserRole.TECH:
                     return await this.router.navigate(['/tech']);
-                case 'CLIENT':
+                case UserRole.CLIENT:
                     return await this.router.navigate(['/client']);
                 default:
                     return await this.router.navigate(['/login']);

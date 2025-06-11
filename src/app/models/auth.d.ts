@@ -14,8 +14,8 @@ declare namespace Auth {
      * Données pour l'inscription
      */
     interface RegistrationData {
-        firstname: string;
-        lastname: string;
+        firstName: string;
+        lastName: string;
         email: string;
         password: string;
         role?: UserRole;  // Optionnel si un rôle par défaut est attribué par l'API

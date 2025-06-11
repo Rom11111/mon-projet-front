@@ -39,11 +39,11 @@ export class EditProductComponent implements OnInit{
         price: [15.99, [Validators.required, Validators.min(0.1)]],
         // Validators.min(0.1) le prix doit être d'au moins 10 centimes.
         etat: [{id: 1}],
-        labels: [[] as Label[]],
+        // labels: [[] as Label[]],
     })
 
     etats: Etat[] = []
-    labels: Label[] = []
+    // labels: Label[] = []
     editedProduct: Product | null = null;
 
 
@@ -63,12 +63,12 @@ export class EditProductComponent implements OnInit{
                 }
             })
 
-        this.http
-            .get<Label[]>("environment.serverUrl +/etats")
-            .subscribe(etats => this.etats = etats)
-        this.http
-            .get<Label[]>("environment.serverUrl +/labels")
-            .subscribe(labels => this.labels = labels)
+        // this.http
+        //     .get<Label[]>("environment.serverUrl +/etats")
+        //     .subscribe(etats => this.etats = etats)
+        // this.http
+        //     .get<Label[]>("environment.serverUrl +/labels")
+        //     .subscribe(labels => this.labels = labels)
 
     }
 

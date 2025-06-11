@@ -22,10 +22,11 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-
 import { ClientService } from '../../services/clients.service';
-import { Client } from '../../models/user';
 import { ClientDetailsDialogComponent } from './client-details-dialog.component';
+import {Client} from '../../models/client';
+import {UserRole} from '../../models/userRole.enum';
+
 
 @Component({
     selector: 'app-clients',
@@ -131,7 +132,7 @@ export class ClientsComponent implements OnInit {
 
     private loadClients(): void {
         this.clientService.getClients().subscribe((data: Client[]) => {
-            this.dataSource.data = data.filter(c => c.role === 'CLIENT');
+            this.dataSource.data = data.filter(c => c.role === UserRole.CLIENT);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         });

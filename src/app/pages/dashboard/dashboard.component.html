@@ -1,8 +1,9 @@
-<div class="welcome-message">
-    <h2>Bienvenue, {{ userName }} !</h2>
-</div>
+
 
 <div class="dashboard-container" [@staggerCards]>
+    <div class="welcome-message">
+        <h2>Bienvenue, {{ userName || 'Utilisateur' }} !</h2>
+    </div>
     <div class="stats-grid">
         <mat-card class="stat-card success" [@fadeSlideIn]>
             <mat-icon>assignment</mat-icon>

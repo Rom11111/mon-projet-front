@@ -59,7 +59,7 @@ export class SignupComponent {
         // On ne garde que les champs nécessaires pour l'API
         const { firstName, lastName, email, password } = this.form.value;
 
-        this.authService.register({ firstName, lastName, email, password }).subscribe({
+        this.authService.register({firstName, lastName, email, password }).subscribe({
             next: () => {
                 // Redirection vers la page de login après une inscription réussie
                 this.router.navigate(['/login']);

@@ -16,6 +16,8 @@ import {MatOption, MatSelect} from '@angular/material/select';
 import {NgForOf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {Client} from '../../models/client';
+import {UserRole} from '../../models/userRole.enum';
+
 
 @Component({
     selector: 'app-team',
@@ -58,7 +60,7 @@ export class TeamComponent implements OnInit {
     ngOnInit() {
         this.clientService.getClients().subscribe((data: Client[]) => {
             // Filtrer uniquement les admins et techs
-            this.dataSource.data = data.filter(c => c.role === 'ADMIN' || c.role === 'TECH');
+            this.dataSource.data = data.filter(c => c.role === UserRole.ADMIN || c.role === UserRole.TECH);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
             // Ajoute un filtre personnalisé pour la catégorie
