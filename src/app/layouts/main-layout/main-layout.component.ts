@@ -3,12 +3,13 @@ import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {MatLineModule} from '@angular/material/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
-import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatIconAnchor, MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
 import {AuthService} from '../../services/auth.service';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {MatSidenavContent} from '@angular/material/sidenav';
 
 export type MenuItem = {
     icon: string;
@@ -30,11 +31,13 @@ export type MenuItem = {
         MatIconButton,
         MatTooltip,
         MatIconAnchor,
+        RouterOutlet,
+        MatSidenavContent,
     ],
-    templateUrl: './admin-layout.component.scss',
-    styleUrl: './admin-layout.component.scss'
+    templateUrl: './main-layout.component.html',
+    styleUrl: './main-layout.component.scss'
 })
-export class AdminLayoutComponent {
+export class MainLayoutComponent {
 
 
     darkMode = signal(false);

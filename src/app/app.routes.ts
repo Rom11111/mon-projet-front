@@ -13,37 +13,53 @@ import {EmailValidationComponent} from './pages/email-validation/email-validatio
 import {SignupComponent} from './pages/signup/signup.component';
 import {ContactComponent} from './pages/contact/contact.component';
 import {TeamComponent} from './pages/team/team.component';
+import {LoginLayoutComponent} from './layouts/login-layout/login-layout.component';
+import {MainLayoutComponent} from './layouts/main-layout/main-layout.component';
 
 export const routes: Routes = [
     // Routes d'authentification
-    {
-        path: "login",
-        component: LoginComponent,
-        canActivate: [notLoggedGuard], // Optionnel: empêcher les utilisateurs déjà connectés d'accéder à la page de connexion
-        data: { title: 'Connexion' } // Utile pour le titre de la page
-    },
-    {
-        path: "signup",
-        component: SignupComponent,
-        canActivate: [notLoggedGuard], // Optionnel: empêcher les utilisateurs déjà connectés d'accéder à la page d'inscription
-        data: { title: 'Inscription' } // Utile pour le titre de la page
-    },
+        {
+            path: '',
+            component: LoginLayoutComponent,
+            children: [
+        {
+            path: "login",
+            component: LoginComponent,
+            canActivate: [notLoggedGuard], // Optionnel: empêcher les utilisateurs déjà connectés d'accéder à la page de connexion
+            data: { title: 'Connexion' } // Utile pour le titre de la page
+        },
+        {
+            path: 'validate-mail/:token',
+            component: EmailValidationComponent
+        },
+        {
+            path: "signup",
+            component: SignupComponent,
+            canActivate: [notLoggedGuard], // Optionnel: empêcher les utilisateurs déjà connectés d'accéder à la page d'inscription
+            data: { title: 'Inscription' } // Utile pour le titre de la page
+        }
+    ]
+},
 
-    // Routes protégées (nécessitent une connexion)
-    {path: "dashboard", component: DashboardComponent, canActivate:[loggedGuard]},
-    {path: "equipments", component: EquipmentsComponent},
-    {path: "rental", component: RentalComponent},
-    {path: "clients", component: ClientsComponent},
-    {path: "team", component: TeamComponent},
-    {path: "contact", component: ContactComponent},
-    {path: "settings", component: SettingsComponent},
-
-    // Autres routes
-    {path: "validate-mail/:token", component: EmailValidationComponent},
-    {path: "ajout-produit", component: EditProductComponent},
-    {path: "modifier-produit/:id", component: EditProductComponent},
-    {path: "", redirectTo: "dashboard", pathMatch: "full"},
+    // Layout principal (protégé)
+    {
+        path: '',
+        component: MainLayoutComponent,
+        canActivate: [loggedGuard], // Protection globale
+        children: [
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'equipments', component: EquipmentsComponent },
+            { path: 'rental', component: RentalComponent },
+            { path: 'clients', component: ClientsComponent },
+            { path: 'team', component: TeamComponent },
+            { path: 'contact', component: ContactComponent },
+            { path: 'settings', component: SettingsComponent },
+            { path: 'ajout-produit', component: EditProductComponent },
+            { path: 'modifier-produit/:id', component: EditProductComponent },
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+        ]
+    },
 
     // Route 404 - doit toujours être la dernière
-    {path: "**", component: Page404Component},
+    { path: '**', component: Page404Component }
 ];
