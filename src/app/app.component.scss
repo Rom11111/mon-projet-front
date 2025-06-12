@@ -1,26 +1,26 @@
 
 
 
-// ====================
-// Sidenav & Content
-// ====================
-mat-sidenav-container {
-    height: 100vh; // Utilise 100% de la hauteur de la fenêtre
-    position: absolute; // Assure que le conteneur prend toute la hauteur disponible
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-
-
-
-
- //====================
- //Page actuelle (désactivé pour l'instant)
- //====================
- .page-actuelle {
-   color: red;
- }
+//// ====================
+//// Sidenav & Content
+//// ====================
+//mat-sidenav-container {
+//    height: 100vh; // Utilise 100% de la hauteur de la fenêtre
+//    position: absolute; // Assure que le conteneur prend toute la hauteur disponible
+//    top: 0;
+//    bottom: 0;
+//    left: 0;
+//    right: 0;
+//}
+//
+//
+//
+//
+//
+// //====================
+// //Page actuelle (désactivé pour l'instant)
+// //====================
+// .page-actuelle {
+//   color: red;
+// }
 

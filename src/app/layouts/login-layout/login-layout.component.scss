@@ -1,0 +1,26 @@
+.login-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #f5f5f5;
+
+    .login-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+
+        .logo {
+            margin-bottom: 2rem;
+
+            img {
+                width: 150px;
+                height: auto;
+            }
+        }
+    }
+}

@@ -4,23 +4,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CustomSidenavComponent } from './components/custom-sidenav/custom-sidenav.component';
 import { AuthService } from './services/auth.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {NgIf} from '@angular/common';
+import {MainLayoutComponent} from './layouts/main-layout/main-layout.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     imports: [
-        RouterOutlet,
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
         MatSidenavModule,
-        CustomSidenavComponent,
-        NgIf
+        MainLayoutComponent,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

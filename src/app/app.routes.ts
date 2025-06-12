@@ -22,24 +22,29 @@ export const routes: Routes = [
             path: '',
             component: LoginLayoutComponent,
             children: [
-        {
-            path: "login",
-            component: LoginComponent,
-            canActivate: [notLoggedGuard], // Optionnel: empêcher les utilisateurs déjà connectés d'accéder à la page de connexion
-            data: { title: 'Connexion' } // Utile pour le titre de la page
+                {
+                    path: 'login',
+                    component: LoginComponent,
+                    canActivate: [notLoggedGuard],
+                    data: { title: 'Connexion' }
+                },
+                {
+                    path: 'signup',
+                    component: SignupComponent,
+                    canActivate: [notLoggedGuard],
+                    data: { title: 'Inscription' }
+                },
+                {
+                    path: 'validate-mail/:token',
+                    component: EmailValidationComponent
+                },
+                {
+                    path: '',
+                    redirectTo: 'login',
+                    pathMatch: 'full'
+                }
+            ]
         },
-        {
-            path: 'validate-mail/:token',
-            component: EmailValidationComponent
-        },
-        {
-            path: "signup",
-            component: SignupComponent,
-            canActivate: [notLoggedGuard], // Optionnel: empêcher les utilisateurs déjà connectés d'accéder à la page d'inscription
-            data: { title: 'Inscription' } // Utile pour le titre de la page
-        }
-    ]
-},
 
     // Layout principal (protégé)
     {

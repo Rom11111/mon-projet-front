@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, Input, signal} from '@angular/core';
+import {Component, computed, inject, Input, signal} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {MatLineModule} from '@angular/material/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
@@ -9,17 +9,16 @@ import {MatIconAnchor, MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
 import {AuthService} from '../../services/auth.service';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {MatSidenavContent} from '@angular/material/sidenav';
+import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
 
 export type MenuItem = {
     icon: string;
     label: string;
     route?:string;
 }
-
 @Component({
-    // standalone: true,
-    selector: 'app-custom-sidenav',
+    standalone: true,
+    selector: 'app-main-layout',
     imports: [
         CommonModule,
         MatLineModule,
@@ -33,6 +32,8 @@ export type MenuItem = {
         MatIconAnchor,
         RouterOutlet,
         MatSidenavContent,
+        MatSidenavContainer,
+        MatSidenav,
     ],
     templateUrl: './main-layout.component.html',
     styleUrl: './main-layout.component.scss'
