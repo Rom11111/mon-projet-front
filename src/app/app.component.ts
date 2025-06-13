@@ -18,6 +18,7 @@ import {MainLayoutComponent} from './layouts/main-layout/main-layout.component';
         MatIconModule,
         MatSidenavModule,
         MainLayoutComponent,
+        RouterOutlet,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
