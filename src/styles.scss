@@ -1,45 +1,96 @@
 @use '@angular/material' as mat;
+@use '@angular/material/core' as mat-core;
 
-body {
-    font-family: 'Inter', sans-serif;
-    // Autres styles globaux
-}
-:root {
-    --font-family: 'Inter', sans-serif;
-    --font-light: 300;
-    --font-regular: 400;
-    --font-medium: 500;
-    --font-semibold: 600;
-    --font-bold: 700;
-}
 
-html {
-    @include mat.theme(
-                (
-    color: mat.$azure-palette,
-            typography: Roboto,
-        )
-    );
-}
+$custom-typography: mat-core.define-typography-config(
+    $font-family: 'Inter, sans-serif'
+);
 
+
+@include angular-material-typography($custom-typography);
+
+
+// ========================================================
+// Étape 1 : Définir les bases de la palette de couleurs
+// ========================================================
+
+// Définir le schéma de couleurs clair
+$light-color-scheme: mat.define-color-scheme((
+  primary: mat.palette(tokens.$indigo),
+  secondary: mat.palette(tokens.$pink),
+  error: mat.palette(tokens.$red),
+));
+
+// Définir le schéma de couleurs sombre
+$dark-color-scheme: mat.define-color-scheme((
+  primary: mat.palette(tokens.$indigo),
+  secondary: mat.palette(tokens.$pink),
+  error: mat.palette(tokens.$red),
+  background: (
+    background: mat.get-color-from-palette(tokens.$grey, 900),
+    surface: mat.get-color-from-palette(tokens.$grey, 800),
+  ),
+  foreground: tokens.$dark-theme-foreground,
+));
+
+// ========================================================
+// Étape 2 : Créer les thèmes utilisant les schémas de couleurs
+// ========================================================
+
+// Créer le thème clair en utilisant la palette et le schéma clair
+$light-theme: mat.define-theme((
+  color: $light-color-scheme,
+  typography: mat.define-typography-config(), // Typographie par défaut
+));
+
+// Créer le thème sombre en utilisant la palette et le schéma sombre
+$dark-theme: mat.define-theme((
+  color: $dark-color-scheme,
+  typography: mat.define-typography-config(), // Typographie par défaut
+));
+
+// ========================================================
+// Étape 3 : Appliquer les thèmes aux composants
+// ========================================================
+
+// Appliquer le thème clair à tous les composants (par défaut)
+@include mat.all-component-themes($light-theme);
+
+// Appliquer les couleurs du thème sombre lorsqu'une classe `.darkMode` est présente
 .darkMode {
-    @include  mat.theme(
-        (
-            color : (
-            primary: mat.$azure-palette,
-                theme-type: dark,
-            ),
-        )
-    );
+  @include mat.all-component-colors($dark-theme);
+}
+
+// ========================================================
+// Étape 4 : Styles globaux
+// ========================================================
+
+// Styles généraux pour le HTML et le body
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+// Configuration des tailles et des polices avec des variables CSS
+:root {
+  --font-family: 'Inter', sans-serif;
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 
 @font-face {
-    font-family: 'Inter';
-    src: url('/assets/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype-variations');
-    font-weight: 100 900; /* Plage complète des poids disponibles */
-    font-style: normal;
-    font-display: swap; /* Améliore le chargement de la page */
+  font-family: 'Inter';
+  src: url('/assets/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
 }
-
-
-
