@@ -36,7 +36,8 @@ export type MenuItem = {
         MatSidenav,
     ],
     templateUrl: './main-layout.component.html',
-    styleUrl: './main-layout.component.scss'
+    styleUrls: ['./main-layout.component.scss']
+
 })
 export class MainLayoutComponent {
 
@@ -110,3 +111,17 @@ export class MainLayoutComponent {
     tracksByIndex(index: number, item: MenuItem) {return index; }
     profilePicSize = computed(() => this.sideNavCollapsed() ? '32' : '100');
 }
+// collapsed = signal(false);
+// darkMode = signal(false);
+//
+// auth = inject(AuthService);
+// overlay = inject(OverlayContainer);
+//
+// sidenavWidth = computed(() =>
+//     this.auth.connected ? (this.collapsed() ? "65px" : "250px") : "0px"
+// );
+//
+// onSignOut() {
+//     localStorage.removeItem("jwt");
+//     this.auth.connected = false;
+// }
