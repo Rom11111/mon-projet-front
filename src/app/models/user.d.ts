@@ -1,4 +1,4 @@
-import { UserRole } from './userRole.enum';
+import { Role } from './Role.enum';
 
 export interface User {
     id: number;
@@ -6,13 +6,17 @@ export interface User {
     lastname: string;
     email: string;
     password: string; // Seulement pour l'authentification, pas pour l'affichage
-    role: UserRole;
+    role: Role;
     photoUrl?: string;
-    status: 'Active' | 'Inactive';
+    userStatus: 'Active' | 'Inactive';
     createdAt?: Date;
     updatedAt?: Date;
-
+    company: string;
+    companyAddress: string;
+    phone: string;
+    emailVerificationToken?: string;
 }
+
 
 
 

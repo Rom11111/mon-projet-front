@@ -1,37 +1,38 @@
-import {Injectable} from '@angular/core';
-import {Observable, of, throwError, BehaviorSubject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {catchError, map, tap} from 'rxjs/operators';
-import {Router} from '@angular/router';
-
-
-// Importez les interfaces depuis votre fichier auth.d.ts
-
-import {Auth} from '../models/auth';
-import {UserRole} from '../models/userRole.enum';
-import {User} from '../models/user';
-
+import { Injectable } from '@angular/core';
+import { Observable, of, throwError, BehaviorSubject, timeout } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Auth } from '../models/auth';
+import { Role } from '../models/Role.enum';
+import { User } from '../models/user';
+import {environment} from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-
-    // BehaviorSubject pour stocker l'utilisateur courant
     private currentUserSubject = new BehaviorSubject<User | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();
 
     connected = false;
-    role: UserRole | null = null;
-    private apiUrl = 'api/auth';
+    role: Role | null = null;
+    private apiUrl = `${environment.serverUrl}/api/auth`;
+
 
     constructor(
         private http: HttpClient,
         private router: Router
     ) {
-        // Initialise l'état de l'authentification
+        // Vérification supplémentaire pour la production
+        if (environment.production) {
+            // Désactive les console.log en production
+            console.log = () => {};
+            console.error = () => {};
+        }
+
         const jwt = localStorage.getItem("jwt");
-        if (jwt != null) {
+        if (jwt && !this.isTokenExpired()) {
             this.decodeJwt(jwt);
         }
     }
@@ -39,8 +40,13 @@ export class AuthService {
     /**
      * Enregistre un nouvel utilisateur
      */
-    register(userData: Auth.RegistrationData): Observable<any> {
+    register(userData: Auth.RegistrationData): Observable<{ token: string }> {
         return this.http.post<{ token: string }>(`${this.apiUrl}/register`, userData).pipe(
+            tap(response => {
+                if (response?.token) {
+                    this.decodeJwt(response.token);
+                }
+            }),
             catchError(error => {
                 console.error('Erreur lors de l\'inscription', error);
                 return throwError(() => error);
@@ -51,10 +57,10 @@ export class AuthService {
     /**
      * Connecte un utilisateur existant
      */
-    signIn(credentials: Auth.LoginData): Observable<any> {
+    signIn(credentials: Auth.LoginData): Observable<{ token: string }> {
         return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials).pipe(
             tap(response => {
-                if (response && response.token) {
+                if (response?.token) {
                     this.decodeJwt(response.token);
                 }
             }),
@@ -68,7 +74,7 @@ export class AuthService {
     /**
      * Décode le JWT et met à jour l'état de l'utilisateur
      */
-    public decodeJwt(jwt: string): void {
+    private decodeJwt(jwt: string): void {
         localStorage.setItem("jwt", jwt);
 
         try {
@@ -79,12 +85,25 @@ export class AuthService {
 
             this.role = body.role;
             this.connected = true;
-
-            // Mettre à jour l'utilisateur courant
             this.refreshUserData();
         } catch (error) {
             console.error('Erreur lors du décodage du JWT', error);
             this.signOut();
+        }
+    }
+
+    /**
+     * Vérifie si le token JWT est expiré
+     */
+    private isTokenExpired(): boolean {
+        const token = this.getToken();
+        if (!token) return true;
+
+        try {
+            const jwt = JSON.parse(atob(token.split('.')[1]));
+            return Date.now() >= jwt.exp * 1000;
+        } catch {
+            return true;
         }
     }
 
@@ -110,70 +129,78 @@ export class AuthService {
      * Vérifie si l'utilisateur est connecté
      */
     isLoggedIn(): boolean {
-        return this.connected;
+        return this.connected && !this.isTokenExpired();
     }
 
     /**
      * Rafraîchit les données utilisateur depuis le token ou l'API
      */
     private refreshUserData(): void {
-        const jwt = localStorage.getItem("jwt");
+        const jwt = this.getToken();
         if (!jwt) {
             this.currentUserSubject.next(null);
             return;
         }
 
         try {
-            // Extraire les données de base du JWT
             const splitJwt = jwt.split(".");
-            const jwtBody = splitJwt[1];
-            const jsonBody = atob(jwtBody);
-            const userData = JSON.parse(jsonBody) as Auth.JwtPayload;
+            if (splitJwt.length !== 3) {
+                this.handleAuthError('Format JWT invalide');
+                return;
+            }
 
-            // Créer un utilisateur avec les informations minimales disponibles dans le JWT
-            // Puisque firstname et lastname ne sont pas dans le JWT,
-            // nous allons récupérer les informations complètes depuis l'API
+            const userData = JSON.parse(atob(splitJwt[1])) as Auth.JwtPayload;
+
+            if (!userData.sub || !userData.email || !userData.role) {
+                this.handleAuthError('Données JWT incomplètes');
+                return;
+            }
+
             const userId = Number(userData.sub);
 
-            // Récupérer les informations complètes de l'utilisateur depuis l'API
-            this.http.get<User>(`${this.apiUrl}/users/${userId}`).subscribe(
-                user => {
-                    this.currentUserSubject.next(user);
-                },
-                error => {
+            this.http.get<User>(`${this.apiUrl}/users/${userId}`).pipe(
+                timeout(5000),
+                catchError(error => {
                     console.error('Erreur lors de la récupération des données utilisateur', error);
-
-                    // En cas d'erreur, on crée un utilisateur avec les informations minimales
-                    const minimalUser: User = {
+                    return of({
                         id: userId,
                         email: userData.email,
-                        firstname: '',  // Information non disponible dans le JWT
-                        lastname: '',   // Information non disponible dans le JWT
-                        password: '',   // Ne jamais stocker le mot de passe
+                        firstname: '',
+                        lastname: '',
+                        password: '',
                         role: userData.role,
-                        photoUrl: '',   // Information non disponible dans le JWT
-                        status: 'Active'
-                    };
+                        photoUrl: '',
+                        userStatus: 'Active',
+                        company: '',
+                        companyAddress: '',
+                        phone: ''
+                    } as User);
+                })
+            ).subscribe({
+                next: (user) => this.currentUserSubject.next(user),
+                error: (error) => this.handleAuthError(error)
+            });
 
-                    this.currentUserSubject.next(minimalUser);
-                }
-            );
         } catch (error) {
-            console.error('Erreur lors de la récupération des données utilisateur', error);
-            this.currentUserSubject.next(null);
+            this.handleAuthError(error);
         }
+    }
+
+    /**
+     * Gestion centralisée des erreurs d'authentification
+     */
+    private handleAuthError(error: any): void {
+        console.error('Erreur d\'authentification:', error);
+        this.currentUserSubject.next(null);
     }
 
     /**
      * Récupère les informations de l'utilisateur courant
      */
     getCurrentUser(): Observable<User | null> {
-        // Si l'utilisateur est déjà chargé, on le retourne
         if (this.currentUserSubject.value) {
             return of(this.currentUserSubject.value);
         }
-
-        // Sinon, on essaie de le charger
         this.refreshUserData();
         return this.currentUser$;
     }
@@ -181,14 +208,14 @@ export class AuthService {
     /**
      * Vérifie si l'utilisateur a un rôle spécifique
      */
-    hasRole(requiredRole: UserRole): boolean {
+    hasRole(requiredRole: Role): boolean {
         return this.role === requiredRole;
     }
 
     /**
      * Vérifie si l'utilisateur a l'un des rôles requis
      */
-    hasAnyRole(requiredRoles: UserRole[]): boolean {
+    hasAnyRole(requiredRoles: Role[]): boolean {
         return this.role !== null && requiredRoles.includes(this.role);
     }
 
@@ -200,17 +227,14 @@ export class AuthService {
             return await this.router.navigate(['/login']);
         }
 
+        const roleRoutes = {
+            [Role.ADMIN]: '/dashboard',
+            [Role.TECH]: '/dashboard',
+            [Role.CLIENT]: '/dashboard'
+        };
+
         try {
-            switch (this.role) {
-                case UserRole.ADMIN:
-                    return await this.router.navigate(['/admin']);
-                case UserRole.TECH:
-                    return await this.router.navigate(['/tech']);
-                case UserRole.CLIENT:
-                    return await this.router.navigate(['/client']);
-                default:
-                    return await this.router.navigate(['/login']);
-            }
+            return await this.router.navigate([roleRoutes[this.role as Role] || '/login']);
         } catch (error) {
             console.error('Erreur lors de la navigation:', error);
             return false;

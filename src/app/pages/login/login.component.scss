@@ -1,20 +1,22 @@
+// Ce fichier contient tous les styles de la boîte de connexion,
+// mais SANS le style pour l'image de fond qui est maintenant dans le layout.
+
 .login-box {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 400px;
     padding: 40px;
-    margin: 20px auto;
-    transform: translate(-50%, -55%);
-    background: #232323;
+    transform: translate(-50%, -50%);
+    background: rgba(35, 35, 35, 0.95); // Légère transparence pour mieux s'intégrer
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0,0,0,.6);
     border-radius: 10px;
-    overflow: hidden; /* Empêche tout débordement */
+    overflow: hidden;
 }
 
-.login-box p:first-child {
-    margin: 0 0 30px;
+.login-box p:first-of-type {
+    margin: 0 0 20px;
     padding: 0;
     color: #f25c05;
     text-align: center;
@@ -50,207 +52,94 @@
     transition: .5s;
 }
 
+// L'animation pour le label qui monte
 .login-box .user-box input:focus ~ label,
 .login-box .user-box input:valid ~ label {
     top: -20px;
     left: 0;
-    color: #fff;
+    color: #f25c05; // Couleur orange pour le focus
     font-size: 12px;
 }
 
-.login-box form a {
+.error-text {
+    color: #ff4d4d;
+    font-size: 12px;
+    position: absolute;
+    bottom: 12px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 80px;
+}
+
+.login-logo {
+    width: 75%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    transform: scale(1.5);
+}
+
+.login-box button[type="submit"] {
     position: relative;
-    display: inline-block;
+    display: block;
+    margin: 30px auto 0;
     padding: 10px 20px;
     font-weight: bold;
     color: #fff;
+    background: transparent;
     font-size: 16px;
     text-decoration: none;
     text-transform: uppercase;
     overflow: hidden;
     transition: .5s;
-    margin-top: 40px;
-    letter-spacing: 3px
-}
-
-.login-box a:hover {
-    background: #fff;
-    color: #272727;
+    letter-spacing: 3px;
+    border: 1px solid #f25c05;
     border-radius: 5px;
-}
-
-.login-box a span {
-    position: absolute;
-    display: block;
-}
-
-.login-box a span:nth-child(1) {
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #fff);
-    animation: btn-anim1 1.5s linear infinite;
-}
-
-@keyframes btn-anim1 {
-    0% {
-        left: -100%;
-    }
-
-    50%,100% {
-        left: 100%;
-    }
-}
-
-.login-box a span:nth-child(2) {
-    top: -100%;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, #fff);
-    animation: btn-anim2 1.5s linear infinite;
-    animation-delay: .375s
-}
-
-@keyframes btn-anim2 {
-    0% {
-        top: -100%;
-    }
-
-    50%,100% {
-        top: 100%;
-    }
-}
-
-.login-box a span:nth-child(3) {
-    bottom: 0;
-    right: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(270deg, transparent, #fff);
-    animation: btn-anim3 1.5s linear infinite;
-    animation-delay: .75s
-}
-
-@keyframes btn-anim3 {
-    0% {
-        right: -100%;
-    }
-
-    50%,100% {
-        right: 100%;
-    }
-}
-
-.login-box a span:nth-child(4) {
-    bottom: -100%;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(360deg, transparent, #fff);
-    animation: btn-anim4 1.5s linear infinite;
-    animation-delay: 1.125s
-}
-
-@keyframes btn-anim4 {
-    0% {
-        bottom: -100%;
-    }
-
-    50%,100% {
-        bottom: 100%;
-    }
-}
-
-.login-box p:last-child {
-    color: #aaa;
-    font-size: 14px;
-}
-
-.login-box a.a2 {
-    color: #fff;
-    text-decoration: none;
-}
-
-.login-box a.a2:hover {
-    background: transparent;
-    color: #aaa;
-    border-radius: 5px;
-}
-
-.login-container {
-    background-image: url('/assets/images/login-signup-background.png');
-    background-size: cover; // Couvre tout l'espace disponible
-    background-position: center; // Centre l'image
-    background-repeat: no-repeat;
-    min-height: 100vh; // Prend toute la hauteur de l'écran
-}
-
-/* Approche alternative si l'image source a beaucoup d'espace vide */
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  width: 100%;
-  height: 80px;
-}
-
-.login-logo {
-  width: 75%; /* Utilise un pourcentage large */
-  height: auto;
-  object-fit: contain;
-  /* Rogne l'image pour se concentrer sur la partie centrale */
-  object-position: center;
-  transform: scale(1.5); /* Zoom avant important */
-}
-
-/* Modification pour le texte "Login" */
-.login-box p:first-of-type {
-  margin: 0 0 20px; /* Réduit la marge pour laisser plus d'espace au logo */
-  padding: 0;
-  color: #f25c05;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-/* Style pour le bouton de connexion */
-.login-box button[type="submit"] {
-  position: relative;
-  display: block;
-  margin: 30px auto 0;
-  padding: 10px 20px;
-  font-weight: bold;
-  color: #fff;
-  background: transparent;
-  font-size: 16px;
-  text-decoration: none;
-  text-transform: uppercase;
-  overflow: hidden;
-  transition: .5s;
-  letter-spacing: 3px;
-  border: 1px solid #fff;
-  cursor: pointer;
-  width: fit-content;
+    cursor: pointer;
+    width: fit-content;
 }
 
 .login-box button[type="submit"]:hover {
-  background: #fff;
-  color: #272727;
-  border-radius: 5px;
+    background: #f25c05;
+    color: #fff;
 }
 
-/* Pour les écrans plus petits */
-@media (max-width: 480px) {
-  .login-box {
-    width: 90%;
-    padding: 30px;
-  }
+.login-box button[type="submit"]:disabled {
+    border-color: #555;
+    color: #555;
+    cursor: not-allowed;
+    &:hover {
+        background: transparent;
+        color: #555;
+    }
+}
 
-  .login-logo {
-    max-width: 70%;
-  }
+.signup-link {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 14px;
+    text-align: center;
+}
+
+.signup-link a.a2 {
+    color: #f25c05;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link a.a2:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .login-box {
+        width: 90%;
+        padding: 30px;
+    }
 }
