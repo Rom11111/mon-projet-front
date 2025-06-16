@@ -17,7 +17,7 @@ export class AuthService {
 
     connected = false;
     role: Role | null = null;
-    private apiUrl = `${environment.serverUrl}/api/auth`;
+    private apiUrl = `${environment.serverUrl}`;
 
 
     constructor(
