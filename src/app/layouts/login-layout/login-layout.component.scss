@@ -1,0 +1,9 @@
+.login-layout-container {
+    // On applique l'image de fond et on s'assure qu'elle prend tout l'écran
+    background-image: url('/assets/images/login-signup-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+}

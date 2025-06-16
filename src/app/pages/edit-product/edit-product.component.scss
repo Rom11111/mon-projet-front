@@ -1,9 +1,62 @@
 form {
-    margin: 2em;
+    margin: 2em auto;
     min-width: 400px;
     max-width: 600px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 4px;
+    border-radius: 16px;
+    padding: 24px 32px;
+    background-color: var(--form-bg-color, #2c2626);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--form-border-color, #e0e0e0);
+    transition: all 0.3s ease;
+    color: var(--form-text-color, #333333); /* Couleur de texte principale */
+
+    /* Effet optionnel au survol */
+    &:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+
+    /* Titre du formulaire, si vous en avez un */
+    h2, h3, legend {
+        color: var(--form-title-color, #212121);
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    /* Style pour les labels */
+    mat-label {
+        color: var(--form-label-color, #555555);
+    }
+
+    /* Style pour les textes d'erreur */
+    mat-error {
+        color: var(--form-error-color, #f44336);
+    }
+
+    /* Style pour les inputs */
+    input, textarea, mat-select {
+        color: var(--form-input-color, #ffffff);
+    }
+
+    /* Style pour les placeholders */
+    ::placeholder {
+        color: var(--form-placeholder-color, #9e9e9e);
+    }
+}
+
+/* Pour des champs de formulaire qui s'harmonisent avec le design */
+mat-form-field {
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+button[type="submit"] {
+    margin-top: 24px;
+    align-self: center;
+    min-width: 120px;
+    background-color: var(--form-button-bg, #f25c05);
+    color: var(--form-button-text, #ffffff);
 }

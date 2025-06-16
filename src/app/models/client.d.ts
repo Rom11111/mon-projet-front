@@ -1,11 +1,7 @@
-export interface Client {
-    id: number;
-    firstname: string;
-    lastname: string;
-    address: string;
-    email: string;
-    password: string;  // tu peux ne pas l'utiliser pour l'affichage, mais il est dans ton modèle
-    role: 'CLIENT' | 'TECH' | 'ADMIN';  // Correspond au rôle de l'utilisateur
-    photoUrl: string;  // Pour l'image de profil, tu peux l'ajouter si nécessaire
-    status: 'Active' | 'Inactive';  // Statut de l'utilisateur
+import { User } from './user';
+
+export interface Client extends User {
+    company: string;
+    companyAddress: string;
+    // Autres propriétés spécifiques aux clients
 }

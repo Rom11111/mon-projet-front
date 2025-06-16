@@ -1,28 +1,30 @@
-/*.page-actuelle {
-    color: red;
-}
-*/
-
-mat-toolbar {
-    position: relative;
-    z-index: 5;
-    background-color: #93acc3;
-}
-
-.content {
-    padding: 24px;
-}
-
-mat-sidenav-container {
-    height: calc(100vh - 64px);
-
-}
-
-mat-sidenav,
-mat-sidenav-content {
-    transition:  all 500ms ease-in-out;
+:host {
+    display: block;
+    height: 100%;
 }
 
 
 
+//// ====================
+//// Sidenav & Content
+//// ====================
+//mat-sidenav-container {
+//    height: 100vh; // Utilise 100% de la hauteur de la fenêtre
+//    position: absolute; // Assure que le conteneur prend toute la hauteur disponible
+//    top: 0;
+//    bottom: 0;
+//    left: 0;
+//    right: 0;
+//}
+//
+//
+//
+//
+//
+// //====================
+// //Page actuelle (désactivé pour l'instant)
+// //====================
+// .page-actuelle {
+//   color: red;
+// }
 

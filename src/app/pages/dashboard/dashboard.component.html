@@ -1,3 +1,52 @@
 
 
-<h1>Dashboard</h1>
+<div class="dashboard-container" [@staggerCards]>
+    <div class="welcome-message">
+        <h2>Bienvenue, {{ userName || 'Utilisateur' }} !</h2>
+    </div>
+    <div class="stats-grid">
+        <mat-card class="stat-card success" [@fadeSlideIn]>
+            <mat-icon>assignment</mat-icon>
+            <div>
+                <h4>Locations actives</h4>
+                <p>{{ activeRentals }}</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card primary" [@fadeSlideIn]>
+            <mat-icon>inventory_2</mat-icon>
+            <div>
+                <h4>Équipements disponibles</h4>
+                <p>{{ availableEquipments }}</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card warning" [@fadeSlideIn]>
+            <mat-icon>schedule</mat-icon>
+            <div>
+                <h4>Retards</h4>
+                <p>{{ lateReturns }}</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card danger" [@fadeSlideIn]>
+            <mat-icon>build</mat-icon>
+            <div>
+                <h4>En réparation</h4>
+                <p>{{ inRepair }}</p>
+            </div>
+        </mat-card>
+
+        <mat-card class="stat-card accent" [@fadeSlideIn]>
+            <mat-icon>euro</mat-icon>
+            <div>
+                <h4>Revenus mensuels</h4>
+                <p>{{ monthlyRevenue | currency: 'EUR' }}</p>
+            </div>
+        </mat-card>
+    </div>
+
+    <mat-card class="table-card" [@fadeSlideIn]>
+        <!-- reste du contenu inchangé -->
+    </mat-card>
+</div>

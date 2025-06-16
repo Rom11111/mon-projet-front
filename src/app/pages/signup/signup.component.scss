@@ -1,0 +1,132 @@
+.login-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: rgba(35, 35, 35, 0.95);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.login-box p:first-of-type {
+    margin: 0 0 20px;
+    padding: 0;
+    color: #f25c05;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.login-box .user-box {
+    position: relative;
+}
+
+.login-box .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+}
+
+.login-box .user-box label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    pointer-events: none;
+    transition: .5s;
+}
+
+.login-box .user-box input:focus ~ label,
+.login-box .user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #f25c05;
+    font-size: 12px;
+}
+
+.error-text {
+    color: #ff4d4d;
+    font-size: 12px;
+    position: absolute;
+    bottom: 12px;
+}
+
+.login-box button[type="submit"] {
+    position: relative;
+    display: block;
+    margin: 30px auto 0;
+    padding: 10px 20px;
+    font-weight: bold;
+    color: #fff;
+    background: transparent;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    letter-spacing: 3px;
+    border: 1px solid #f25c05;
+    border-radius: 5px;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.login-box button[type="submit"]:hover {
+    background: #f25c05;
+    color: #fff;
+}
+
+.login-box button[type="submit"]:disabled {
+    border-color: #555;
+    color: #555;
+    cursor: not-allowed;
+    &:hover {
+        background: transparent;
+        color: #555;
+    }
+}
+
+.login-link {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 14px;
+    text-align: center;
+}
+
+.login-link a.a2 {
+    color: #f25c05;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a.a2:hover {
+    text-decoration: underline;
+}
+
+.signup-container {
+    background-image: url('/assets/images/login-signup-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+@media (max-width: 480px) {
+    .login-box {
+        width: 90%;
+        padding: 30px;
+    }
+}

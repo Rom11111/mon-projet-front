@@ -1,1 +1,36 @@
-<h1>Réglages</h1>
+<h2>Réglages</h2>
+
+<form (ngSubmit)="saveSettings()" #settingsForm="ngForm">
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="email" name="email" />
+    </mat-form-field>
+
+    <section>
+        <label>Thème :</label>
+        <mat-radio-group [(ngModel)]="theme" name="theme">
+            <mat-radio-button value="light">Clair</mat-radio-button>
+            <mat-radio-button value="dark">Sombre</mat-radio-button>
+        </mat-radio-group>
+    </section>
+
+    <section>
+        <mat-slide-toggle [(ngModel)]="notifications" name="notifications">
+            Activer les notifications
+        </mat-slide-toggle>
+    </section>
+
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Langue</mat-label>
+        <mat-select [(ngModel)]="language" name="language">
+            <mat-option value="fr">Français</mat-option>
+            <mat-option value="en">Anglais</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div class="actions">
+        <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+        <button mat-stroked-button type="button" (click)="resetSettings()">Réinitialiser</button>
+        <button mat-flat-button color="warn" type="button" (click)="logout()">Déconnexion</button>
+    </div>
+</form>

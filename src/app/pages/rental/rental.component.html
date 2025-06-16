@@ -1,0 +1,48 @@
+
+    <mat-card-title>Liste des réservations</mat-card-title>
+    <mat-card>
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!-- Client -->
+        <ng-container matColumnDef="client">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Client</th>
+            <td mat-cell *matCellDef="let rental">
+                {{ rental.user?.firstname }} {{ rental.user?.lastname }}
+            </td>
+        </ng-container>
+
+        <!-- Produit -->
+        <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Produit</th>
+            <td mat-cell *matCellDef="let rental">{{ rental.product?.name }}</td>
+        </ng-container>
+
+        <!-- Date -->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+            <td mat-cell *matCellDef="let rental">{{ rental.date | date:'shortDate' }}</td>
+        </ng-container>
+
+        <!-- Heure -->
+        <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef>Heure</th>
+            <td mat-cell *matCellDef="let rental">{{ rental.heureDebut }} - {{ rental.heureFin }}</td>
+        </ng-container>
+
+        <!-- Statut -->
+        <ng-container matColumnDef="statut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let rental">
+        <span [ngClass]="getStatutClass(rental.statut)">
+          {{ rental.statut }}
+        </span>
+            </td>
+        </ng-container>
+
+        <!-- Header & Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+</mat-card>
