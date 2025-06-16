@@ -1,12 +1,11 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
-import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../services/notification.service';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -14,49 +13,44 @@ import {environment} from '../../../environments/environment';
         ReactiveFormsModule,
         FormsModule,
         MatButtonModule,
-        MatInputModule
+        MatInputModule,
+        RouterLink
     ],
     templateUrl: './login.component.html',
-    styleUrl: './login.component.scss'
+    styleUrl: './login.component.scss',
+    standalone: true
 })
 export class LoginComponent {
-
-    formBuilder = inject(FormBuilder)
-    http = inject(HttpClient)
-    notification = inject(NotificationService)
-    auth = inject(AuthService)
-    router = inject (Router)
-    private baseurl = `${environment.serverUrl}`
+    private formBuilder = inject(FormBuilder);
+    private notification = inject(NotificationService);
+    private auth = inject(AuthService);
 
     form = this.formBuilder.group({
-        email: ["a@a.com", [Validators.required, Validators.email]],
-        password: ["root", [Validators.required]],
+        email: [environment.production ? '' : 'a@a.com', [Validators.required, Validators.email]],
+        password: [environment.production ? '' : 'root', [Validators.required]]
+    });
 
 
-    })
-
-    onLogin() {
+    onLogin(): void {
         if (this.form.valid) {
-
-            this.http
-            .post(
-            this.baseurl +"login",
-            this.form.value,
-            {responseType: "text"})
-            .subscribe({
-            next : jwt => {
-                this.auth.connected = true // à revoir
-                this.auth.decodeJwt(jwt)
-                this.router.navigateByUrl("/dashboard") // Une fois connecté, dirige vers la page d'accueil
-            }, // stock sur le navigateur
-            error : error => {
-                if(error.status === 401) {
-                    //reçois des erreurs à partir de 300
-                    this.notification.show("Mauvais login/ mot de passe", "error")
-            }
-
+            this.auth.signIn({
+                email: this.form.value.email!,
+                password: this.form.value.password!
+            }).subscribe({
+                next: () => {
+                    this.notification.show('Connexion réussie', 'valid');
+                    this.auth.redirectBasedOnRole();
+                },
+                error: error => {
+                    if (error.status === 401) {
+                        this.notification.show('Email ou mot de passe incorrect', 'error');
+                    } else {
+                        this.notification.show('Erreur lors de la connexion', 'error');
+                    }
+                }
+            });
+        } else {
+            this.notification.show('Veuillez remplir tous les champs correctement', 'error');
         }
-    })
     }
-}
 }

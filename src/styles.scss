@@ -6,3 +6,39 @@ body {
     margin: 0;
     font-family: 'Inter', sans-serif;
 }
+
+
+.mdc-snackbar.notification-valid {
+    .mdc-snackbar__surface {
+        background-color: #4caf50;
+        color: white;
+    }
+}
+
+.mdc-snackbar.notification-error {
+    .mdc-snackbar__surface {
+        background-color: #f44336;
+        color: white;
+    }
+}
+
+.mdc-snackbar.notification-warning {
+    .mdc-snackbar__surface {
+        background-color: #ff9800;
+        color: white;
+    }
+}
+
+.mdc-snackbar.notification-info {
+    .mdc-snackbar__surface {
+        background-color: #2196f3;
+        color: white;
+    }
+}
+
+// Pour styler le bouton "Fermer"
+.mdc-snackbar {
+    .mat-mdc-button {
+        color: white;
+    }
+}

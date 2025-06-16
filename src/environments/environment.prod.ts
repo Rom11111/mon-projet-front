@@ -1,4 +1,6 @@
 
 export const environment = {
-    serverUrl: "http://mon-site.com:8080/"
+    production: true,
+    serverUrl: "http://altatech.com:8080"
 };
+

@@ -1,7 +1,6 @@
-// auth.d.ts
-import { UserRole } from './user.model';
+import { Role } from './user.model';
 
-declare namespace Auth {
+export declare namespace Auth {
     /**
      * Données pour la connexion
      */
@@ -27,7 +26,8 @@ declare namespace Auth {
     interface JwtPayload {
         sub: string | number;  // Identifiant utilisateur
         email: string;
-        role: UserRole;
+        role: Role;
         exp: number;          // Timestamp d'expiration
     }
 }
+

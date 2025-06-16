@@ -22,27 +22,10 @@ export const routes: Routes = [
             path: '',
             component: LoginLayoutComponent,
             children: [
-                {
-                    path: 'login',
-                    component: LoginComponent,
-                    canActivate: [notLoggedGuard],
-                    data: { title: 'Connexion' }
-                },
-                {
-                    path: 'signup',
-                    component: SignupComponent,
-                    canActivate: [notLoggedGuard],
-                    data: { title: 'Inscription' }
-                },
-                {
-                    path: 'validate-mail/:token',
-                    component: EmailValidationComponent
-                },
-                {
-                    path: '',
-                    redirectTo: 'login',
-                    pathMatch: 'full'
-                }
+                {path: 'login', component: LoginComponent, canActivate: [notLoggedGuard], data: { title: 'Connexion' }},
+                {path: 'signup', component: SignupComponent, canActivate: [notLoggedGuard], data: { title: 'Inscription' }},
+                {path: 'validate-mail/:token', component: EmailValidationComponent,data: { title: 'Validation de l\'email' }},
+                {path: '', redirectTo: 'login', pathMatch: 'full'}
             ]
         },
 
@@ -52,19 +35,20 @@ export const routes: Routes = [
         component: MainLayoutComponent,
         canActivate: [loggedGuard], // Protection globale
         children: [
-            { path: 'dashboard', component: DashboardComponent },
-            { path: 'equipments', component: EquipmentsComponent },
-            { path: 'rental', component: RentalComponent },
-            { path: 'clients', component: ClientsComponent },
-            { path: 'team', component: TeamComponent },
-            { path: 'contact', component: ContactComponent },
-            { path: 'settings', component: SettingsComponent },
-            { path: 'ajout-produit', component: EditProductComponent },
-            { path: 'modifier-produit/:id', component: EditProductComponent },
-            { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+            {path: 'dashboard', component: DashboardComponent, data: {title: 'Tableau de bord'}},
+            {path: 'equipments', component: EquipmentsComponent, data: {title: 'Équipements'}},
+            {path: 'rental', component: RentalComponent, data: {title: 'Locations'}},
+            {path: 'clients', component: ClientsComponent, data: {title: 'Clients'}},
+            {path: 'team', component: TeamComponent, data: {title: 'Équipe'}},
+            {path: 'contact', component: ContactComponent, data: {title: 'Contact'}},
+            {path: 'settings', component: SettingsComponent, data: {title: 'Paramètres'}},
+            {path: 'ajout-produit', component: EditProductComponent, data: {title: 'Ajouter un produit'}},
+            {path: 'modifier-produit/:id', component: EditProductComponent, data: {title: 'Modifier le produit'}},
+            {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
         ]
     },
 
-    // Route 404 - doit toujours être la dernière
-    { path: '**', component: Page404Component }
+            // Route 404 - doit toujours être la dernière
+            { path: '**', component: Page404Component, data: { title: 'Page non trouvée' }}
 ];
+
