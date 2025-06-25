@@ -7,17 +7,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-import { HttpClientModule } from '@angular/common/http';
 import {Rental} from '../../models/rental';
 import {RentalService} from '../../services/rental.service';
+
+
 
 @Component({
     selector: 'app-rental',
     standalone: true,
     imports: [
         CommonModule,
-        HttpClientModule,
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,

@@ -17,7 +17,7 @@ export declare namespace Auth {
         lastName: string;
         email: string;
         password: string;
-        role?: UserRole;  // Optionnel si un rôle par défaut est attribué par l'API
+        role?: Role;  // Optionnel si un rôle par défaut est attribué par l'API
     }
 
     /**
@@ -28,6 +28,7 @@ export declare namespace Auth {
         email: string;
         role: Role;
         exp: number;          // Timestamp d'expiration
+        userId: number;
     }
 }
 
