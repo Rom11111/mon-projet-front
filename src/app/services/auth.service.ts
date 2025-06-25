@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError, BehaviorSubject, timeout } from 'rxjs';
+import {Observable, of, throwError, BehaviorSubject, timeout, map} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -17,6 +17,7 @@ export class AuthService {
 
     connected = false;
     role: Role | null = null;
+    userId: Number = 0;
     private apiUrl = `${environment.serverUrl}`;
 
 
@@ -58,17 +59,29 @@ export class AuthService {
      * Connecte un utilisateur existant
      */
     signIn(credentials: Auth.LoginData): Observable<{ token: string }> {
-        return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials).pipe(
-            tap(response => {
-                if (response?.token) {
-                    this.decodeJwt(response.token);
-                }
+        return this.http.post(`${this.apiUrl}/login`, credentials, { responseType: 'text' }).pipe(
+            map(tokenResponse => {
+                const token = tokenResponse as string;
+                console.log('Token JWT:', token);
+                this.decodeJwt(token);
+                return { token };
             }),
             catchError(error => {
                 console.error('Erreur lors de la connexion', error);
                 return throwError(() => error);
             })
         );
+    }
+
+    /**
+     * Déconnecte l'utilisateur
+     */
+    signOut(): void {
+        localStorage.removeItem("jwt");
+        this.connected = false;
+        this.role = null;
+        this.currentUserSubject.next(null);
+        this.router.navigate(['/login']);
     }
 
     /**
@@ -82,8 +95,10 @@ export class AuthService {
             const jwtBody = splitJwt[1];
             const jsonBody = atob(jwtBody);
             const body = JSON.parse(jsonBody) as Auth.JwtPayload;
-
+            console.log(jwt);
+            console.log(jwtBody);
             this.role = body.role;
+            this.userId = body.userId;
             this.connected = true;
             this.refreshUserData();
         } catch (error) {
@@ -107,16 +122,7 @@ export class AuthService {
         }
     }
 
-    /**
-     * Déconnecte l'utilisateur
-     */
-    signOut(): void {
-        localStorage.removeItem("jwt");
-        this.connected = false;
-        this.role = null;
-        this.currentUserSubject.next(null);
-        this.router.navigate(['/login']);
-    }
+
 
     /**
      * Récupère le token JWT
@@ -151,19 +157,23 @@ export class AuthService {
 
             const userData = JSON.parse(atob(splitJwt[1])) as Auth.JwtPayload;
 
-            if (!userData.sub || !userData.email || !userData.role) {
+            console.log("data = " + jwt);
+            console.log("data = " + userData);
+
+            if (!userData.sub || !userData.email || !userData.role || !userData.userId) {
                 this.handleAuthError('Données JWT incomplètes');
                 return;
             }
 
-            const userId = Number(userData.sub);
+            const userId = Number(userData.userId);
+
 
             this.http.get<User>(`${this.apiUrl}/users/${userId}`).pipe(
                 timeout(5000),
                 catchError(error => {
                     console.error('Erreur lors de la récupération des données utilisateur', error);
                     return of({
-                        id: userId,
+                        id: userData.userId,
                         email: userData.email,
                         firstname: '',
                         lastname: '',

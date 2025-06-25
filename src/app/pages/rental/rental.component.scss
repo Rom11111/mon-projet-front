@@ -16,3 +16,7 @@
         background-color: #f44336;
     }
 }
+
+.total-height {
+    min-height: calc(100vh - 120px);
+}
