@@ -8,9 +8,9 @@ import {MatSelectModule} from '@angular/material/select';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {NotificationService} from '../../services/notification.service';
-import {ProductService} from '../../services/crud/product.service';
-import {FileChooserComponent} from '../../components/file-chooser/file-chooser.component';
+import {NotificationService} from '../../../services/notification.service';
+import {ProductService} from '../../../services/crud/product.service';
+import {FileChooserComponent} from '../../../components/file-chooser/file-chooser.component';
 
 // ReactiveFormsModule utilisé pour valider le formulaire
 // FormsModule bloque le formulaire pour ne pas recharger la page

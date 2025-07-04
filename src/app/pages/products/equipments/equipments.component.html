@@ -1,0 +1,44 @@
+<div class="row total-height">
+    @if (auth.role === UserRole.TECH || auth.role === UserRole.ADMIN) {
+        <div class="col-12 mt-3">
+            <button mat-raised-button color="primary" routerLink="/ajout-produit">
+                Ajouter un produit
+            </button>
+        </div>
+    }
+
+    @for (product of productService.products$ | async; track $index) {
+        <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <mat-card appearance="outlined" [class.occasion]="product.etat?.id === 3">
+                <mat-card-header>
+                    <mat-card-title>{{ product.name }}</mat-card-title>
+                    <mat-card-subtitle>
+                        <span class="code">{{ product.code }}</span>
+                    </mat-card-subtitle>
+                </mat-card-header>
+
+                @if (product.id && product.imageName) {
+                    <img ImgSecured mat-card-image [src]="environment.serverUrl + 'product/image/' + product.id + '/600/400'" alt="Photo produit">
+                }
+
+                <mat-card-content>
+                    <p>{{ product.description }}</p>
+                    <p *ngIf="product.rentalPrice">Location : {{ product.rentalPrice | currency:'EUR' }}</p>
+                    <p *ngIf="!product.available" class="text-danger">Indisponible à la location</p>
+                </mat-card-content>
+
+                <mat-card-actions>
+                    @if (auth.role === UserRole.TECH || auth.role === UserRole.ADMIN) {
+                        <button mat-button color="accent" [routerLink]="['/modifier-produit', product.id]">Modifier</button>
+                        <button mat-button color="warn" (click)="deleteProduct(product.id)">Supprimer</button>
+                    }
+                    @if (auth.role === UserRole.CLIENT) {
+                        <button mat-button color="primary" (click)="openRentalDialog(product)" [disabled]="!product.available">
+                            Louer
+                        </button>
+                    }
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    }
+</div>

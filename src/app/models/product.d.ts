@@ -2,10 +2,9 @@ type Product = {
     id : number,
     name : string,
     code : string,
-    category: string;
+    category: Category;
     description : string,
-    etat: Etat,
-    labelList: Label []
+    etat?: Etat,
     isOccasion?: boolean;
     rentalPrice: number; // Prix de location
     available: boolean;  // Disponible à la location

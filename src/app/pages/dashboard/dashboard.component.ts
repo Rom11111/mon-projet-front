@@ -106,18 +106,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 ) {}
 
     ngOnInit(): void {
-
-        // Récupérer le nom de l'utilisateur depuis le service d'authentification
-        this.auth.getCurrentUser().subscribe(user => {
-            if (user) {
-                this.userName = user.firstname;
-            }
-        });
-
-
-
-
-// Récupérer les stats du dashboard
+        // Récupérer les stats du dashboard
         this.dashboardService.getStats()
             .pipe(takeUntil(this.destroy$))
             .subscribe({
@@ -135,7 +124,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                     });
                 }
             });
-
         // Récupérer les dernières locations
         this.rentalService.getRecentRentals()
             .pipe(takeUntil(this.destroy$))

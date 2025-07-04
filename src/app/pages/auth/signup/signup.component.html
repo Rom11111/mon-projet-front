@@ -1,11 +1,11 @@
 <div class="login-box">
     <div class="logo-container">
-        <img src="assets/images/altaTech.svg" alt="Logo de l'entreprise" class="login-logo">
+        <img src="../../../../assets/images/altaTech.svg" alt="Logo de l'entreprise" class="login-logo">
     </div>
 
     <p>Inscription</p>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
+    <form [formGroup]="form" (ngSubmit)="onSignup()" autocomplete="off">
         <div class="user-box">
             <input formControlName="firstName"
                    required
