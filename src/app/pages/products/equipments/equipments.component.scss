@@ -1,58 +1,57 @@
-// Style principal pour chaque carte produit
+// Styles pour la carte produit
 mat-card {
     height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    transition: box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
     &.occasion {
-        background-color: rgba(208, 87, 113, 0.1); // couleur douce pour produits d'occasion
-        border-left: 4px solid #d05771;
+        background-color: rgba(208, 87, 113, 0.79);
     }
 
     mat-card-header {
         align-items: flex-start;
-        padding-bottom: 0;
     }
 
     mat-card-title {
-        font-weight: 600;
+        font-weight: bold;
         font-size: 1.2em;
-        color: #333;
     }
 
     mat-card-subtitle {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         gap: 0.5em;
-        font-size: 0.9em;
-        color: #666;
 
         .code {
             font-style: italic;
-            font-weight: 500;
+            color: #555;
+            margin-right: 0.5em;
+        }
+
+        .label {
+            padding: 2px 10px;
+            border-radius: 50px;
+            background-color: darkolivegreen; // valeur par défaut si pas de color dynamique
+            color: #fff;
+            font-size: 0.85em;
+            margin-right: 0.25em;
+            margin-bottom: 2px;
+            display: inline-block;
         }
     }
 
     mat-card-image {
         object-fit: cover;
         height: 180px;
-        width: 100%;
         border-radius: 4px;
         margin-bottom: 0.5em;
     }
 
     mat-card-content {
         flex-grow: 1;
-        padding: 1em;
-
         p {
-            margin: 0.5em 0;
-            font-size: 0.95em;
-            color: #444;
+            margin-bottom: 0.5em;
         }
     }
 
@@ -60,7 +59,7 @@ mat-card {
         display: flex;
         justify-content: flex-end;
         gap: 0.5em;
-        padding: 1em;
+        margin-top: 0.5em;
     }
 }
 
@@ -70,29 +69,11 @@ mat-card {
     font-weight: bold;
 }
 
-// Layout général responsive
-.row.total-height {
+// Responsive pour les colonnes Bootstrap si beso
+.total-height {
     min-height: 100vh;
+}
 
-    .col-12 {
-        padding: 0 10px;
-    }
-
-    @media (max-width: 768px) {
-        .col-md-6 {
-            width: 100%;
-        }
-    }
-
-    @media (min-width: 768px) and (max-width: 992px) {
-        .col-md-6 {
-            width: 50%;
-        }
-    }
-
-    @media (min-width: 992px) {
-        .col-lg-3 {
-            width: 25%;
-        }
-    }
+.card {
+    margin-top: 24px;
 }

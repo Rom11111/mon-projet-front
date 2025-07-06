@@ -1,44 +1,120 @@
-<div class="row total-height">
-    @if (auth.role === UserRole.TECH || auth.role === UserRole.ADMIN) {
-        <div class="col-12 mt-3">
-            <button mat-raised-button color="primary" routerLink="/ajout-produit">
-                Ajouter un produit
-            </button>
-        </div>
-    }
+<mat-card class="card">
 
-    @for (product of productService.products$ | async; track $index) {
-        <div class="col-12 col-md-6 col-lg-3 mb-4">
-            <mat-card appearance="outlined" [class.occasion]="product.etat?.id === 3">
-                <mat-card-header>
-                    <mat-card-title>{{ product.name }}</mat-card-title>
-                    <mat-card-subtitle>
-                        <span class="code">{{ product.code }}</span>
-                    </mat-card-subtitle>
-                </mat-card-header>
+    <div class="container mt-4">
 
-                @if (product.id && product.imageName) {
-                    <img ImgSecured mat-card-image [src]="environment.serverUrl + 'product/image/' + product.id + '/600/400'" alt="Photo produit">
-                }
+        @if (isTechOrAdmin) {
+            <!-- Bouton Ajouter visible uniquement pour TECH et ADMIN -->
+            <div class="d-flex justify-content-end mb-3">
+                <button mat-flat-button color="primary" routerLink="/ajout-produit">
+                    Ajouter un produit
+                </button>
+            </div>
+        }
 
-                <mat-card-content>
-                    <p>{{ product.description }}</p>
-                    <p *ngIf="product.rentalPrice">Location : {{ product.rentalPrice | currency:'EUR' }}</p>
-                    <p *ngIf="!product.available" class="text-danger">Indisponible à la location</p>
-                </mat-card-content>
+        <!-- Tableau des produits -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
-                <mat-card-actions>
-                    @if (auth.role === UserRole.TECH || auth.role === UserRole.ADMIN) {
+            <!-- Colonne Checkbox de sélection -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <!-- Checkbox du header : sélectionne / désélectionne tout -->
+                    <mat-checkbox
+                        (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()"
+                        color="warn">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <!-- Checkbox par ligne -->
+                    <mat-checkbox
+                        (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)"
+                        color="warn">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <!-- ID -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                <td mat-cell *matCellDef="let product"> {{ product.id }} </td>
+            </ng-container>
+
+            <!-- Image -->
+            <ng-container matColumnDef="image">
+                <th mat-header-cell *matHeaderCellDef> Image </th>
+                <td mat-cell *matCellDef="let product">
+                    <!-- Image du produit (lazy load + async decode) -->
+                    <img
+                        [ngSrc]="environment.serverUrl + 'product/image/' + product.id"
+                        width="80"
+                        height="100"
+                        alt="Image du produit"
+                        style="border-radius: 4px;"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </td>
+            </ng-container>
+
+            <!-- Nom -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+                <td mat-cell *matCellDef="let product"> {{ product.name }} </td>
+            </ng-container>
+
+            <!-- Description -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let product"> {{ product.description }} </td>
+            </ng-container>
+
+            <!-- Prix -->
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Prix / jour </th>
+                <td mat-cell *matCellDef="let product">
+                    {{ product.price | currency:'EUR' }}
+                </td>
+            </ng-container>
+
+            <!-- Disponibilité -->
+            <ng-container matColumnDef="available">
+                <th mat-header-cell *matHeaderCellDef> Disponibilité </th>
+                <td mat-cell *matCellDef="let product">
+            <span [ngClass]="{'text-success': product.available, 'text-danger': !product.available}">
+              {{ product.available ? 'Disponible' : 'Indisponible' }}
+            </span>
+                </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let product">
+
+                    @if (isTechOrAdmin) {
                         <button mat-button color="accent" [routerLink]="['/modifier-produit', product.id]">Modifier</button>
                         <button mat-button color="warn" (click)="deleteProduct(product.id)">Supprimer</button>
-                    }
-                    @if (auth.role === UserRole.CLIENT) {
-                        <button mat-button color="primary" (click)="openRentalDialog(product)" [disabled]="!product.available">
+                    } @else if (isClient) {
+                        <button mat-button color="primary"
+                                (click)="openRentalDialog(product)"
+                                [disabled]="!product.available">
                             Louer
                         </button>
                     }
-                </mat-card-actions>
-            </mat-card>
-        </div>
-    }
-</div>
+
+                </td>
+            </ng-container>
+
+            <!-- Rendu des lignes -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="12" [pageSizeOptions]="[5, 10, 12, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</mat-card>
