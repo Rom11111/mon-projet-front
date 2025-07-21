@@ -9,6 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {Rental} from '../../models/rental';
 import {RentalService} from '../../services/rental.service';
+import {PageHeaderComponent} from '../../components/page-header/page-header.component';
 
 
 
@@ -20,7 +21,8 @@ import {RentalService} from '../../services/rental.service';
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        MatCardModule
+        MatCardModule,
+        PageHeaderComponent
     ],
     templateUrl: './rental.component.html',
     styleUrls: ['./rental.component.scss']

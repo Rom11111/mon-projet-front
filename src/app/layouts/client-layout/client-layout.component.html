@@ -1,16 +1,16 @@
 
 <mat-sidenav-container class="mat-app-background total-height">
-    <!-- 🔹 SIDE NAV -->
+    <!-- SIDE NAV -->
     <mat-sidenav mode="side" [opened]="true" class="sidenav">
         <div class="sidenav-container">
 
-            <!-- 🔹 LOGO -->
+            <!-- LOGO -->
             <div class="sidenav-header">
                 <img *ngIf="!sideNavCollapsed()" src="assets/images/altaTech.svg" alt="Alta Tech Logo" />
                 <img *ngIf="sideNavCollapsed()" src="assets/icons/alta-tech-icon.svg" alt="Alta Tech Icon" width="40" height="40" />
             </div>
 
-            <!-- 🔹 NAVIGATION PRINCIPALE -->
+            <!-- NAVIGATION PRINCIPALE -->
             <nav class="sidenav-nav">
                 @for (item of mainMenuItems(); track item.route) {
                     <a class="menu-item" [routerLink]="item.route" routerLinkActive="selected-menu-item">
@@ -29,7 +29,7 @@
                 }
             </nav>
 
-            <!-- 🔹 FOOTER AVEC PROFIL ET ACTIONS -->
+            <!-- FOOTER AVEC PROFIL ET ACTIONS -->
             <div class="sidenav-footer">
                 <div class="profile-section">
                     <div class="profile-pic">
@@ -58,7 +58,7 @@
         </div>
     </mat-sidenav>
 
-    <!-- 🔹 CONTENU CENTRAL -->
+    <!-- CONTENU CENTRAL -->
     <mat-sidenav-content class="main-content">
         <div class="router-container">
             <router-outlet></router-outlet>

@@ -35,11 +35,11 @@ export type MenuItem = {
         MatSidenavContainer,
         MatSidenav,
     ],
-    templateUrl: './main-layout.component.html',
-    styleUrls: ['./main-layout.component.scss']
+    templateUrl: './client-layout.component.html',
+    styleUrls: ['./client-layout.component.scss']
 
 })
-export class MainLayoutComponent {
+export class ClientLayoutComponent {
 
 
     darkMode = signal(false);

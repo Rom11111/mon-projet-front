@@ -25,7 +25,8 @@ import { of } from 'rxjs';
 import { ClientService } from '../../services/clients.service';
 import { ClientDetailsDialogComponent } from './client-details-dialog.component';
 import {Client} from '../../models/client';
-import {Role} from '../../models/Role.enum';
+import {Role} from '../../models/role.enum';
+import {PageHeaderComponent} from '../../components/page-header/page-header.component';
 
 
 @Component({
@@ -51,6 +52,7 @@ import {Role} from '../../models/Role.enum';
         MatTable,
         MatTooltip,
         MatLabel,
+        PageHeaderComponent,
 
     ],
     styleUrls: ['./clients.component.scss']

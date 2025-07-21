@@ -1,54 +1,41 @@
-import {Routes} from '@angular/router';
-import {Page404Component} from './pages/page404/page404.component';
-import {EditProductComponent} from './pages/products/edit-product/edit-product.component';
-import {LoginComponent} from './pages/auth/login/login.component';
-import {SettingsComponent} from './pages/settings/settings.component';
-import {RentalComponent} from './pages/rental/rental.component';
-import {EquipmentsComponent} from './pages/products/equipments/equipments.component';
-import {DashboardComponent} from './pages/dashboard/dashboard.component';
-import {loggedGuard} from './services/logged.guard';
-import {notLoggedGuard} from './services/not-logged.guard'; // À créer si nécessaire
-import {ClientsComponent} from './pages/clients/clients.component';
-import {EmailValidationComponent} from './pages/email-validation/email-validation.component';
-import {SignupComponent} from './pages/auth/signup/signup.component';
-import {ContactComponent} from './pages/contact/contact.component';
-import {TeamComponent} from './pages/team/team.component';
-import {LoginLayoutComponent} from './layouts/login-layout/login-layout.component';
-import {MainLayoutComponent} from './layouts/main-layout/main-layout.component';
+import { Routes } from '@angular/router';
+import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
+import {notLoggedGuard} from './guards/not-logged.guard';
+import {loggedGuard} from './guards/logged.guard';
+
 
 export const routes: Routes = [
-    // Routes d'authentification
-        {
-            path: '',
-            component: LoginLayoutComponent,
-            children: [
-                {path: 'login', component: LoginComponent, canActivate: [notLoggedGuard], data: { title: 'Connexion' }},
-                {path: 'signup', component: SignupComponent, canActivate: [notLoggedGuard], data: { title: 'Inscription' }},
-                {path: 'validate-mail/:token', component: EmailValidationComponent,data: { title: 'Validation de l\'email' }},
-                {path: '', redirectTo: 'login', pathMatch: 'full'}
-            ]
-        },
-
-    // Layout principal (protégé)
     {
         path: '',
-        component: MainLayoutComponent,
-        canActivate: [loggedGuard], // Protection globale
+        component: LoginLayoutComponent,
         children: [
-            {path: 'dashboard', component: DashboardComponent, data: {title: 'Tableau de bord'}},
-            {path: 'equipments', component: EquipmentsComponent, data: {title: 'Équipements'}},
-            {path: 'rental', component: RentalComponent, data: {title: 'Locations'}},
-            {path: 'clients', component: ClientsComponent, data: {title: 'Clients'}},
-            {path: 'team', component: TeamComponent, data: {title: 'Équipe'}},
-            {path: 'contact', component: ContactComponent, data: {title: 'Contact'}},
-            {path: 'settings', component: SettingsComponent, data: {title: 'Paramètres'}},
-            {path: 'ajout-produit', component: EditProductComponent, data: {title: 'Ajouter un produit'}},
-            {path: 'modifier-produit/:id', component: EditProductComponent, data: {title: 'Modifier le produit'}},
-            {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
+            { path: 'login', loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent), canActivate: [notLoggedGuard], data: { title: 'Connexion' } },
+            { path: 'signup', loadComponent: () => import('./pages/auth/signup/signup.component').then(m => m.SignupComponent), canActivate: [notLoggedGuard], data: { title: 'Inscription' } },
+            { path: 'forgot-password', loadComponent: () => import('./pages/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent), canActivate: [notLoggedGuard], data: { title: 'Mot de passe oublié' } },
+            { path: 'reset-password', loadComponent: () => import('./pages/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent), canActivate: [notLoggedGuard], data: { title: 'Réinitialisation du mot de passe' } },
+            { path: 'validate-mail/:token', loadComponent: () => import('./pages/email-validation/email-validation.component').then(m => m.EmailValidationComponent), data: { title: 'Validation de l\'email' } },
+            { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
     },
 
-            // Route 404 - doit toujours être la dernière
-            { path: '**', component: Page404Component, data: { title: 'Page non trouvée' }}
-];
+    {
+        path: '',
+        component: ClientLayoutComponent,
+        canActivate: [loggedGuard],
+        children: [
+            { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent), data: { title: 'Tableau de bord' } },
+            { path: 'equipments', loadComponent: () => import('./pages/products/equipments/equipments.component').then(m => m.EquipmentsComponent), data: { title: 'Équipements' } },
+            { path: 'rental', loadComponent: () => import('./pages/rental/rental.component').then(m => m.RentalComponent), data: { title: 'Locations' } },
+            { path: 'clients', loadComponent: () => import('./pages/clients/clients.component').then(m => m.ClientsComponent), data: { title: 'Clients' } },
+            { path: 'team', loadComponent: () => import('./pages/team/team.component').then(m => m.TeamComponent), data: { title: 'Équipe' } },
+            { path: 'contact', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent), data: { title: 'Contact' } },
+            { path: 'settings', loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent), data: { title: 'Paramètres' } },
+            { path: 'ajout-produit', loadComponent: () => import('./pages/products/edit-product/edit-product.component').then(m => m.EditProductComponent), data: { title: 'Ajouter un produit' } },
+            { path: 'modifier-produit/:id', loadComponent: () => import('./pages/products/edit-product/edit-product.component').then(m => m.EditProductComponent), data: { title: 'Modifier le produit' } },
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+        ]
+    },
 
+    { path: '**', loadComponent: () => import('./pages/page404/page404.component').then(m => m.Page404Component), data: { title: 'Page non trouvée' } }
+];

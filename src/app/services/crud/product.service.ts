@@ -23,7 +23,7 @@ export class ProductService {
      * Met à jour la liste des produits dans le BehaviorSubject
      */
     getAll() {
-        this.http.get<Product[]>(environment.serverUrl + 'products')
+        this.http.get<Product[]>( '/api/products')
             .subscribe(products => this.products$.next(products));
     }
 
@@ -33,7 +33,7 @@ export class ProductService {
      * Renvoie un Observable (exploitable avec .subscribe() si besoin)
      */
     save(product: any) {
-        return this.http.post(environment.serverUrl + 'product', product).pipe(
+        return this.http.post( '/api/product', product).pipe(
             // une fois le produit enregistré, on met à jour la liste
             tap(() => this.getAll())
             // pas de catchError ici : il est géré par l'intercepteur global
@@ -47,9 +47,23 @@ export class ProductService {
      * Renvoie un Observable
      */
     update(id: number, product: any) {
-        return this.http.put(environment.serverUrl + 'product/' + id, product).pipe(
+        return this.http.put( '/api/product/' + id, product).pipe(
             // met à jour la liste après modification
             tap(() => this.getAll())
+        );
+    }
+
+    /**
+     * Supprime un produit par son ID
+     * @param id - identifiant du produit à supprimer
+     * Met à jour automatiquement la liste après suppression
+     */
+    delete(id: number) {
+        return this.http.delete( '/api/product/' + id).pipe(
+            tap(() => {
+                this.notification.success('Produit supprimé avec succès');
+                this.getAll(); // met à jour la liste après suppression
+            })
         );
     }
 }

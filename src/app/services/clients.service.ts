@@ -9,16 +9,15 @@ import {Client} from '../models/client';  // Importation depuis le dossier model
     providedIn: 'root'
 })
 export class ClientService {
-    private apiUrl = environment.serverUrl + 'api/users';  // URL de ton API
 
     constructor(private http: HttpClient) {}
 
     getClients(): Observable<Client[]> {
-        return this.http.get<Client[]>(this.apiUrl);  // Récupération des utilisateurs
+        return this.http.get<Client[]>('/api/clients');  // Récupération des utilisateurs
     }
 
     deleteClient(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/clients/${id}`);
+        return this.http.delete(`/api/clients/${id}`);
     }
 
 }

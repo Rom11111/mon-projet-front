@@ -1,3 +1,19 @@
+.product-page-container {
+    padding: 24px;
+}
+
+.product-card {
+    padding: 16px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.search-bar {
+    min-width: 280px;
+    flex: 1;
+}
+
 // Styles pour la carte produit
 mat-card {
     height: 100%;
@@ -65,7 +81,7 @@ mat-card {
 
 // Style pour le texte d'indisponibilité
 .text-danger {
-    color: #d32f2f;
+    color: #d32f73;
     font-weight: bold;
 }
 

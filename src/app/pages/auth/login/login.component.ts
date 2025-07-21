@@ -28,6 +28,7 @@ export class LoginComponent {
     private auth = inject(AuthService);
     private notification = inject(NotificationService);
 
+    // Création du formulaire avec valeurs par défaut pour faciliter les tests
     form = this.fb.group({
         email: ['a@a.com', [Validators.required, Validators.email]],
         password: ['root', Validators.required]
@@ -35,9 +36,11 @@ export class LoginComponent {
 
     onLogin(): void {
         if (this.form.valid) {
-            this.http.post(`${environment.serverUrl}/login`, this.form.value, { responseType: 'text' })
+            // Appel HTTP au backend pour récupérer un JWT
+            this.http.post('login', this.form.value, { responseType: 'text' })
                 .subscribe({
                     next: jwt => {
+                        // Décodage du JWT pour stocker les infos utilisateur
                         this.auth.decodeJwt(jwt);
                         this.notification.show('Connexion réussie', 'valid');
                         this.router.navigateByUrl('/dashboard');
@@ -51,6 +54,7 @@ export class LoginComponent {
                     }
                 });
         } else {
+            // Le formulaire est invalide (ex : champ vide)
             this.notification.show('Formulaire invalide', 'error');
         }
     }

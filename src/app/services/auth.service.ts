@@ -5,33 +5,57 @@ import {Injectable} from '@angular/core';
 })
 export class AuthService {
 
-    connected = false
-    role: string | null = null
+    // Indique si l'utilisateur est connecté
+    connected = false;
+
+    // Stocke le rôle de l'utilisateur (ex : 'CLIENT', 'ADMIN', 'TECH')
+    role: string | null = null;
 
     constructor() {
+        // Si un JWT est déjà présent dans le localStorage, on le décode pour récupérer le rôle
         const jwt = localStorage.getItem("jwt")
         if (jwt != null) {
             this.decodeJwt(jwt)
         }
     }
 
+    /**
+     * Décode le JWT reçu (au login) et extrait le rôle
+     * @param jwt Le token JWT sous forme de chaîne
+     */
     decodeJwt(jwt: string) {
         localStorage.setItem("jwt", jwt)
 
-        //on decoupe le jwt en 3 parties séparées par un point
+        //on découpe le jwt en 3 parties séparées par un point
         const splitJwt = jwt.split(".");
-        //on recupere la partie "body" du jwt
+
+        //on récupère la partie "body" du jwt
         const jwtBody = splitJwt[1]
-        //on decode la base 64
+
+        // On décode le corps du JWT depuis la base64
         const jsonBody = atob(jwtBody)
-        //on transforme le json en objet js
+
+        // On transforme la chaîne JSON en objet JS
         const body = JSON.parse(jsonBody)
 
+        // On extrait le rôle et on l'enregistre dans le service
         this.role = body.role;
 
+        // On indique que l'utilisateur est connecté
         this.connected = true;
     }
 
+    /**
+     * Renvoie le rôle actuel de l'utilisateur
+     * @returns 'CLIENT', 'ADMIN', 'TECH' ou null
+     */
+    getUserRole(): string | null {
+        return this.role;
+    }
+
+    /**
+     * Déconnecte l'utilisateur en supprimant le JWT
+     */
     logout() {
         localStorage.removeItem("jwt")
         this.connected = false

@@ -16,7 +16,8 @@ import {MatOption, MatSelect} from '@angular/material/select';
 import {NgForOf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {Client} from '../../models/client';
-import {Role} from '../../models/Role.enum';
+import {Role} from '../../models/role.enum';
+import {PageHeaderComponent} from '../../components/page-header/page-header.component';
 
 
 
@@ -43,7 +44,8 @@ import {Role} from '../../models/Role.enum';
         MatOption,
         NgForOf,
         MatLabel,
-        MatIcon
+        MatIcon,
+        PageHeaderComponent
     ],
     styleUrls: ['./team.component.scss']
 })

@@ -16,6 +16,11 @@ import { Role } from '../../../models/role.enum';
 import { environment } from '../../../../environments/environment';
 import { MatCard } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
+import {NotificationService} from '../../../services/notification.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialogComponent} from '../../../components/confirm-dialog/confirm-dialog.component';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {PageHeaderComponent} from '../../../components/page-header/page-header.component';
 
 @Component({
     standalone: true,
@@ -33,7 +38,14 @@ import { MatCheckbox } from '@angular/material/checkbox';
         NgClass,
         MatCard,
         NgOptimizedImage,
-        MatCheckbox
+        MatCheckbox,
+        MatFormField,
+        MatLabel,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatFormField,
+        PageHeaderComponent
     ]
 })
 export class EquipmentsComponent implements OnInit {
@@ -54,9 +66,12 @@ export class EquipmentsComponent implements OnInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
+
     constructor(
         private productService: ProductService,
-        public auth: AuthService
+        public auth: AuthService,
+        private notification: NotificationService,
+        private dialog: MatDialog
     ) {}
 
     ngOnInit(): void {
@@ -80,13 +95,31 @@ export class EquipmentsComponent implements OnInit {
         });
     }
 
+
+
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
     /**
      * Supprime un produit par son ID
-     * À relier à une vraie méthode dans le service
+     * Appelle le service puis rafraîchit la liste
      */
     deleteProduct(id: number): void {
-        console.log('Suppression du produit avec ID:', id);
-        // Ex: appeler productService.delete(id) puis productService.getAll()
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Confirmation',
+                message: 'Es-tu sûr de vouloir supprimer ce produit ?'
+            },
+            width: '400px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.productService.delete(id).subscribe(); // aucun message
+            }
+        });
     }
 
     /**
@@ -99,6 +132,20 @@ export class EquipmentsComponent implements OnInit {
 
     // Pour gérer les images via env
     protected readonly environment = environment;
+
+
+    getProductImageUrl(product: any): string {
+        if (!product || !product.id) {
+            return ''; // renvoyer une chaîne vide évite l’appel à `new URL(...)`
+        }
+        return `${environment.serverUrl}product/image/${product.id}`;
+    }
+
+    onImageError(event: Event): void {
+        const imgElement = event.target as HTMLImageElement;
+        imgElement.src = 'assets/images/default-product.png'; // chemin de l'image de fallback dans les assets
+    }
+
 
     // --------- Gestion des checkboxes ---------
 

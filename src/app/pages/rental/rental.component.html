@@ -1,5 +1,9 @@
 
-    <mat-card-title class="total-height">Liste des réservations</mat-card-title>
+    <!-- Header -->
+    <app-page-header
+        [title]="'Liste des réservations'"
+        [breadcrumbs]="['Liste des réservations']">
+    </app-page-header>
     <mat-card>
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 

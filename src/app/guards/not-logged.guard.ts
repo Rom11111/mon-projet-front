@@ -1,7 +1,7 @@
 
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 
 /**
  * Garde qui empêche les utilisateurs déjà connectés d'accéder à certaines pages

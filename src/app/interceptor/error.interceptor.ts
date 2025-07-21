@@ -54,6 +54,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 panelClass: ['error-snackbar']
             });
 
+            // Important : relancer l’erreur pour qu’elle puisse être gérée ailleurs si besoin
             throw error;
         })
     );
