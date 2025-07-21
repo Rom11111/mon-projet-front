@@ -1,0 +1,48 @@
+.page-header {
+    background-color: #1B2A3D;
+    border-radius: 8px;
+    padding: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .page-title {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        gap: 4px;
+
+        .active {
+            color: #aaa;
+        }
+
+        mat-icon {
+            color: #f25c05;
+        }
+    }
+
+    .breadcrumb-home {
+        display: inline-flex;
+        align-items: center;
+        color: inherit;
+        text-decoration: none;
+
+        mat-icon {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        &:hover {
+            color: #1976d2; // ou ta couleur principale
+        }
+    }
+}
+
