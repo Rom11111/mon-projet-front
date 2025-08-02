@@ -39,86 +39,64 @@ export class EditProductComponent implements OnInit{
         price: [15.99, [Validators.required, Validators.min(0.1)]],
         // Validators.min(0.1) le prix doit être d'au moins 10 centimes.
         etat: [{id: 1}],
-        // labels: [[] as Label[]],
-    })
+    });
 
     etats: Etat[] = []
-    // labels: Label[] = []
     editedProduct: Product | null = null;
 
-
     ngOnInit() {
-
-        this.activatedRoute.params
-            .subscribe(parameters => {
-                // Si c'est une edition
-                if (parameters['id']) {
-                    this.http
-                        .get<Product>('environment.serverUrl +/product/' + parameters['id'])
-                        .subscribe((product => {
-                            this.form.patchValue(product)
-                            this.editedProduct = product
-                        }))
-
-                }
-            })
-
-        // this.http
-        //     .get<Label[]>("environment.serverUrl +/etats")
-        //     .subscribe(etats => this.etats = etats)
-        // this.http
-        //     .get<Label[]>("environment.serverUrl +/labels")
-        //     .subscribe(labels => this.labels = labels)
-
+        // Si un paramètre "id" est présent → mode édition
+        this.activatedRoute.params.subscribe(parameters => {
+            if (parameters['id']) {
+                this.http.get<Product>('product/' + parameters['id']).subscribe(product => {
+                    this.form.patchValue(product);
+                    this.editedProduct = product;
+                });
+            }
+        });
     }
 
+    // Soumission du formulaire
     onAddProduct() {
+        if (this.form.invalid) return;
 
-        if (this.form.valid) {
-
-            // pour éditer
-            if (this.editedProduct){
-                this.productService
-                    .update(this.editedProduct.id, this.form.value)
-                    .subscribe({
-                        next : () => this.notification.show("Le produit a bien été modifié", "valid"),
-                        error: () => this.notification.show("Problème de communication", "error"),
-        })
+        if (this.editedProduct) {
+            // ✏️ MODE ÉDITION
+            this.productService.update(this.editedProduct.id, this.form.value).subscribe({
+                next: () => {
+                    this.notification.show("Le produit a bien été modifié", "valid");
+                    this.router.navigateByUrl("equipments");
+                },
+                error: () => {
+                    this.notification.show("Problème de communication", "error");
+                }
+            });
 
         } else {
-
+            // ➕ MODE AJOUT (avec gestion image)
             const formData = new FormData();
-
-                formData.set("produit", new Blob([JSON.stringify(this.form.value)], {type: 'application/json'}));
-
-            if(this.photo){
-                formData.set("photo", this.photo)
+            formData.set("produit", new Blob([JSON.stringify(this.form.value)], {type: 'application/json'}));
+            if (this.photo) {
+                formData.set("photo", this.photo);
             }
-
-
-            this.http
-                .post("environment.serverUrl +/product", this.form.value)
-                .subscribe(product => console.log("OK"))
-
-
-                //this.productService
-                //    .save(this.form.value)
-                //    .subscribe({
-                //        next: () => this.notification.show("Produit modifié"),
-                //        error: () => this.notification.show("Problème de communication", "error"),
-                //    })
-
+            this.http.post("product", formData).subscribe({
+                next: () => {
+                    this.notification.show("Produit ajouté avec succès", "valid");
+                    this.router.navigateByUrl("equipments");
+                },
+                error: () => {
+                    this.notification.show("Erreur lors de l'ajout", "error");
+                }
+            });
         }
-
-        this.router.navigateByUrl("/accueil")
     }
-}
 
+    // Pour les <select> (ex: compare deux états par ID)
     compareId(o1: { id: number }, o2: { id: number }) {
-
         return o1.id === o2.id
     }
 
+    // Déclenché par le composant d'upload
     onPhotoSelected(file: File | null) {
         this.photo = file
     }
