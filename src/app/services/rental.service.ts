@@ -3,18 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Rental } from '../models/rental';
 import {environment} from '../../environments/environment';
+import {RentalResponse} from '../models/rental-response';
  // ajuste le chemin selon ton projet
 
 @Injectable({
     providedIn: 'root'
 })
 export class RentalService {
-    private apiUrl =  environment.serverUrl + 'rentals'; // adapte à ton backend
+    private apiUrl = 'rentals';
 
     constructor(private http: HttpClient) {}
 
     getAllRentals(): Observable<Rental[]> {
         return this.http.get<Rental[]>(this.apiUrl);
+    }
+
+    getClientRentals(): Observable<RentalResponse[]> {
+        return this.http.get<RentalResponse[]>(this.apiUrl);
     }
 
     getRentalById(id: number): Observable<Rental> {
