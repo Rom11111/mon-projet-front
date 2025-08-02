@@ -4,6 +4,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-button (click)="onCancel()">Annuler</button>
-    <button mat-flat-button color="warn" (click)="onConfirm()">Supprimer</button>
+    <button mat-button (click)="onCancel()">
+        {{ data.cancelButtonText || 'Annuler' }}
+    </button>
+    <button mat-flat-button color="warn" (click)="onConfirm()">
+        {{ data.confirmButtonText || 'Supprimer' }}
+    </button>
 </mat-dialog-actions>

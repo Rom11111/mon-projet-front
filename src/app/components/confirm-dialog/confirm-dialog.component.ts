@@ -6,30 +6,37 @@ import {
     MatDialogRef,
     MatDialogTitle
 } from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
+    standalone: true,
     imports: [
         MatDialogActions,
         MatDialogContent,
         MatDialogTitle,
         MatButton
-    ],
-    standalone: true
+    ]
 })
 export class ConfirmDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string }
+        @Inject(MAT_DIALOG_DATA) public data: {
+            title: string;
+            message: string;
+            confirmButtonText?: string; // Texte personnalisé pour le bouton de validation
+            cancelButtonText?: string;  // Texte personnalisé pour le bouton d’annulation
+        }
     ) {}
 
+    // Appelé quand l'utilisateur clique sur "Valider" (ou autre)
     onConfirm(): void {
-        this.dialogRef.close(true); // utilisateur a confirmé
+        this.dialogRef.close(true);
     }
 
+    // Appelé quand l'utilisateur clique sur "Annuler"
     onCancel(): void {
-        this.dialogRef.close(false); // utilisateur a annulé
+        this.dialogRef.close(false);
     }
 }
