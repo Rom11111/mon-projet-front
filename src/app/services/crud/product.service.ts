@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import {BehaviorSubject, Observable, tap} from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { environment } from '../../../environments/environment';
+import {ApiResponseDto} from '../../dto/ApiResponseDto';
 
 @Injectable({
     providedIn: 'root' // rend le service disponible partout sans le déclarer dans un module
@@ -23,7 +24,7 @@ export class ProductService {
      * Met à jour la liste des produits dans le BehaviorSubject
      */
     getAll() {
-        this.http.get<Product[]>( '/api/products')
+        this.http.get<Product[]>( 'products')
             .subscribe(products => this.products$.next(products));
     }
 
@@ -33,7 +34,7 @@ export class ProductService {
      * Renvoie un Observable (exploitable avec .subscribe() si besoin)
      */
     save(product: any) {
-        return this.http.post( '/api/product', product).pipe(
+        return this.http.post( 'product', product).pipe(
             // une fois le produit enregistré, on met à jour la liste
             tap(() => this.getAll())
             // pas de catchError ici : il est géré par l'intercepteur global
@@ -47,11 +48,31 @@ export class ProductService {
      * Renvoie un Observable
      */
     update(id: number, product: any) {
-        return this.http.put( '/api/product/' + id, product).pipe(
+        return this.http.put( 'product/' + id, product).pipe(
             // met à jour la liste après modification
             tap(() => this.getAll())
         );
     }
+
+    /**
+     * Active ou désactive un produit (toggle disponibilité)
+     * Appelle l’endpoint PATCH /admin/product/{id}/toggle-availability
+     * @param productId - ID du produit à modifier
+     */
+    toggleAvailability(productId: number): Observable<ApiResponseDto<Product>> {
+        return this.http.patch<ApiResponseDto<Product>>(
+            `admin/product/${productId}/toggle-availability`,
+            {}
+        ).pipe(
+            tap(res => {
+                const dispo = res.data.available ? 'disponible' : 'indisponible';
+                this.notification.success(`Produit ${res.data.name} est maintenant ${dispo}`);
+                // Optionnel : this.getAll(); si tu veux actualiser la liste
+            })
+        );
+    }
+
+
 
     /**
      * Supprime un produit par son ID
@@ -59,7 +80,7 @@ export class ProductService {
      * Met à jour automatiquement la liste après suppression
      */
     delete(id: number) {
-        return this.http.delete( '/api/product/' + id).pipe(
+        return this.http.delete( 'product/' + id).pipe(
             tap(() => {
                 this.notification.success('Produit supprimé avec succès');
                 this.getAll(); // met à jour la liste après suppression

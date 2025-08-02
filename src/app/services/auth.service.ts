@@ -1,4 +1,7 @@
 import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -11,13 +14,21 @@ export class AuthService {
     // Stocke le rôle de l'utilisateur (ex : 'CLIENT', 'ADMIN', 'TECH')
     role: string | null = null;
 
-    constructor() {
+
+    constructor(private http: HttpClient) {
         // Si un JWT est déjà présent dans le localStorage, on le décode pour récupérer le rôle
         const jwt = localStorage.getItem("jwt")
         if (jwt != null) {
             this.decodeJwt(jwt)
         }
     }
+
+
+    login(credentials: { email: string; password: string }): Observable<string> {
+        // L’intercepteur ajoutera le serverUrl automatiquement
+        return this.http.post('login', credentials, { responseType: 'text' });
+    }
+
 
     /**
      * Décode le JWT reçu (au login) et extrait le rôle
