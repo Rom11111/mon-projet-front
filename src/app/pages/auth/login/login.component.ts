@@ -37,7 +37,7 @@ export class LoginComponent {
     onLogin(): void {
         if (this.form.valid) {
             // Appel HTTP au backend pour récupérer un JWT
-            this.http.post('login', this.form.value, { responseType: 'text' })
+            this.http.post('/login', this.form.value, { responseType: 'text' })
                 .subscribe({
                     next: jwt => {
                         // Décodage du JWT pour stocker les infos utilisateur
