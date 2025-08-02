@@ -1,1 +1,11 @@
-<p>unauthorized works!</p>
+<app-page-header
+    [title]="'Accès refusé'"
+    [breadcrumbs]="['Erreur']">
+</app-page-header>
+
+<mat-card class="unauthorized-card">
+    <h2>Accès refusé</h2>
+    <p>Vous n'avez pas les droits pour accéder à cette page.</p>
+    <a mat-raised-button color="primary" routerLink="/dashboard">Retour au tableau de bord</a>
+</mat-card>
+
