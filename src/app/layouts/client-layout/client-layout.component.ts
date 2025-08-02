@@ -1,21 +1,22 @@
-import {Component, computed, inject, Input, signal} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {MatLineModule} from '@angular/material/core';
-import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { MatLineModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MatIconAnchor, MatIconButton} from '@angular/material/button';
-import {MatTooltip} from '@angular/material/tooltip';
-import {AuthService} from '../../services/auth.service';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
+import { MatIconAnchor, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AuthService } from '../../services/auth.service';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import { UserService } from '../../services/user.service';
+import { User } from '../../models/user';
 
 export type MenuItem = {
     icon: string;
     label: string;
-    route?:string;
-}
+    route?: string;
+};
+
 @Component({
     standalone: true,
     selector: 'app-main-layout',
@@ -33,95 +34,74 @@ export type MenuItem = {
         RouterOutlet,
         MatSidenavContent,
         MatSidenavContainer,
-        MatSidenav,
+        MatSidenav
     ],
     templateUrl: './client-layout.component.html',
     styleUrls: ['./client-layout.component.scss']
-
 })
-export class ClientLayoutComponent {
+export class ClientLayoutComponent implements OnInit {
 
+    userName: string = 'Utilisateur';
+    userPhoto: string = 'assets/profiles/avatar-1.jpg';
+    userRole: string = '';
+    collapsed: boolean = false;
 
-    darkMode = signal(false);
+    constructor(
+        public auth: AuthService,
+        private userService: UserService,
+        private router: Router,
 
-    auth = inject(AuthService);
-    overlay = inject(OverlayContainer);
+    ) {}
 
-    sideNavCollapsed = signal(false);
-    @Input() set collapsed(val: boolean){
-        this.sideNavCollapsed.set(val);
+    @Input() set setCollapsed(val: boolean) {
+        this.collapsed = val;
     }
 
-    toggleDarkMode() {
-        this.darkMode.update((v) => !v);
-        const isDark = this.darkMode();
-        const html = document.documentElement;
-        if (isDark) {
-            html.classList.add('dark-theme');
-            this.overlay.getContainerElement().classList.add('dark-theme');
-        } else {
-            html.classList.remove('dark-theme');
-            this.overlay.getContainerElement().classList.remove('dark-theme');
-        }
+    ngOnInit(): void {
+        this.userService.getCurrentUser().subscribe({
+            next: user => {
+                this.userName = user.firstname;
+                this.userRole = user.role;
+
+                if (user.photoUrl) {
+                    this.userPhoto = user.photoUrl;
+                } else {
+                    const fullName = `${user.firstname} ${user.lastname}`;
+                    const encodedName = encodeURIComponent(fullName.trim());
+                    this.userPhoto = `https://ui-avatars.com/api/?name=${encodedName}&background=4F46E5&color=fff&rounded=true`;
+                }
+            },
+            error: () => {
+                this.userName = 'Utilisateur';
+                this.userPhoto = 'assets/profiles/avatar-1.jpg';
+                this.userRole = '';
+            }
+        });
     }
 
-    onSignOut() {
-        localStorage.removeItem("jwt");
-        this.auth.connected = false;
+    onSignOut(): void {
+        this.auth.logout(); // Déconnexion
+        this.router.navigate(['/login']); // Redirection
     }
 
-    // GROUPE 1 : Liens de navigation principaux
-    mainMenuItems = signal<MenuItem[]>([
-        {
-            icon: "layout-dashboard.svg",
-            label: "Dashboard",
-            route: "dashboard",
-        },
-        {
-            icon: "monitor.svg",
-            label: "Équipements",
-            route: "equipments",
-        },
-        {
-            icon: "calendar-check.svg",
-            label: "Réservations",
-            route: "rental",
-        },
-        {
-            icon: "users.svg",
-            label: "Clients",
-            route: "clients",
-        },
-    ]);
-    // GROUPE 2 : Liens secondaires
-    secondaryMenuItems = signal<MenuItem[]>([
-        {
-            icon: "user-cog.svg",
-            label: "Team",
-            route: "team",
-        },
-        {
-            icon: "message-square.svg",
-            label: "Contact",
-            route: "contact",
-        },
-    ]);
+    profilePicSize(): string {
+        return this.collapsed ? '32' : '100';
+    }
 
+    mainMenuItems: MenuItem[] = [
+        { icon: 'layout-dashboard.svg', label: 'Dashboard', route: 'dashboard' },
+        { icon: 'monitor.svg', label: 'Équipements', route: 'equipments' },
+        { icon: 'calendar-check.svg', label: 'Réservations', route: 'rental' },
+        { icon: 'history.svg', label: 'Mes Réservations', route: 'my-rentals' },
+        { icon: 'users.svg', label: 'Clients', route: 'clients' }
+    ];
 
-    tracksByIndex(index: number, item: MenuItem) {return index; }
-    profilePicSize = computed(() => this.sideNavCollapsed() ? '32' : '100');
+    secondaryMenuItems: MenuItem[] = [
+        { icon: 'user-cog.svg', label: 'Team', route: 'team' },
+        { icon: 'message-square.svg', label: 'Contact', route: 'contact' }
+    ];
+
+    tracksByIndex(index: number, item: MenuItem): number {
+        return index;
+    }
 }
-// collapsed = signal(false);
-// darkMode = signal(false);
-//
-// auth = inject(AuthService);
-// overlay = inject(OverlayContainer);
-//
-// sidenavWidth = computed(() =>
-//     this.auth.connected ? (this.collapsed() ? "65px" : "250px") : "0px"
-// );
-//
-// onSignOut() {
-//     localStorage.removeItem("jwt");
-//     this.auth.connected = false;
-// }
