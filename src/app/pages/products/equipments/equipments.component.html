@@ -9,14 +9,12 @@
 
         <div class="container mt-4">
 
-            @if (isTechOrAdmin) {
-                <!-- Bouton Ajouter visible uniquement pour TECH et ADMIN -->
-                <div class="d-flex justify-content-end mb-3">
-                    <button mat-flat-button color="primary" routerLink="/ajout-produit">
-                        Ajouter un produit
-                    </button>
-                </div>
-            }
+            <!-- Bouton "Ajouter un produit" visible uniquement pour TECH et ADMIN -->
+            <div class="d-flex justify-content-end mb-3" *ngIf="isTechOrAdmin">
+                <button mat-flat-button color="primary" routerLink="/ajout-produit">
+                    Ajouter un produit
+                </button>
+            </div>
 
             <mat-form-field appearance="outline" class="w-100 mb-3">
                 <mat-label>Rechercher un produit</mat-label>
@@ -104,30 +102,45 @@
                 <ng-container matColumnDef="available">
                     <th mat-header-cell *matHeaderCellDef> Disponibilité </th>
                     <td mat-cell *matCellDef="let product">
-                <span [ngClass]="{'text-success': product.available, 'text-danger': !product.available}">
-                  {{ product.available ? 'Disponible' : 'Indisponible' }}
-                </span>
+                        <ng-container *ngIf="isTechOrAdmin; else readonlyStatus">
+                            <mat-slide-toggle
+                                [checked]="product.available"
+                                (change)="onToggleAvailability(product)">
+                                {{ product.available ? 'Dispo' : 'Indispo' }}
+                            </mat-slide-toggle>
+                        </ng-container>
+
+                        <ng-template #readonlyStatus>
+                            <span [ngClass]="{ 'text-success': product.available, 'text-danger': !product.available }">
+                                {{ product.available ? 'Disponible' : 'Indisponible' }}
+                            </span>
+                        </ng-template>
                     </td>
                 </ng-container>
 
-                <!-- Actions -->
+                <!-- Colonne Actions -->
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> Actions </th>
                     <td mat-cell *matCellDef="let product">
 
-                        @if (isTechOrAdmin) {
+                        <!-- Pour TECH ou ADMIN -->
+                        <ng-container *ngIf="isTechOrAdmin">
                             <button mat-button color="accent" [routerLink]="['/modifier-produit', product.id]">Modifier</button>
                             <button mat-button color="warn" (click)="deleteProduct(product.id)">Supprimer</button>
-                        } @else if (isClient) {
+                        </ng-container>
+
+                        <!-- Pour CLIENT -->
+                        <ng-container *ngIf="isClient">
                             <button mat-button color="primary"
                                     (click)="openRentalDialog(product)"
                                     [disabled]="!product.available">
                                 Louer
                             </button>
-                        }
+                        </ng-container>
 
                     </td>
                 </ng-container>
+
 
                 <!-- Rendu des lignes -->
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

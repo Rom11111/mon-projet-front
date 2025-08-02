@@ -21,6 +21,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../../components/confirm-dialog/confirm-dialog.component';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {PageHeaderComponent} from '../../../components/page-header/page-header.component';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
 
 @Component({
     standalone: true,
@@ -45,7 +46,8 @@ import {PageHeaderComponent} from '../../../components/page-header/page-header.c
         MatInput,
         MatLabel,
         MatFormField,
-        PageHeaderComponent
+        PageHeaderComponent,
+        MatSlideToggle
     ]
 })
 export class EquipmentsComponent implements OnInit {
@@ -75,20 +77,25 @@ export class EquipmentsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // Détection du rôle de l'utilisateur connecté
+        // Récupère directement le rôle sans préfixe
         const role = this.auth.role;
-        this.isClient = role === Role.CLIENT;
-        this.isTechOrAdmin = role === Role.TECH || role === Role.ADMIN;
+        console.log('Rôle reçu :', role);
 
-        // Récupération des produits via le service
+        // Mise à jour des flags
+        this.isClient = role === 'CLIENT';
+        this.isTechOrAdmin = role === 'TECH' || role === 'ADMIN';
+
+        console.log('isClient :', this.isClient);
+        console.log('isTechOrAdmin :', this.isTechOrAdmin);
+
+        // Chargement des produits
         this.productService.products$.subscribe(products => {
             this.dataSource.data = products;
         });
 
-        // Appel initial pour peupler les données
         this.productService.getAll();
 
-        // On branche le tri et la pagination une fois la vue prête
+        // Initialisation du tri et de la pagination
         setTimeout(() => {
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
@@ -100,6 +107,51 @@ export class EquipmentsComponent implements OnInit {
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    isCurrentlyRented(product: Product): boolean {
+        const etat = product.etat?.name?.toLowerCase();
+        return etat === 'en cours' || etat === 'en retard';
+    }
+
+    onToggleAvailability(product: Product): void {
+        // Si produit non dispo à la location (ex : il est déjà loué)
+        if (this.isCurrentlyRented(product)) {
+            this.notification.warning("Ce produit est actuellement loué et ne peut pas être désactivé.");
+            return;
+        }
+
+        // Si on passe de dispo → indispo → on demande une confirmation
+        if (product.available) {
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                data: {
+                    title: 'Confirmation',
+                    message: `Es-tu sûr de vouloir rendre le produit "${product.name}" indisponible ?`,
+                    confirmButtonText: 'Valider',         //  remplacement de "Supprimer"
+                    cancelButtonText: 'Annuler'           //  texte explicite pour "Annuler"
+                },
+                width: '400px'
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.toggle(product);
+                }
+            });
+        } else {
+            this.toggle(product);
+        }
+    }
+
+    private toggle(product: Product): void {
+        this.productService.toggleAvailability(product.id).subscribe({
+            next: (res) => {
+                product.available = res.data.available;
+            },
+            error: () => {
+                this.notification.error("Erreur lors de la mise à jour de disponibilité.");
+            }
+        });
     }
 
     /**
