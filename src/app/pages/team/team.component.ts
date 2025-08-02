@@ -18,6 +18,8 @@ import {MatIcon} from '@angular/material/icon';
 import {Client} from '../../models/client';
 import {Role} from '../../models/role.enum';
 import {PageHeaderComponent} from '../../components/page-header/page-header.component';
+import {User} from '../../models/user';
+import {UserService} from '../../services/user.service';
 
 
 
@@ -58,18 +60,23 @@ export class TeamComponent implements OnInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
-    constructor(private clientService: ClientService) {}
+    constructor(private userService: UserService) {}
 
     ngOnInit() {
-        this.clientService.getClients().subscribe((data: Client[]) => {
-            // Filtrer uniquement les admins et techs
-            this.dataSource.data = data.filter(c => c.role === Role.ADMIN || c.role === Role.TECH);
+        this.userService.getAllUsers().subscribe((response: any) => {
+            console.log("Tous les utilisateurs :", response);
+
+            const users: User[] = response.content;
+
+            this.dataSource.data = users.filter(u =>
+                u.role === Role.ADMIN || u.role === Role.TECH
+            );
+
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
-            // Ajoute un filtre personnalisé pour la catégorie
-            this.dataSource.filterPredicate = (data: Client, filter: string) => {
-                if (!filter) return true;
-                return data.role === filter;
+
+            this.dataSource.filterPredicate = (data: User, filter: string) => {
+                return !filter || data.role === filter;
             };
         });
     }
