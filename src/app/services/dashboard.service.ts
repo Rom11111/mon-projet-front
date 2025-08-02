@@ -16,7 +16,7 @@ export interface DashboardStats {
 })
 export class DashboardService {
 
-    private apiUrl = environment.serverUrl + 'api/dashboard'; // URL de base
+    private apiUrl = 'dashboard'; // URL de base
 
     constructor(private http: HttpClient) { }
 
