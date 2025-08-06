@@ -22,6 +22,7 @@ import {ConfirmDialogComponent} from '../../../components/confirm-dialog/confirm
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {PageHeaderComponent} from '../../../components/page-header/page-header.component';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {RentalDialogComponent} from '../../rental-dialog/rental-dialog.component';
 
 @Component({
     standalone: true,
@@ -78,17 +79,25 @@ export class EquipmentsComponent implements OnInit {
 
     ngOnInit(): void {
         // Récupère directement le rôle sans préfixe
-        const role = this.auth.role;
-        console.log('Rôle reçu :', role);
+        const rawRole = this.auth.role;
+        if (!rawRole) {
+            console.warn('Aucun rôle trouvé pour l’utilisateur. Redirection ou affichage limité.');
+            return;
+        }
+        const role = rawRole.replace('ROLE_', '') as Role;
+
+        console.log('Rôle reçu :', rawRole);
+        console.log('Rôle nettoyé :', role);
 
         // Mise à jour des flags
-        this.isClient = role === 'CLIENT';
-        this.isTechOrAdmin = role === 'TECH' || role === 'ADMIN';
+        this.isClient = role === Role.CLIENT;
+        this.isTechOrAdmin = role === Role.TECH || role === Role.ADMIN;
+
 
         console.log('isClient :', this.isClient);
         console.log('isTechOrAdmin :', this.isTechOrAdmin);
 
-        // Chargement des produits
+        // Chargement des produits depuis l'api
         this.productService.products$.subscribe(products => {
             this.dataSource.data = products;
         });
@@ -178,8 +187,17 @@ export class EquipmentsComponent implements OnInit {
      * Ouvre une modale ou une action pour louer un produit
      */
     openRentalDialog(product: Product): void {
-        console.log('Location demandée pour:', product);
-        // À adapter selon ta modale/dialog ou redirection
+        const dialogRef = this.dialog.open(RentalDialogComponent, {
+            data: { product },
+            width: '500px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result === true) {
+                this.notification.success("Le produit a bien été ajouté à vos locations !");
+                // Tu peux aussi rafraîchir la liste des produits ou naviguer si besoin
+            }
+        });
     }
 
     // Pour gérer les images via env
