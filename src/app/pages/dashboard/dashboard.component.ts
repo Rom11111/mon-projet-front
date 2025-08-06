@@ -26,24 +26,7 @@ import {
     stagger
 } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
-
-export interface Rental {
-    id: number;
-    clientId: number;
-    productId: number;
-    date: Date;
-    heureDebut?: string;
-    heureFin?: string;
-    statut: 'confirmé' | 'en attente' | 'annulé';
-    reservationDate?: Date;
-    expirationDate?: Date;
-    confirmed?: boolean;
-    isActive?: boolean;
-    user?: { firstname: string; lastname: string };
-    product?: { name: string };
-    startDate?: Date;
-    endDate?: Date;
-}
+import {Rental} from '../../models/rental';
 
 @Component({
     selector: 'app-dashboard',
@@ -164,7 +147,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         return rentals.map(rental => ({
             client: rental.user?.firstname + ' ' + rental.user?.lastname || 'Client inconnu',
             equipment: rental.product?.name || 'Équipement inconnu',
-            start: rental.startDate || rental.date,
+            start: rental.startDate ?? rental.reservationDate,
             end: rental.endDate || '-'
         }));
     }
