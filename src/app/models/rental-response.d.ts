@@ -4,5 +4,6 @@ export interface RentalResponse {
     startDate: string;
     endDate: string;
     status: string;
-    createdAt: string;
+    reservationDate: string;
+    quantity: number;
 }
