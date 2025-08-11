@@ -46,3 +46,23 @@ body {
 .total-height {
     min-height: 90vh;
 }
+
+.mat-mdc-table .mat-mdc-header-cell {
+    font-weight: bold !important;
+}
+
+/* Badges dans la table Material */
+.mat-mdc-table .badge {
+    display: inline-block;
+    padding: 4px 8px !important;
+    border-radius: 999px !important; /* pastille arrondie */
+    font-size: 0.85rem;
+    line-height: 1;
+    font-weight: 500;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+.mat-mdc-table .badge-success { background-color: #4caf50 !important; }
+.mat-mdc-table .badge-warning { background-color: #ff9800 !important; }
+.mat-mdc-table .badge-danger  { background-color: #f44336 !important; }
