@@ -5,7 +5,6 @@ import { catchError, Observable, throwError } from 'rxjs';
 import {environment} from '../../environments/environment';
 
 
-
 export function apiInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
     const router = inject(Router);
 
