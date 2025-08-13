@@ -10,7 +10,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCard } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
 import { DashboardService } from '../../services/dashboard.service';
 import { RentalService } from '../../services/rental.service';
 import { UserService } from '../../services/user.service';
@@ -26,7 +25,8 @@ import {
     stagger
 } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
-import {Rental} from '../../models/rental';
+import {PageHeaderComponent} from '../../components/page-header/page-header.component';
+import {RentalResponse} from '../../models/rental-response';
 
 @Component({
     selector: 'app-dashboard',
@@ -36,11 +36,11 @@ import {Rental} from '../../models/rental';
     imports: [
         CommonModule,
         MatCard,
-        MatIcon,
         MatTableModule,
         MatSortModule,
         MatPaginatorModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        PageHeaderComponent
     ],
     animations: [
         trigger('fadeSlideIn', [
@@ -70,8 +70,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     inRepair = 0;
     monthlyRevenue = 0;
 
-    recentRentals: Rental[] = [];
-    dataSource: MatTableDataSource<Rental> = new MatTableDataSource<Rental>([]);
+    recentRentals: RentalResponse[] = [];
+
+    dataSource = new MatTableDataSource<{
+        client: string;
+        equipment: string;
+        start: string;
+        end: string;
+    }>();
     displayedColumns: string[] = ['client', 'equipment', 'start', 'end'];
 
     isLoading = true;
@@ -105,12 +111,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.lateReturns = stats.lateReturns;
                     this.inRepair = stats.inRepair;
                     this.monthlyRevenue = stats.monthlyRevenue;
-                },
-                error: error => {
-                    console.error('Erreur stats', error);
-                    this.snackBar.open('Erreur lors du chargement des statistiques', 'Fermer', {
-                        duration: 5000
-                    });
                 }
             });
 
@@ -118,18 +118,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.rentalService.getRecentRentals()
             .pipe(takeUntil(this.destroy$))
             .subscribe({
-                next: rentals => {
+                next: (rentals) => {
+                    // On garde la data brute si on veut afficher des détails ailleurs
                     this.recentRentals = rentals;
+
+                    // On forme les lignes pour la table (client / produit / dates)
                     this.dataSource.data = this.formatRentalsForTable(rentals);
-                    this.isLoading = false;
                 },
-                error: error => {
-                    console.error('Erreur locations', error);
-                    this.snackBar.open('Erreur lors du chargement des locations récentes', 'Fermer', {
-                        duration: 5000
-                    });
-                    this.isLoading = false;
-                }
+                complete: () => this.isLoading = false
             });
     }
 
@@ -143,12 +139,23 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    private formatRentalsForTable(rentals: Rental[]): any[] {
-        return rentals.map(rental => ({
-            client: rental.user?.firstname + ' ' + rental.user?.lastname || 'Client inconnu',
-            equipment: rental.product?.name || 'Équipement inconnu',
-            start: rental.startDate ?? rental.reservationDate,
-            end: rental.endDate || '-'
+    private formatRentalsForTable(
+        rentals: RentalResponse[]
+    ): { client: string; equipment: string; start: string; end: string }[] {
+        // commentaire : on forme des lignes prêtes pour l'affichage du tableau
+        return rentals.map(r => ({
+            // d'abord les champs à plat, sinon fallback sur l'objet user si présent
+            client:
+                `${r.clientFirstname ?? ''} ${r.clientLastname ?? ''}`.trim()
+                || `${r.user?.firstname ?? ''} ${r.user?.lastname ?? ''}`.trim()
+                || 'Client inconnu',
+
+            // d'abord le nom à plat, sinon fallback sur product?.name
+            equipment: r.productName ?? r.product?.name ?? 'Équipement inconnu',
+
+            // dates en string ISO (le date pipe se charge du format)
+            start: r.startDate ?? r.reservationDate,
+            end: r.endDate || '-',
         }));
     }
 

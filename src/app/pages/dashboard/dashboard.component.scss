@@ -1,9 +1,16 @@
+/* Conteneur principal de page (padding homogène) */
+.product-page-container {
+    padding: 24px;
+}
+
 .dashboard-container {
+    margin-top: 24px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 32px;
     background-color: #101010;
+    border-radius: 16px;
 }
 
 .welcome-message {
@@ -105,4 +112,20 @@
     tr:hover {
         background-color: #f0f0f0;
     }
+}
+
+/* Icône SVG des stats */
+.stat-card {
+    /* on retire la taille du mat-icon et on utilise .stat-icon à la place */
+    mat-icon { display: none; } /* sécurité si tu en laisses un par erreur */
+}
+
+/* taille standard et comportement */
+.stat-icon {
+    width: 44px;   /* même taille visuelle que ton mat-icon actuel */
+    height: 44px;
+    flex-shrink: 0;
+    /* Si tes SVG sont noirs et que tu veux les rendre blancs sans éditer le fichier : */
+    filter: brightness(0) invert(1); /* -> blanc sur fond sombre */
+    opacity: 0.95;
 }
