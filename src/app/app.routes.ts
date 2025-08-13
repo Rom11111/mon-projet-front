@@ -5,7 +5,7 @@ import {notLoggedGuard} from './guards/not-logged.guard';
 import {loggedGuard} from './guards/logged.guard';
 
 export const routes: Routes = [
-    // 🌐 ZONE PUBLIQUE
+    // ZONE PUBLIQUE
     {
         path: '',
         component: LoginLayoutComponent,
