@@ -69,4 +69,7 @@ body {
 .badge-danger  { background-color: #f44336; } // rouge
 .badge-default { background-color: #9e9e9e; } // gris par défaut
 
-
+/* Variantes de couleur pour les statuts de report */
+.badge-open        { background-color: #ff9800; } // orange - en attente
+.badge-in-progress { background-color: #2196f3; } // bleu - en cours
+.badge-resolved    { background-color: #4caf50; } // vert - résolu
