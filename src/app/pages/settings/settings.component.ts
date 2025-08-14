@@ -7,6 +7,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {PageHeaderComponent} from '../../components/page-header/page-header.component';
 
 @Component({
     selector: 'app-settings',
@@ -19,7 +20,8 @@ import { CommonModule } from '@angular/common';
         MatButtonModule,
         MatRadioModule,
         MatSlideToggleModule,
-        MatSelectModule
+        MatSelectModule,
+        PageHeaderComponent
     ],
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss']
