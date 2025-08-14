@@ -1,103 +1,114 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatSelectModule} from '@angular/material/select';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {HttpClient} from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {NotificationService} from '../../../services/notification.service';
-import {ProductService} from '../../../services/crud/product.service';
-import {FileChooserComponent} from '../../../components/file-chooser/file-chooser.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
-// ReactiveFormsModule utilisé pour valider le formulaire
-// FormsModule bloque le formulaire pour ne pas recharger la page
+import { NotificationService } from '../../../services/notification.service';
+import { ProductService } from '../../../services/crud/product.service';
+import { CategoryService } from '../../../services/category.service';
+import { FileChooserComponent } from '../../../components/file-chooser/file-chooser.component';
+
+import { Product } from '../../../models/product';
+import { Category } from '../../../models/category';
+import { Etat } from '../../../models/etat';
+import {MatDialogActions} from '@angular/material/dialog';
+import {CommonModule} from '@angular/common';
+import {EtatService} from '../../../services/etat.service';
+
 @Component({
     selector: 'app-edit-product',
-    imports: [MatInputModule, MatButtonModule, MatIconModule,
-        MatSelectModule, ReactiveFormsModule, FormsModule, FileChooserComponent],
+    standalone: true,
+    imports: [CommonModule, MatInputModule, MatButtonModule, MatIconModule, MatSelectModule, ReactiveFormsModule, FormsModule, FileChooserComponent, MatDialogActions],
     templateUrl: './edit-product.component.html',
     styleUrl: './edit-product.component.scss'
 })
-export class EditProductComponent implements OnInit{
+export class EditProductComponent implements OnInit {
 
-    formBuilder = inject(FormBuilder)
-    http = inject(HttpClient)
-    activatedRoute = inject(ActivatedRoute)
-    notification = inject(NotificationService)
-    router = inject(Router)
-    productService = inject(ProductService)
+    // Injections
+    private fb = inject(FormBuilder);
+    private http = inject(HttpClient);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private notify = inject(NotificationService);
+    private productService = inject(ProductService);
+    private categoryService = inject(CategoryService);
+    private etatService = inject(EtatService);
+
+    // États UI / données
     photo?: File | null = null;
+    etats: Etat[] = [];
+    categories: Category[] = [];
+    editedProduct: Product | null = null;  // null => ajout
+    isEditMode = false;                    // flag de mode, basé sur l’URL
 
-    form = this.formBuilder.group({
-        name: ["Nouveau produit", [Validators.required, Validators.maxLength(20), Validators.minLength(3)]],
-        // le nom est requis.
-        code: ["1234", [Validators.required]],
-        description: ["Une description", []],
+    // Formulaire
+    form = this.fb.group({
+        name: ['Nouveau produit', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+        code: ['1234', [Validators.required]],
+        description: ['Une description'],
+        stock: [0, [Validators.required, Validators.min(0)]],   // ✅ stock présent
         price: [15.99, [Validators.required, Validators.min(0.1)]],
-        // Validators.min(0.1) le prix doit être d'au moins 10 centimes.
-        etat: [{id: 1}],
+        category: [null as Category | null, Validators.required],
+        etat: [{ id: 1 } as any]
     });
 
-    etats: Etat[] = []
-    editedProduct: Product | null = null;
+    ngOnInit(): void {
+        // 1) Charger listes
+        this.categoryService.getCategories().subscribe(cats => this.categories = cats);
+        this.etatService.getEtats().subscribe(list => this.etats = list);
 
-    ngOnInit() {
-        // Si un paramètre "id" est présent → mode édition
-        this.activatedRoute.params.subscribe(parameters => {
-            if (parameters['id']) {
-                this.http.get<Product>('product/' + parameters['id']).subscribe(product => {
-                    this.form.patchValue(product);
-                    this.editedProduct = product;
-                });
-            }
-        });
-    }
+        // 2) Déterminer le mode depuis l’URL (présence de :id)
+        const idParam = this.route.snapshot.paramMap.get('id'); // plus fiable qu’attendre l’async
+        this.isEditMode = !!idParam;
 
-    // Soumission du formulaire
-    onAddProduct() {
-        if (this.form.invalid) return;
-
-        if (this.editedProduct) {
-            // ✏️ MODE ÉDITION
-            this.productService.update(this.editedProduct.id, this.form.value).subscribe({
-                next: () => {
-                    this.notification.show("Le produit a bien été modifié", "valid");
-                    this.router.navigateByUrl("equipments");
-                },
-                error: () => {
-                    this.notification.show("Problème de communication", "error");
-                }
-            });
-
-        } else {
-            // ➕ MODE AJOUT (avec gestion image)
-            const formData = new FormData();
-            formData.set("produit", new Blob([JSON.stringify(this.form.value)], {type: 'application/json'}));
-            if (this.photo) {
-                formData.set("photo", this.photo);
-            }
-            this.http.post("product", formData).subscribe({
-                next: () => {
-                    this.notification.show("Produit ajouté avec succès", "valid");
-                    this.router.navigateByUrl("equipments");
-                },
-                error: () => {
-                    this.notification.show("Erreur lors de l'ajout", "error");
-                }
+        if (this.isEditMode) {
+            const id = Number(idParam);
+            // Charger le produit (si ok => on passe bien en mode édition)
+            this.http.get<Product>('product/' + id).subscribe(prod => {
+                this.editedProduct = prod;
+                this.form.patchValue(prod); // remplit aussi stock/category/etat si noms identiques
             });
         }
     }
 
-    // Pour les <select> (ex: compare deux états par ID)
-    compareId(o1: { id: number }, o2: { id: number }) {
-        return o1.id === o2.id
+    // Soumission (création). Si on est en édition, on redirige vers update.
+    onAddProduct(): void {
+        if (this.form.invalid) return;
+
+        if (this.isEditMode && this.editedProduct) {
+            this.onUpdateProduct();
+            return;
+        }
+
+        const formData = new FormData();
+        formData.set('product', new Blob([JSON.stringify(this.form.value)], { type: 'application/json' }));
+        if (this.photo) formData.set('photo', this.photo);
+
+        this.http.post('product', formData).subscribe({
+            next: () => { this.notify.show('Produit ajouté avec succès', 'valid'); this.router.navigateByUrl('equipments'); },
+            error: () => this.notify.show('Erreur lors de l’ajout', 'error')
+        });
     }
 
-    // Déclenché par le composant d'upload
-    onPhotoSelected(file: File | null) {
-        this.photo = file
+    // Modification (mise à jour)
+    onUpdateProduct(): void {
+        if (this.form.invalid || !this.editedProduct) return;
+
+        this.productService.update(this.editedProduct.id, this.form.value).subscribe({
+            next: () => { this.notify.show('Le produit a bien été modifié', 'valid'); this.router.navigateByUrl('equipments'); },
+            error: () => this.notify.show('Problème de communication', 'error')
+        });
     }
+
+    // Pour <mat-select>
+    compareId(a: { id: number } | null, b: { id: number } | null): boolean {
+        return !!a && !!b && a.id === b.id;
+    }
+
+    onPhotoSelected(file: File | null): void { this.photo = file; }
 }
