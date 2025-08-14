@@ -35,7 +35,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                     break;
 
                 case 409:
-                    message = "Cet email est déjà utilisé. Veuillez en choisir un autre.";
+                    if (req.url.includes('/report')) {
+                        message = "Vous avez déjà signalé cette réservation ou elle ne peut pas être signalée.";
+                    } else if (req.url.includes('/inscription')) {
+                        message = "Cet email est déjà utilisé.";
+                    } else {
+                        message = "Conflit détecté. L’action n’a pas pu être effectuée.";
+                    }
                     break;
 
                 case 500:
