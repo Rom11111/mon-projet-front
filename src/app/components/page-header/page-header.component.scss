@@ -1,5 +1,5 @@
 .page-header {
-    background-color: #1B2A3D;
+    background-color: #101010;
     border-radius: 8px;
     padding: 16px;
     color: white;
@@ -28,6 +28,16 @@
             color: #f25c05;
         }
     }
+    .breadcrumb-separator {
+        width: 18px;         // taille de l’icône
+        height: 18px;
+        display: inline-block;
+        vertical-align: middle;
+        color: white;
+        margin: 0 6px;
+        filter: brightness(0) invert(1);
+        opacity: 0.8;        // discrétion
+    }
 
     .breadcrumb-home {
         display: inline-flex;
@@ -37,11 +47,14 @@
 
         mat-icon {
             cursor: pointer;
-            font-size: 20px;
+            font-size: 32px;   // augmente la taille
+            width: 32px;       // ajuste la largeur
+            height: 32px;      // ajuste la hauteur
+            line-height: 32px; // centre verticalement
         }
 
         &:hover {
-            color: #1976d2; // ou ta couleur principale
+            color: #1976d2;
         }
     }
 }

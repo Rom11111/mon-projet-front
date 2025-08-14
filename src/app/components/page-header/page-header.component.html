@@ -6,7 +6,7 @@
         <mat-icon>home</mat-icon>
         </a>
         <ng-container *ngFor="let crumb of breadcrumbs; let i = index">
-            <span>&gt;</span>
+            <img src="assets/icons/arrow-big-right.svg" alt="" class="breadcrumb-separator" />
             <span [class.active]="i === breadcrumbs.length - 1">{{ crumb }}</span>
         </ng-container>
     </nav>
