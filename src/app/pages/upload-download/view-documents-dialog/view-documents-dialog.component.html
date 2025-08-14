@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>Documents liés</h2>
+
+<div mat-dialog-content>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+
+        <!-- Titre -->
+        <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Titre</th>
+            <td mat-cell *matCellDef="let doc">{{ doc.title }}</td>
+        </ng-container>
+
+        <!-- Type -->
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let doc">{{ doc.type }}</td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let doc">
+
+                <!-- Bouton télécharger/ouvrir -->
+                <button mat-icon-button (click)="download(doc)" matTooltip="Ouvrir / Télécharger">
+                    <img
+                        [ngSrc]="'assets/icons/download.svg'"
+                        width="22"
+                        height="22"
+                        alt="Télécharger"
+                        decoding="async"
+                        style="pointer-events: none;" />
+                </button>
+
+                <!-- Bouton supprimer -->
+                <button *ngIf="isTechOrAdmin"
+                        mat-icon-button
+                        color="warn"
+                        (click)="delete(doc.id)"
+                        matTooltip="Supprimer">
+                    <img
+                        [ngSrc]="'assets/icons/trash.svg'"
+                        width="22"
+                        height="22"
+                        alt="Supprimer"
+                        decoding="async"
+                        style="pointer-events: none;" />
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Fermer</button>
+</div>
