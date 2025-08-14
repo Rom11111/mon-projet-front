@@ -39,7 +39,6 @@ import {MatIconModule} from '@angular/material/icon';
         MatInputModule,
         MatFormFieldModule,
         MatCheckboxModule,
-        RentalFormComponent,
         NgOptimizedImage,
         MatButtonModule,
         MatIconModule,
@@ -51,6 +50,15 @@ export class RentalComponent implements OnInit {
         'select', 'id', 'clientName', 'productName', 'quantity',
         'startDate', 'endDate', 'status', 'reservationDate', 'actions'
     ];
+
+    // Map statut -> classe de couleur du badge
+    // commentaire : on centralise ici l'association statut/couleur pour garder le HTML simple
+    statusClassMap: Record<string, string> = {
+        PENDING: 'badge-warning',   // orange : en attente
+        APPROVED: 'badge-success',  // vert   : validée
+        REJECTED: 'badge-danger',   // rouge  : refusée
+        CANCELED: 'badge-danger'    // rouge  : annulée (même couleur que refusée)
+    };
 
     // la table manipule des RentalResponse
     dataSource = new MatTableDataSource<RentalResponse>();
@@ -68,16 +76,17 @@ export class RentalComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.rentalService.getAllRentals().subscribe((res) => {
-            console.log('Réponse du backend :', res);
-            this.dataSource.data = res.data as RentalResponse[];
+        // ✅ le service renvoie un tableau direct
+        this.rentalService.getAllRentals().subscribe((rentals) => {
+            console.log('Locations chargées :', rentals);
+            this.dataSource.data = rentals; // ⬅️ pas de .data
         });
+    }
 
-        // commentaire : attache paginator/sort après init
-        setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-        });
+    ngAfterViewInit(): void {
+        // ✅ branche paginator/sort après l’init de la vue
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     }
 
     applyFilter(event: Event): void {
@@ -124,7 +133,7 @@ export class RentalComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((newStatus: RentalStatus | undefined) => {
-            if (newStatus && newStatus !== rental.status) {
+            if (newStatus && newStatus !== rental.statut) {
                 this.rentalService.updateRentalStatus(rental.id, newStatus).subscribe({
                     next: () => this.ngOnInit(), // commentaire : refresh simple
                     error: () => console.error('Erreur lors de la mise à jour du statut.')
@@ -174,7 +183,7 @@ export class RentalComponent implements OnInit {
             'Fin': this.fmtDate(r.endDate),
             'Période (jours)': this.daysBetween(r.startDate, r.endDate),
             'Qté': r.quantity ?? '',
-            'Statut': this.getStatusLabel(String(r.status)), // status -> libellé
+            'Statut': this.getStatusLabel(String(r.statut)), // status -> libellé
             'Réservée le': this.fmtDate(r.reservationDate),
             // ajoute d'autres champs utiles au RH si présents dans RentalResponse
         }));

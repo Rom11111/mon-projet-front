@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 
 import { Rental } from '../models/rental';
 import { RentalResponse } from '../models/rental-response';
 import {RentalRequest} from '../models/RentalRequest';
 import {ApiResponse} from '../models/api-response';
 import {RentalStatus} from '../models/rental-status';
+import {ApiResponseDto} from '../dto/ApiResponseDto';
 
 
 // Service injectable partout dans l’app
@@ -19,38 +20,57 @@ export class RentalService {
 
     constructor(private http: HttpClient) {}
 
-    // Récupère toutes les locations (admin/tech)
-    getAllRentals(): Observable<ApiResponse<RentalResponse[]>> {
-        return this.http.get<ApiResponse<RentalResponse[]>>(this.apiUrl);
+    // LECTURE
+
+    /** Liste accessible selon le rôle (CLIENT → ses locations ; TECH/ADMIN → toutes) */
+    getAllRentals(): Observable<RentalResponse[]> {
+        return this.http
+            .get<ApiResponseDto<RentalResponse[]>>(this.apiUrl)
+            .pipe(map(res => res.data ?? [])); // on déballe l’enveloppe ici
     }
 
-    // Récupère les locations du client connecté
+    /** Mes locations (CLIENT uniquement) */
     getClientRentals(): Observable<RentalResponse[]> {
-        return this.http.get<RentalResponse[]>(this.apiUrl);
+        return this.http
+            .get<ApiResponseDto<RentalResponse[]>>(`${this.apiUrl}/my`)
+            .pipe(map(res => res.data ?? []));
     }
 
-    // Récupère une location précise par ID
+    /** Détail d’une location par ID (accès contrôlé côté back) */
     getRentalById(id: number): Observable<Rental> {
         return this.http.get<Rental>(`${this.apiUrl}/${id}`);
     }
 
-    // Crée une nouvelle location (POST)
+
+    // ÉCRITURE
+
+    /** Créer une location (POST /api/rentals/create) */
     createRental(rental: RentalRequest): Observable<RentalResponse> {
-        return this.http.post<RentalResponse>(this.apiUrl, rental);
+        return this.http
+            .post<ApiResponseDto<RentalResponse>>(`${this.apiUrl}/create`, rental)
+            .pipe(map(res => res.data as RentalResponse));
     }
 
-    // Met à jour une location existante (PUT)
-    updateRental(rental: Rental): Observable<Rental> {
-        return this.http.put<Rental>(`${this.apiUrl}/${rental.id}`, rental);
+    /** Mettre à jour une location existante (PUT /api/rentals/{id}) */
+    updateRental(rental: Rental): Observable<RentalResponse> {
+        return this.http
+            .put<ApiResponseDto<RentalResponse>>(`${this.apiUrl}/${rental.id}`, rental)
+            .pipe(map(res => res.data as RentalResponse));
     }
 
+    /** Changer le statut d’une location (PUT /api/rentals/{id}/status) */
     updateRentalStatus(id: number, status: RentalStatus): Observable<RentalResponse> {
-        return this.http.put<RentalResponse>(`${this.apiUrl}/${id}/status`, { status });
+        // ⚠️ le back attend une string { status: 'APPROVED' | 'PENDING' | ... }
+        return this.http
+            .put<ApiResponseDto<RentalResponse>>(`${this.apiUrl}/${id}/status`, { status })
+            .pipe(map(res => res.data as RentalResponse));
     }
 
-    // Supprime une location par ID
+    /** Supprimer une location (DELETE /api/rentals/{id}) */
     deleteRental(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`);
+        return this.http
+            .delete<ApiResponseDto<void>>(`${this.apiUrl}/${id}`)
+            .pipe(map(() => void 0)); // pas de data à retourner
     }
 
     // Crée une location à partir d’un produit et de deux dates
@@ -66,8 +86,10 @@ export class RentalService {
         return this.http.post<Rental>(this.apiUrl, rental);
     }
 
-    // Récupère les dernières locations (pour dashboard ou page d’accueil)
-    getRecentRentals(): Observable<Rental[]> {
-        return this.http.get<Rental[]>(`${this.apiUrl}/recent`);
+    /** Dernières locations (Todo endpoint a faire) */
+    getRecentRentals(): Observable<RentalResponse[]> {
+        return this.http
+            .get<ApiResponseDto<RentalResponse[]>>(`${this.apiUrl}/recent`)
+            .pipe(map(res => res.data ?? []));
     }
 }

@@ -35,8 +35,6 @@
                 </mat-menu>
             </div>
 
-            <!-- ⬇️ SUPPRIME l'ouverture de <div> inutile que tu avais ici -->
-
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
                 <!-- Sélection -->
@@ -103,12 +101,9 @@
                 <ng-container matColumnDef="status">
                     <th mat-header-cell *matHeaderCellDef>Statut</th>
                     <td mat-cell *matCellDef="let r">
-                        <span
-                            [ngClass]="{
-                                'badge badge-warning': r.status === 'PENDING',
-                                'badge badge-success': r.status === 'APPROVED',
-                                'badge badge-danger': r.status === 'REJECTED' || r.status === 'CANCELED'
-                            }">
+                        <!-- Classe de base 'badge' toujours présente -->
+                        <!-- + classe de couleur ajoutée dynamiquement via la map (voir .ts) -->
+                        <span class="badge" [ngClass]="statusClassMap[r.status] || 'badge-default'">
                             {{ getStatusLabel(r.status) }}
                         </span>
                     </td>
