@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Détails du signalement</h2>
+
+<mat-dialog-content>
+    <p><strong>ID :</strong> {{ data.report.id }}</p>
+    <p><strong>Produit :</strong> {{ data.report.productName }}</p>
+    <p><strong>Description :</strong> {{ data.report.description }}</p>
+    <p><strong>Statut :</strong> {{ data.report.status }}</p>
+    <p><strong>Créé le :</strong> {{ data.report.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="close()">Fermer</button>
+</mat-dialog-actions>
+
