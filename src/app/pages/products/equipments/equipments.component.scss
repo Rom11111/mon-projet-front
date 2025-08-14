@@ -1,0 +1,110 @@
+/* ----- Mise en page globale pour les pages data-table ----- */
+
+/* Conteneur principal de page (padding homogène) */
+.product-page-container {
+    padding: 24px;
+}
+
+/* Barre d’outils au-dessus du tableau */
+.table-header {
+    /* place la recherche à gauche et les actions à droite */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* la recherche prend l’espace dispo, le bouton garde sa largeur */
+.search-field {
+    flex: 0 0 auto; /* ne pas s’étirer */
+    width: 300px;   /* largeur fixe */
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* petit espace entre les boutons */
+}
+
+
+/* Carte "cadre" qui contient la table */
+.card {
+    margin-top: 24px; /* espace entre header et carte */
+    border-radius: 12px; /* angles doux */
+    /* ombre légère et propre */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background: #fff; /* fond blanc par défaut */
+}
+
+/* Uniformise l’ombre des tables (réservations et équipements) */
+table.mat-elevation-z8, table.mat-elevation-z2 {
+    /* même rendu visuel pour toutes les listes */
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    border-radius: 8px;              /* angles arrondis */
+    overflow: hidden;                /* évite que l’ombre dépasse aux bords */
+}
+
+/* Cellules : un peu plus d’air */
+.mat-mdc-table .mdc-data-table__cell,
+.mat-mdc-table .mdc-data-table__header-cell {
+    padding: 12px 16px; /* confort de lecture */
+}
+
+/* Paginator : marges cohérentes */
+mat-paginator {
+    margin-top: 12px;
+}
+
+/* Badges de statut : basique + couleurs (réutilisable si besoin ailleurs) */
+.badge {
+    /* style de base systématique */
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;   /* pastille */
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 600;
+}
+
+/* Couleur par défaut si aucune classe mappée n’est trouvée */
+.badge-default {
+    background: #e0e0e0;
+    color: #333;
+}
+
+/* Exemples de variantes (si tu utilises statusClassMap côté TS) */
+.badge-success { background: #e6f4ea; color: #1e7a34; } /* validée */
+.badge-warning { background: #fff7e6; color: #a15c00; } /* en attente */
+.badge-danger  { background: #fde8ec; color: #b32653; } /* refusée */
+
+/* États de texte pour "Disponible/Indisponible" côté équipements */
+.text-success { color: #1e7a34; font-weight: 600; }
+.text-danger  { color: #b32653; font-weight: 600; }
+
+/* Images de produit : coin arrondi + anti-saut */
+.table-product-image {
+    border-radius: 4px;
+    width: 80px;
+    height: 100px;
+    object-fit: cover;  /* évite la déformation */
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .table-header {
+        /* passe la recherche au-dessus et le bouton en dessous */
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-field {
+        width: 100%; /* occupe toute la largeur en mobile */
+    }
+
+    /* allège les paddings pour gagner de la place */
+    .mat-mdc-table .mdc-data-table__cell,
+    .mat-mdc-table .mdc-data-table__header-cell {
+        padding: 10px 12px;
+    }
+}

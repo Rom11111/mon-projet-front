@@ -16,19 +16,19 @@
 }
 
 .sidenav-header {
-    padding: 16px;
+    padding: 4px 0;
     text-align: center;
     img {
         max-width: 100%;
         height: auto;
-        width: 180px;
+        width: 250px;
     }
 }
 
 .sidenav-nav {
     flex-grow: 1;
     overflow-y: auto;
-    padding-top: 16px;
+    padding-top: 10px;
 
     .menu-item {
         position: relative;
@@ -118,6 +118,27 @@
         .actions-section {
             flex-direction: column;
             gap: 8px;
+        }
+    }
+
+    .profile-info {
+        p {
+            margin: 0;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .role-badge {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-transform: uppercase;
+            color: white !important;
+            background-color: #43a047; // ✅ vert CLIENT
         }
     }
 }

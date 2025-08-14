@@ -1,0 +1,79 @@
+
+<section class="product-page-container">
+    <app-page-header
+        [title]="'Signalements'"
+        [breadcrumbs]="['Signalements']">
+    </app-page-header>
+
+    <mat-card>
+        <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Filtrer</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher..." />
+        </mat-form-field>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> # </th>
+                <td mat-cell *matCellDef="let r"> {{ r.id }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef> Produit </th>
+                <td mat-cell *matCellDef="let r"> {{ r.productName }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let r"> {{ r.description }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Statut </th>
+                <td mat-cell *matCellDef="let r">
+                <span class="badge"
+                      [ngClass]="{
+                        'badge-open': r.status === 'OPEN',
+                        'badge-in-progress': r.status === 'IN_PROGRESS',
+                        'badge-resolved': r.status === 'RESOLVED'
+                    }">
+                    {{ getStatusLabel(r.status) }}
+                </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef> Date </th>
+                <td mat-cell *matCellDef="let r"> {{ r.createdAt | date:'dd/MM/yyyy HH:mm' }} </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let r" class="action-cell">
+
+                    <!-- Bouton modifier le statut -->
+                    <button mat-flat-button color="primary"
+                            [disabled]="isUpdating(r.id)"
+                            (click)="openStatusDialog(r)">
+                        <mat-icon>edit</mat-icon>
+                        Changer
+                    </button>
+
+                    <!-- Bouton voir détails -->
+                    <button mat-stroked-button color="accent"
+                            (click)="openDetailsDialog(r)">
+                        <mat-icon>visibility</mat-icon>
+                        Détails
+                    </button>
+
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="5"></mat-paginator>
+    </mat-card>
+</section>

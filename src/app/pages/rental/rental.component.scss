@@ -1,22 +1,42 @@
-.badge {
-    padding: 4px 8px;
-    border-radius: 5px;
-    color: white;
-    text-transform: capitalize;
+.product-page-container {
+    padding: 24px;
+}
 
-    &-success {
-        background-color: #4caf50;
-    }
+/* --- Barre d’actions au-dessus du tableau --- */
+.table-header {
+    /* ligne flex avec espace entre recherche et bouton */
+    display: flex;
+    justify-content: space-between; /* search à gauche, bouton à droite */
+    align-items: center;
+    gap: 12px;                      /* petit espace entre éléments */
+    margin: 16px;           /* espace sous la barre d’actions */
 
-    &-warning {
-        background-color: #ff9800;
-    }
-
-    &-danger {
-        background-color: #f44336;
+    /* variante si tu veux uniquement aligner à droite */
+    &.right-only {
+        justify-content: flex-end;    /* pousse tout à droite */
     }
 }
 
-.total-height {
-    min-height: calc(100vh - 120px);
+/* la recherche prend l’espace dispo, le bouton garde sa largeur */
+.search-field {
+    flex: 0 0 auto; /* ne pas s’étirer */
+    width: 300px;   /* largeur fixe */
 }
+
+/* --- Responsive : sur mobile on passe l’un sous l’autre --- */
+@media (max-width: 768px) {
+    .table-actions {
+        flex-direction: column;       /* empile verticalement */
+        align-items: stretch;         /* prend toute la largeur */
+    }
+
+    .search-field {
+        width: 100%;
+    }
+
+    .table-actions button[mat-raised-button] {
+        align-self: flex-end;         /* bouton à droite même en colonne */
+    }
+}
+
+

@@ -1,0 +1,14 @@
+
+<div class="page-header mat-elevation-z1">
+    <h2 class="page-title">{{ title }}</h2>
+    <nav class="breadcrumb">
+        <a [routerLink]="'/dashboard'" class="breadcrumb-home">
+        <mat-icon>home</mat-icon>
+        </a>
+        <ng-container *ngFor="let crumb of breadcrumbs; let i = index">
+            <img src="assets/icons/arrow-big-right.svg" alt="" class="breadcrumb-separator" />
+            <span [class.active]="i === breadcrumbs.length - 1">{{ crumb }}</span>
+        </ng-container>
+    </nav>
+</div>
+

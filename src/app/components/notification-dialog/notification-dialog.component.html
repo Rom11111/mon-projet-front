@@ -1,0 +1,8 @@
+<div mat-dialog-content class="notification-dialog" [ngClass]="data.type">
+    <h2 class="notification-title">{{ data.title || 'Notification' }}</h2>
+    <p class="notification-message">{{ data.message }}</p>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Fermer</button>
+</div>

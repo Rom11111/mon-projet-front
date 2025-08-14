@@ -1,0 +1,88 @@
+
+<!-- pages/products/edit-product/edit-product.component.html -->
+<div class="form-container">
+    <form [formGroup]="form" (ngSubmit)="onAddProduct()">
+        <!-- Nom -->
+        <mat-form-field>
+            <mat-label>Nom</mat-label>
+            <input formControlName="name" matInput placeholder="Ex. PC Asus 9874">
+            @if(form.get('name')?.hasError('required')) { <mat-error>Le nom est requis</mat-error> }
+            @else if (form.get('name')?.hasError('minlength')) { <mat-error>Le nom doit comporter au moins 3 caractères</mat-error> }
+            @else if (form.get('name')?.hasError('maxlength')) { <mat-error>Le nom doit comporter au maximum 20 caractères</mat-error> }
+        </mat-form-field>
+
+        <!-- Code -->
+        <mat-form-field>
+            <mat-label>Code</mat-label>
+            <input formControlName="code" matInput placeholder="ASU458">
+            @if(form.get('code')?.touched && form.get('code')?.hasError('required')) {
+                <mat-error>Le code est requis</mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+
+        <!-- ✅ Stock (toujours visible) -->
+        <mat-form-field appearance="fill">
+            <mat-label>Stock</mat-label>
+            <input matInput type="number" formControlName="stock" min="0">
+            @if(form.get('stock')?.hasError('required')) { <mat-error>Le stock est requis</mat-error> }
+            @else if(form.get('stock')?.hasError('min')) { <mat-error>Le stock ne peut pas être négatif</mat-error> }
+        </mat-form-field>
+
+        <!-- Prix -->
+        <mat-form-field>
+            <mat-label>Prix</mat-label>
+            <input formControlName="price" matInput type="number">
+            @if(form.get('price')?.hasError('required')) { <mat-error>Le prix est requis</mat-error> }
+            @else if (form.get('price')?.hasError('min')) { <mat-error>Le prix doit être au minimum de 0,10 €</mat-error> }
+        </mat-form-field>
+
+        <!-- Catégorie -->
+        <mat-form-field>
+            <mat-label>Catégorie</mat-label>
+            <mat-select formControlName="category" [compareWith]="compareId">
+                @for (cat of categories; track $index) {
+                    <mat-option [value]="cat">{{ cat.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Etat -->
+        <mat-form-field>
+            <mat-label>Etat</mat-label>
+            <mat-select formControlName="etat" [compareWith]="compareId">
+                @for (etat of etats; track $index) {
+                    <mat-option [value]="etat">{{ etat.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Upload photo -->
+        <app-file-chooser (selected)="onPhotoSelected($event)"></app-file-chooser>
+
+        <!-- Actions : Retour à gauche / boutons à droite -->
+        <mat-dialog-actions style="display:flex;justify-content:space-between;margin-top:1rem;">
+            <button mat-button color="accent" routerLink="/equipments">
+                <mat-icon>arrow_back</mat-icon> Retour
+            </button>
+
+            <span style="display:flex;gap:.5rem;">
+                <!-- Bouton Ajouter : visible seulement en mode ajout -->
+                <button *ngIf="!isEditMode" type="submit" mat-stroked-button color="primary" [disabled]="form.invalid">
+                  <mat-icon>add</mat-icon> Ajouter un produit
+                </button>
+
+                <!-- Bouton Modifier : visible seulement en mode édition -->
+                <button *ngIf="isEditMode" type="button" mat-raised-button color="primary"
+                        (click)="onUpdateProduct()" [disabled]="form.invalid || !editedProduct">
+                  <mat-icon>edit</mat-icon> Modifier
+                </button>
+            </span>
+        </mat-dialog-actions>
+    </form>
+</div>

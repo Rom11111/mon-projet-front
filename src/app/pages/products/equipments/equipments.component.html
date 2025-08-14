@@ -1,0 +1,242 @@
+<section class="product-page-container">
+    <!-- Header -->
+    <app-page-header
+        [title]="'Liste des équipements'"
+        [breadcrumbs]="['Liste des équipements']">
+    </app-page-header>
+
+    <mat-card class="card">
+        <div class="container mt-4">
+            <div class="table-header">
+                <!-- 🔎 À GAUCHE : champ de recherche -->
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Rechercher un produit</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        placeholder="Nom, description, prix..."
+                        (keyup)="applyFilter($event)"
+                    />
+                </mat-form-field>
+
+                <!-- filtre par catégories -->
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Catégories</mat-label>
+                    <!-- multiple = sélection multiple ; [value] = valeurs actuelles -->
+                    <mat-select multiple [value]="selectedCategoryIds" (selectionChange)="onCategoryChange($event.value)">
+                        <!-- On boucle sur la liste des catégories chargées -->
+                        <mat-option *ngFor="let c of categories" [value]="c.id">
+                            {{ c.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- À DROITE : bouton Ajouter + menu Download -->
+                <div class="header-actions">
+                    <!-- visible uniquement pour TECH/ADMIN -->
+                    <button *ngIf="isTechOrAdmin" mat-flat-button color="primary" routerLink="/ajout-produit">
+                        Ajouter un produit
+                    </button>
+
+                    <button mat-icon-button [matMenuTriggerFor]="exportMenu" color="primary" aria-label="Télécharger">
+                        <img
+                            [ngSrc]="'assets/icons/download.svg'"
+                            width="22" height="22" alt="Télécharger" decoding="async"
+                        />
+                    </button>
+                    <mat-menu #exportMenu="matMenu">
+                        <button mat-menu-item (click)="export('csv')">Télécharger en CSV</button>
+                        <button mat-menu-item (click)="export('xlsx')">Télécharger en Excel</button>
+                        <button mat-menu-item (click)="export('pdf')">Télécharger en PDF</button>
+                    </mat-menu>
+                </div>
+            </div>
+
+            <!-- Tableau -->
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+                <!-- Sélection -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox
+                            (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()"
+                            color="warn">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox
+                            (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel(row)"
+                            color="warn">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <!-- ID -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                    <td mat-cell *matCellDef="let p">{{ p.id }}</td>
+                </ng-container>
+
+                <!-- Image -->
+                <ng-container matColumnDef="image">
+                    <th mat-header-cell *matHeaderCellDef>Image</th>
+                    <td mat-cell *matCellDef="let p">
+                        <img *ngIf="p?.id" [src]="p.imageUrl"
+                            (error)="onImageError($event)"
+                            width="80"
+                            height="100"
+                            alt="Image du produit"
+                            style="border-radius: 4px;"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </td>
+                </ng-container>
+
+                <!-- Nom -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+                    <td mat-cell *matCellDef="let p">{{ p.name }}</td>
+                </ng-container>
+
+
+                <!-- Catégorie -->
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef> Catégorie </th>
+                    <td mat-cell *matCellDef="let row">
+                        <!-- on est dans le scope, donc 'row' existe -->
+                        {{ getCategoryName(row) }}
+                    </td>
+                </ng-container>
+
+                <!-- Description -->
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td mat-cell *matCellDef="let p">{{ p.description }}</td>
+                </ng-container>
+
+                <!-- Prix -->
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Prix / jour</th>
+                    <td mat-cell *matCellDef="let p">{{ p.price | currency:'EUR' }}</td>
+                </ng-container>
+
+                <!-- Disponibilité -->
+                <ng-container matColumnDef="available">
+                    <th mat-header-cell *matHeaderCellDef>Disponibilité</th>
+                    <td mat-cell *matCellDef="let p">
+                        <ng-container *ngIf="isTechOrAdmin; else readonlyStatus">
+                            <mat-slide-toggle
+                                [checked]="p.available"
+                                (change)="onToggleAvailability(p)">
+                                {{ p.available ? 'Dispo' : 'Indispo' }}
+                            </mat-slide-toggle>
+                        </ng-container>
+                        <ng-template #readonlyStatus>
+                            <span [ngClass]="{ 'text-success': p.available, 'text-danger': !p.available }">
+                                {{ p.available ? 'Disponible' : 'Indisponible' }}
+                            </span>
+                        </ng-template>
+                    </td>
+                </ng-container>
+
+                <!-- Stock -->
+                <ng-container matColumnDef="stock">
+                    <th mat-header-cell *matHeaderCellDef>Stock</th>
+                    <td mat-cell *matCellDef="let p">{{ p.stock }}</td>
+                </ng-container>
+
+                <!-- Actions -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let p">
+                        <ng-container *ngIf="isTechOrAdmin">
+                            <button mat-icon-button
+                                    color="primary"
+                                    [routerLink]="['/modifier-produit', p.id]"
+                                    matTooltip="Modifier ce produit">
+                                <img
+                                    [ngSrc]="'assets/icons/pencil.svg'"
+                                    width="22"
+                                    height="22"
+                                    alt="Modifier"
+                                    decoding="async"
+                                    style="pointer-events: none;" />
+                            </button>
+
+                            <button mat-icon-button
+                                    (click)="onUploadDocument(p)"
+                                    matTooltip="Uploader un document">
+                                <img
+                                    [ngSrc]="'assets/icons/upload.svg'"
+                                    width="22"
+                                    height="22"
+                                    alt="Uploader un document"
+                                    decoding="async"
+                                    style="pointer-events: none;" />
+                            </button>
+                            <button mat-icon-button
+                                    (click)="openDocumentsDialog(p.id)"
+                                    matTooltip="Voir les documents">
+                                <img
+                                    [ngSrc]="'assets/icons/eye.svg'"
+                                    width="22"
+                                    height="22"
+                                    alt="Documents"
+                                    decoding="async"
+                                    style="pointer-events: none;" />
+                            </button>
+                            <button mat-icon-button
+                                    color="warn"
+                                    (click)="deleteProduct(p.id)"
+                                    matTooltip="Supprimer ce produit">
+                                <img
+                                    [ngSrc]="'assets/icons/trash.svg'"
+                                    width="22"
+                                    height="22"
+                                    alt="Supprimer"
+                                    decoding="async"
+                                    style="pointer-events: none;" />
+                            </button>
+                        </ng-container>
+
+                        <!-- Bouton client : louer (désactivé si indisponible) -->
+                        <ng-container *ngIf="isClient">
+                            <button mat-icon-button
+                                    color="primary"
+                                    (click)="openRentalDialog(p, $event)"
+                                    [disabled]="!p.available"
+                                    matTooltip="Louer ce produit">
+                                <img
+                                    [ngSrc]="'assets/icons/shopping-cart.svg'"
+                                    width="24"
+                                    height="24"
+                                    alt="Louer"
+                                    decoding="async"
+                                    loading="lazy"
+                                    style="pointer-events: none;"
+                                />
+                            </button>
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <!-- Rendu -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator
+                [pageSize]="12"
+                [pageSizeOptions]="[5, 10, 12, 20]"
+                showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </mat-card>
+</section>

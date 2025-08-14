@@ -1,0 +1,17 @@
+
+<h2 mat-dialog-title>Signaler un problème</h2>
+
+<mat-dialog-content>
+    <!-- Champ texte pour décrire le problème -->
+    <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="description"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <!-- Bouton pour annuler et fermer la modale -->
+    <button mat-button (click)="dialogRef.close()">Annuler</button>
+    <!-- Bouton pour envoyer le signalement -->
+    <button mat-raised-button color="warn" (click)="submitReport()">Envoyer</button>
+</mat-dialog-actions>

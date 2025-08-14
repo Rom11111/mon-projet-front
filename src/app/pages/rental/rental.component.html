@@ -1,48 +1,145 @@
+<section class="product-page-container">
+    <app-page-header
+        [title]="'Liste des réservations'"
+        [breadcrumbs]="['Liste des réservations']">
+    </app-page-header>
 
-    <mat-card-title class="total-height">Liste des réservations</mat-card-title>
-    <mat-card>
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <mat-card class="card">
+        <div class="container mt-4">
+            <div class="table-header">
+                <!-- Recherche -->
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Rechercher une réservation</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        placeholder="Client, produit, statut..."
+                        (keyup)="applyFilter($event)"
+                    />
+                </mat-form-field>
 
-        <!-- Client -->
-        <ng-container matColumnDef="client">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Client</th>
-            <td mat-cell *matCellDef="let rental">
-                {{ rental.user?.firstname }} {{ rental.user?.lastname }}
-            </td>
-        </ng-container>
+                <!-- Bouton download + menu -->
+                <button mat-icon-button [matMenuTriggerFor]="exportMenu" color="primary">
+                    <img
+                        [ngSrc]="'assets/icons/download.svg'"
+                        width="22"
+                        height="22"
+                        alt="Télécharger"
+                        decoding="async"
+                    />
+                </button>
+                <mat-menu #exportMenu="matMenu">
+                    <button mat-menu-item (click)="export('csv')">Télécharger en CSV</button>
+                    <button mat-menu-item (click)="export('xlsx')">Télécharger en Excel</button>
+                    <button mat-menu-item (click)="export('pdf')">Télécharger en PDF</button>
+                </mat-menu>
+            </div>
 
-        <!-- Produit -->
-        <ng-container matColumnDef="product">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Produit</th>
-            <td mat-cell *matCellDef="let rental">{{ rental.product?.name }}</td>
-        </ng-container>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
-        <!-- Date -->
-        <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-            <td mat-cell *matCellDef="let rental">{{ rental.date | date:'shortDate' }}</td>
-        </ng-container>
+                <!-- Sélection -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox
+                            (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()"
+                            color="warn">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox
+                            (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel(row)"
+                            color="warn">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
 
-        <!-- Heure -->
-        <ng-container matColumnDef="time">
-            <th mat-header-cell *matHeaderCellDef>Heure</th>
-            <td mat-cell *matCellDef="let rental">{{ rental.heureDebut }} - {{ rental.heureFin }}</td>
-        </ng-container>
+                <!-- ID -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                    <td mat-cell *matCellDef="let r">{{ r.id }}</td>
+                </ng-container>
 
-        <!-- Statut -->
-        <ng-container matColumnDef="statut">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
-            <td mat-cell *matCellDef="let rental">
-        <span [ngClass]="getStatutClass(rental.statut)">
-          {{ rental.statut }}
-        </span>
-            </td>
-        </ng-container>
+                <!-- Client -->
+                <ng-container matColumnDef="clientName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Client</th>
+                    <td mat-cell *matCellDef="let r">
+                        {{ r.clientFirstname | titlecase }} {{ r.clientLastname | uppercase }}
+                    </td>
+                </ng-container>
 
-        <!-- Header & Rows -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+                <!-- Quantité -->
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Qté</th>
+                    <td mat-cell *matCellDef="let r">{{ r.quantity }}</td>
+                </ng-container>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
-</mat-card>
+                <!-- Produit -->
+                <ng-container matColumnDef="productName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Produit</th>
+                    <td mat-cell *matCellDef="let r">{{ r.productName }}</td>
+                </ng-container>
+
+                <!-- Début -->
+                <ng-container matColumnDef="startDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Début</th>
+                    <td mat-cell *matCellDef="let r">{{ r.startDate | date:'shortDate' }}</td>
+                </ng-container>
+
+                <!-- Fin -->
+                <ng-container matColumnDef="endDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fin</th>
+                    <td mat-cell *matCellDef="let r">{{ r.endDate | date:'shortDate' }}</td>
+                </ng-container>
+
+                <!-- Statut -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Statut</th>
+                    <td mat-cell *matCellDef="let r">
+                        <!-- Classe de base 'badge' toujours présente -->
+                        <!-- + classe de couleur ajoutée dynamiquement via la map (voir .ts) -->
+                        <span class="badge" [ngClass]="statusClassMap[r.status] || 'badge-default'">
+                            {{ getStatusLabel(r.status) }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Créée le -->
+                <ng-container matColumnDef="reservationDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Créée le</th>
+                    <td mat-cell *matCellDef="let r">{{ r.reservationDate | date:'short' }}</td>
+                </ng-container>
+
+                <!-- Actions -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let r">
+                        <button mat-icon-button color="primary" (click)="openStatusDialog(r)">
+                            <img
+                                [ngSrc]="'assets/icons/eye.svg'"
+                                width="20"
+                                height="20"
+                                alt="Voir les détails"
+                                decoding="async"
+                            />
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator
+                [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons>
+            </mat-paginator>
+        </div> <!-- ⬅️ fermeture du .container -->
+    </mat-card>
+</section>

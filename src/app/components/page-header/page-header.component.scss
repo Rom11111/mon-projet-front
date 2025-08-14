@@ -1,0 +1,61 @@
+.page-header {
+    background-color: #101010;
+    border-radius: 8px;
+    padding: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .page-title {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        gap: 4px;
+
+        .active {
+            color: #aaa;
+        }
+
+        mat-icon {
+            color: #f25c05;
+        }
+    }
+    .breadcrumb-separator {
+        width: 18px;         // taille de l’icône
+        height: 18px;
+        display: inline-block;
+        vertical-align: middle;
+        color: white;
+        margin: 0 6px;
+        filter: brightness(0) invert(1);
+        opacity: 0.8;        // discrétion
+    }
+
+    .breadcrumb-home {
+        display: inline-flex;
+        align-items: center;
+        color: inherit;
+        text-decoration: none;
+
+        mat-icon {
+            cursor: pointer;
+            font-size: 32px;   // augmente la taille
+            width: 32px;       // ajuste la largeur
+            height: 32px;      // ajuste la hauteur
+            line-height: 32px; // centre verticalement
+        }
+
+        &:hover {
+            color: #1976d2;
+        }
+    }
+}
+

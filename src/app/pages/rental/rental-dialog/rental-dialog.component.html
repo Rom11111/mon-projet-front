@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Louer {{ data.product.name }}</h2>
+
+<mat-dialog-content [formGroup]="rentalForm">
+
+    <!-- Date de début -->
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Date de début</mat-label>
+        <input matInput [matDatepicker]="pickerStart" formControlName="startDate" [min]="today">
+        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Date de fin -->
+    <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Date de fin</mat-label>
+    <input
+        matInput
+        [matDatepicker]="pickerEnd"
+        formControlName="endDate"
+        [min]="rentalForm.value.startDate || today"
+        placeholder="jj/mm/aaaa">
+    <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+    <mat-datepicker #pickerEnd></mat-datepicker>
+</mat-form-field>
+
+    <!-- Prix total -->
+    <div class="total-price">
+        <strong>Total :</strong>
+        {{ getTotalPrice() | currency:'EUR':'symbol':'1.2-2':'fr-FR' }}
+    </div>
+
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Quantité</mat-label>
+        <input matInput type="number" formControlName="quantity" min="1">
+    </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Annuler</button>
+    <button
+        mat-raised-button
+        color="primary"
+        (click)="confirm()"
+        [disabled]="rentalForm.invalid">
+        Valider
+    </button>
+</mat-dialog-actions>

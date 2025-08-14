@@ -1,55 +1,66 @@
 
+
 <mat-sidenav-container class="mat-app-background total-height">
-    <!-- 🔹 SIDE NAV -->
+    <!-- SIDE NAV -->
     <mat-sidenav mode="side" [opened]="true" class="sidenav">
         <div class="sidenav-container">
 
-            <!-- 🔹 LOGO -->
+            <!-- LOGO -->
             <div class="sidenav-header">
-                <img *ngIf="!sideNavCollapsed()" src="assets/images/altaTech.svg" alt="Alta Tech Logo" />
-                <img *ngIf="sideNavCollapsed()" src="assets/icons/alta-tech-icon.svg" alt="Alta Tech Icon" width="40" height="40" />
+                <img *ngIf="!collapsed" ngSrc="assets/images/altaTech.svg" alt="Alta Tech Logo" height="200"
+                     width="400"/>
+                <img *ngIf="collapsed" ngSrc="assets/icons/alta-tech-icon.svg" alt="Alta Tech Icon" width="40" height="40" />
             </div>
 
-            <!-- 🔹 NAVIGATION PRINCIPALE -->
             <nav class="sidenav-nav">
-                @for (item of mainMenuItems(); track item.route) {
+                <!-- On affiche uniquement les items filtrés -->
+                @for (item of filteredMenuItems; track item.route) {
                     <a class="menu-item" [routerLink]="item.route" routerLinkActive="selected-menu-item">
                         <img [ngSrc]="'assets/icons/' + item.icon" class="menu-icon" alt="{{ item.label }}" width="30" height="30" />
-                        <span *ngIf="!sideNavCollapsed()" class="menu-label">{{ item.label }}</span>
+                        <span *ngIf="!collapsed" class="menu-label">{{ item.label }}</span>
                     </a>
                 }
 
-                <hr *ngIf="!sideNavCollapsed()" class="menu-divider" />
+                <hr *ngIf="!collapsed" class="menu-divider" />
 
-                @for (item of secondaryMenuItems(); track item.route) {
+                @for (item of secondaryMenuItems; track item.route) {
                     <a class="menu-item" [routerLink]="item.route" routerLinkActive="selected-menu-item">
                         <img [ngSrc]="'assets/icons/' + item.icon" class="menu-icon" alt="{{ item.label }}" width="30" height="30" />
-                        <span *ngIf="!sideNavCollapsed()" class="menu-label">{{ item.label }}</span>
+                        <span *ngIf="!collapsed" class="menu-label">{{ item.label }}</span>
                     </a>
                 }
             </nav>
 
-            <!-- 🔹 FOOTER AVEC PROFIL ET ACTIONS -->
+            <!-- FOOTER AVEC PROFIL ET ACTIONS -->
             <div class="sidenav-footer">
                 <div class="profile-section">
                     <div class="profile-pic">
-                        <img [width]="profilePicSize()" [height]="profilePicSize()" ngSrc="assets/profiles/avatar-1.jpg" alt="Profile Picture" />
+                        <img
+                            [width]="profilePicSize()"
+                            [height]="profilePicSize()"
+                            [ngSrc]="userPhoto"
+                            alt="Photo de profil"
+                            class="profile-picture"
+                        />
                     </div>
-                    <div *ngIf="!sideNavCollapsed()" class="profile-info">
-                        <p>Romain</p>
+                    <div *ngIf="!collapsed" class="profile-info">
+                        <p>{{ userName }}</p>
+                        <span class="role-badge">CLIENT</span>
                     </div>
+
                 </div>
 
+
                 <div class="actions-section">
-                    <button mat-icon-button (click)="toggleDarkMode()" [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'">
-                        <img [src]="darkMode() ? 'assets/icons/sun.svg' : 'assets/icons/moon.svg'" alt="Theme Icon" class="theme-icon" />
-                    </button>
+<!--                    <button mat-icon-button (click)="toggleDarkMode()" [matTooltip]="darkMode() ? 'Mode clair' : 'Mode sombre'">-->
+<!--                        <img [src]="darkMode() ? 'assets/icons/sun.svg' : 'assets/icons/moon.svg'" alt="Theme Icon" class="theme-icon" />-->
+<!--                    </button>-->
 
                     <a mat-icon-button routerLink="/settings" matTooltip="Réglages">
                         <img ngSrc="assets/icons/settings.svg" alt="Réglages" class="theme-icon" height="24" width="24" />
                     </a>
 
-                    <button mat-icon-button (click)="auth.signOut()" matTooltip="Se déconnecter" routerLink="/login">
+                    <button mat-icon-button (click)="onSignOut()" matTooltip="Se déconnecter">
                         <img ngSrc="assets/icons/logout.svg" alt="Déconnexion" class="theme-icon" height="24" width="24" />
                     </button>
                 </div>
@@ -58,11 +69,10 @@
         </div>
     </mat-sidenav>
 
-    <!-- 🔹 CONTENU CENTRAL -->
+    <!-- CONTENU CENTRAL -->
     <mat-sidenav-content class="main-content">
         <div class="router-container">
             <router-outlet></router-outlet>
         </div>
     </mat-sidenav-content>
-
 </mat-sidenav-container>

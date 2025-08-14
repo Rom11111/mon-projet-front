@@ -1,20 +1,20 @@
-import { Role } from './Role.enum';
+import { Role } from './role.enum';
+import { UserStatus } from './user-status.enum';
 
-export interface User {
+// Version allégée pour le front (sans données sensibles)
+export interface User{
     id: number;
     firstname: string;
     lastname: string;
     email: string;
-    password: string; // Seulement pour l'authentification, pas pour l'affichage
     role: Role;
     photoUrl?: string;
-    userStatus: 'Active' | 'Inactive';
+    userStatus: UserStatus;
     createdAt?: Date;
     updatedAt?: Date;
     company: string;
     companyAddress: string;
     phone: string;
-    emailVerificationToken?: string;
 }
 
 

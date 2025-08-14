@@ -1,12 +1,13 @@
-type Product = {
+export type Product = {
     id : number,
+    imageName?: string;
     name : string,
     code : string,
-    category: string;
+    category: Category;
     description : string,
-    etat: Etat,
-    labelList: Label []
+    etat?: Etat,
     isOccasion?: boolean;
-    rentalPrice: number; // Prix de location
-    available: boolean;  // Disponible à la location
+    price: number;       // Prix de location
+    available: boolean; // Disponible à la location
+    stock: number;
 }

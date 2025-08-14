@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Gérer le signalement</h2>
+
+<mat-dialog-content [formGroup]="form">
+    <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Statut</mat-label>
+        <mat-select formControlName="status">
+            <mat-option value="OPEN">Ouvert</mat-option>
+            <mat-option value="IN_PROGRESS">En cours</mat-option>
+            <mat-option value="RESOLVED">Résolu</mat-option>
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Annuler</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()">Enregistrer</button>
+</mat-dialog-actions>
