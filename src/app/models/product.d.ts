@@ -1,4 +1,4 @@
-type Product = {
+export type Product = {
     id : number,
     imageName?: string;
     name : string,
@@ -8,5 +8,6 @@ type Product = {
     etat?: Etat,
     isOccasion?: boolean;
     price: number;       // Prix de location
-    available: boolean;  // Disponible à la location
+    available: boolean; // Disponible à la location
+    stock: number;
 }

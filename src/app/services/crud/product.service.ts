@@ -4,6 +4,8 @@ import {BehaviorSubject, Observable, tap} from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { environment } from '../../../environments/environment';
 import {ApiResponseDto} from '../../dto/ApiResponseDto';
+import {Product} from '../../models/product';
+import {AuthService} from '../auth.service';
 
 @Injectable({
     providedIn: 'root' // rend le service disponible partout sans le déclarer dans un module
@@ -16,15 +18,31 @@ export class ProductService {
     // Service de notification personnalisé (ex: pour afficher des messages de succès/erreur)
     private notification = inject(NotificationService);
 
+    private auth = inject(AuthService);
+
     // Observable qui contient la liste des produits, accessible dans toute l'application
     readonly products$ = new BehaviorSubject<Product[]>([]);
 
     /**
-     * Récupère tous les produits depuis l'API
-     * Met à jour la liste des produits dans le BehaviorSubject
+     * Méthode générique : appelle automatiquement la bonne version selon le rôle
      */
     getAll() {
-        this.http.get<Product[]>( 'products')
+        if (this.auth.role === 'ROLE_ADMIN' || this.auth.role === 'ROLE_TECH') {
+            this.getAllAdmin();
+        } else {
+            this.getAllClient();
+        }
+    }
+
+    /** Produits pour un client (moins d'infos) */
+    getAllClient() {
+        this.http.get<Product[]>('products')
+            .subscribe(products => this.products$.next(products));
+    }
+
+    /** Produits pour un admin/tech (toutes les infos, y compris stock) */
+    getAllAdmin() {
+        this.http.get<Product[]>('admin/products')
             .subscribe(products => this.products$.next(products));
     }
 
@@ -48,11 +66,24 @@ export class ProductService {
      * Renvoie un Observable
      */
     update(id: number, product: any) {
-        return this.http.put( 'product/' + id, product).pipe(
-            // met à jour la liste après modification
-            tap(() => this.getAll())
+        // ⚠️ ce PUT doit retourner le Product complet (avec imageName)
+        return this.http.put<Product>('product/' + id, product).pipe(
+            // Après succès, on remplace l’élément dans le BehaviorSubject (pas besoin de recharger toute la liste)
+            // et on laisse le composant reconstruire imageUrl avec le nouvel imageName
+            tap((updatedProduct) => {
+                const current = this.products$.value;
+                const index = current.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    current[index] = updatedProduct;
+                    this.products$.next([...current]); // emet une nouvelle liste => le subscribe du composant refabrique imageUrl
+                } else {
+                    // Si le produit n'est pas dans la liste (cas rare), on peut l'ajouter
+                    this.products$.next([...current, updatedProduct]);
+                }
+            })
         );
     }
+
 
     /**
      * Active ou désactive un produit (toggle disponibilité)
