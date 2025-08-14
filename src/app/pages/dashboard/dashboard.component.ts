@@ -9,7 +9,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCard } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { DashboardService } from '../../services/dashboard.service';
 import { RentalService } from '../../services/rental.service';
 import { UserService } from '../../services/user.service';
@@ -40,7 +40,8 @@ import {RentalResponse} from '../../models/rental-response';
         MatSortModule,
         MatPaginatorModule,
         MatSnackBarModule,
-        PageHeaderComponent
+        PageHeaderComponent,
+        NgOptimizedImage
     ],
     animations: [
         trigger('fadeSlideIn', [
