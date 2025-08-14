@@ -36,20 +36,13 @@ export class SignupComponent {
 
     onSignup(): void {
         if (this.form.valid) {
-            this.http.post(environment.serverUrl + 'inscription', this.form.value).subscribe({
+            this.http.post('inscription', this.form.value).subscribe({
                 next: () => {
                     this.router.navigateByUrl('/connexion');
                     this.notification.show(
                         'Un lien de confirmation vous a été envoyé par mail. Cliquez dessus avant de vous connecter.',
                         'warning'
                     );
-                },
-                error: err => {
-                    if (err.status === 409) {
-                        this.notification.show('Cet email est déjà utilisé', 'error');
-                    } else {
-                        this.notification.show('Erreur lors de l\'inscription', 'error');
-                    }
                 }
             });
         }
