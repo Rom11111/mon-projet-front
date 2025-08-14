@@ -1,3 +1,5 @@
+
+
 <mat-sidenav-container class="mat-app-background total-height">
     <!-- SIDE NAV -->
     <mat-sidenav mode="side" [opened]="true" class="sidenav">
@@ -5,29 +7,19 @@
 
             <!-- LOGO -->
             <div class="sidenav-header">
-                <img *ngIf="!collapsed" src="assets/images/altaTech.svg" alt="Alta Tech Logo" />
-                <img *ngIf="collapsed" src="assets/icons/alta-tech-icon.svg" alt="Alta Tech Icon" width="40" height="40" />
+                <img *ngIf="!collapsed" ngSrc="assets/images/altaTech.svg" alt="Alta Tech Logo" height="200"
+                     width="400"/>
+                <img *ngIf="collapsed" ngSrc="assets/icons/alta-tech-icon.svg" alt="Alta Tech Icon" width="40" height="40" />
             </div>
 
-            <!-- NAVIGATION PRINCIPALE -->
             <nav class="sidenav-nav">
-                @for (item of mainMenuItems; track item.route) {
+                <!-- On affiche uniquement les items filtrés -->
+                @for (item of filteredMenuItems; track item.route) {
                     <a class="menu-item" [routerLink]="item.route" routerLinkActive="selected-menu-item">
                         <img [ngSrc]="'assets/icons/' + item.icon" class="menu-icon" alt="{{ item.label }}" width="30" height="30" />
                         <span *ngIf="!collapsed" class="menu-label">{{ item.label }}</span>
                     </a>
                 }
-
-                <!-- Lien visible uniquement pour le client connecté -->
-                <a
-                    *ngIf="auth.getUserRole() === 'CLIENT'"
-                    class="menu-item"
-                    routerLink="/mes-reservations"
-                    routerLinkActive="selected-menu-item"
-                >
-                    <img src="assets/icons/calendar-check.svg" class="menu-icon" alt="Mes réservations" width="30" height="30" />
-                    <span *ngIf="!collapsed" class="menu-label">Mes réservations</span>
-                </a>
 
                 <hr *ngIf="!collapsed" class="menu-divider" />
 
