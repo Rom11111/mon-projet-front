@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import {RentalService} from '../../services/rental.service';
+import {RentalService} from '../../../services/rental.service';
 import {
     MatDatepicker,
     MatDatepickerInput,
@@ -13,8 +13,8 @@ import {
     MatDatepickerToggle
 } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {RentalRequest} from '../../models/RentalRequest';
-import {toLocalDateString} from '../../utils/date-utils';
+import {RentalRequest} from '../../../models/RentalRequest';
+import {toLocalDateString} from '../../../utils/date-utils';
 
 @Component({
     standalone: true,

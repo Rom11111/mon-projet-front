@@ -30,7 +30,7 @@ export class RentalFormComponent {
         private fb: FormBuilder
     ) {
         this.form = this.fb.group({
-            status: [data.status] // Initialisé avec la valeur actuelle
+            status: [data.statut] // Initialisé avec la valeur actuelle
         });
     }
 

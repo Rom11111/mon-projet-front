@@ -1,3 +1,5 @@
+import { RentalStatus } from './rental-status.enum';
+
 export interface RentalResponse {
     id: number;
 
@@ -16,9 +18,12 @@ export interface RentalResponse {
     reservationDate: string;
 
     // Statut et états
-    status: string;          // "PENDING", "CONFIRMED", etc.
+    statut: RentalStatus;        // "PENDING", "CONFIRMED", etc.
     confirmed?: boolean;
     isActive?: boolean;
+
+    price: number;           // Prix unitaire par jour
+    total: number;           // Prix total calculé
 
     // Quantité louée
     quantity: number;
