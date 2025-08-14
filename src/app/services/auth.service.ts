@@ -10,7 +10,6 @@ export class AuthService {
 
     // Indique si l'utilisateur est connecté
     connected = false;
-
     // Stocke le rôle de l'utilisateur (ex : 'CLIENT', 'ADMIN', 'TECH')
     role: string | null = null;
 
@@ -49,9 +48,8 @@ export class AuthService {
         // On transforme la chaîne JSON en objet JS
         const body = JSON.parse(jsonBody)
 
-        // On extrait le rôle et on l'enregistre dans le service
-        this.role = body.role;
-
+        // On extrait le rôle, enlève le préfixe ROLE_ si présent et met en majuscules
+        this.role = body.role?.replace(/^ROLE_/, '').toUpperCase() || null;
         // On indique que l'utilisateur est connecté
         this.connected = true;
     }
@@ -62,6 +60,10 @@ export class AuthService {
      */
     getUserRole(): string | null {
         return this.role;
+    }
+
+    hasAnyRole(roles: string[]): boolean {
+        return !!this.role && roles.includes(this.role);
     }
 
     /**
