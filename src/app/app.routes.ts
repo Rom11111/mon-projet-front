@@ -1,10 +1,11 @@
 // app.routes.ts
 import { Routes } from '@angular/router';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
-import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
+
 import { notLoggedGuard } from './guards/not-logged.guard';
 import { loggedGuard } from './guards/logged.guard';
 import { roleGuard } from './guards/role.guard';
+import {MainLayoutComponent} from './layouts/main-layout/main-layout.component';
 
 export const routes: Routes = [
     // --- ZONE PUBLIQUE ---
@@ -18,7 +19,7 @@ export const routes: Routes = [
         ]},
 
     // --- ZONE AUTHENTIFIÉE ---
-    { path: '', component: ClientLayoutComponent, canActivate: [loggedGuard], children: [
+    { path: '', component: MainLayoutComponent, canActivate: [loggedGuard], children: [
             // Pages accessibles à tous les rôles connectés (pas de data.roles)
             { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent), data: { title: 'Tableau de bord' } },
             { path: 'equipments', loadComponent: () => import('./pages/products/equipments/equipments.component').then(m => m.EquipmentsComponent), data: { title: 'Équipements' } },

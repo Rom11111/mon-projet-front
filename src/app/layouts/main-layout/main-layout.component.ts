@@ -37,10 +37,10 @@ export type MenuItem = {
         MatSidenavContainer,
         MatSidenav
     ],
-    templateUrl: './client-layout.component.html',
-    styleUrls: ['./client-layout.component.scss']
+    templateUrl: './main-layout.component.html',
+    styleUrls: ['./main-layout.component.scss']
 })
-export class ClientLayoutComponent implements OnInit {
+export class MainLayoutComponent implements OnInit {
 
     // Données affichées dans le footer
     userName: string = 'Utilisateur';

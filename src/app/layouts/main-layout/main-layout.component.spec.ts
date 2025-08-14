@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ClientLayoutComponent} from '././client-layout.component';
+import {ClientLayoutComponent} from './main-layout.component';
 
 describe('ClientLayoutComponent', () => {
     let component: ClientLayoutComponent;
