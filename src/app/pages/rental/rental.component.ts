@@ -9,17 +9,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-
 import { SelectionModel } from '@angular/cdk/collections';
-
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { RentalFormComponent } from './rental-form.component';
-
 import { RentalResponse } from '../../models/rental-response';
 import { RentalStatus } from '../../models/rental-status';
 import { RentalService } from '../../services/rental.service';
-
-// ✅ importe le service d'export
 import { ExportService } from '../../shared/export.service';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
@@ -52,12 +47,12 @@ export class RentalComponent implements OnInit {
     ];
 
     // Map statut -> classe de couleur du badge
-    // commentaire : on centralise ici l'association statut/couleur pour garder le HTML simple
+    // on centralise ici l'association statut/couleur pour garder le HTML simple
     statusClassMap: Record<string, string> = {
         PENDING: 'badge-warning',   // orange : en attente
         APPROVED: 'badge-success',  // vert   : validée
         REJECTED: 'badge-danger',   // rouge  : refusée
-        CANCELED: 'badge-danger'    // rouge  : annulée (même couleur que refusée)
+        CANCELED: 'badge-danger'    // rouge  : annulée
     };
 
     // la table manipule des RentalResponse
@@ -76,23 +71,12 @@ export class RentalComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // ✅ le service renvoie un tableau direct
+        // le service renvoie un tableau direct
         this.rentalService.getAllRentals().subscribe((rentals) => {
-            console.log('Locations chargées :', rentals);
-            this.dataSource.data = rentals; // ⬅️ pas de .data
+            this.dataSource.data = rentals;
         });
     }
 
-    ngAfterViewInit(): void {
-        // ✅ branche paginator/sort après l’init de la vue
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
-
-    applyFilter(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
 
     // label lisible pour le statut venu du back (string)
     getStatusLabel(status: string): string {
@@ -105,6 +89,16 @@ export class RentalComponent implements OnInit {
         }
     }
 
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    ngAfterViewInit(): void {
+        // branche paginator/sort après l’init de la vue
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
     isAllSelected(): boolean {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
@@ -142,7 +136,7 @@ export class RentalComponent implements OnInit {
         });
     }
 
-    // ----- Utilitaires d'export -----
+    //  Utilitaires d'export
 
     // format JJ/MM/AAAA, accepte Date ou string ISO
     private fmtDate(d?: string | Date): string {
@@ -151,7 +145,7 @@ export class RentalComponent implements OnInit {
         return isNaN(date.getTime()) ? '' : date.toLocaleDateString('fr-FR');
     }
 
-    // commentaire : jours entre deux dates (arrondi haut)
+    // jours entre deux dates (arrondi haut)
     private daysBetween(a?: string | Date, b?: string | Date): number | '' {
         if (!a || !b) return '';
         const d1 = (a instanceof Date) ? a : new Date(a);
@@ -160,7 +154,7 @@ export class RentalComponent implements OnInit {
         return Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
 
-    // commentaire : renvoie sélection si présente, sinon toutes les lignes
+    // renvoie sélection si présente, sinon toutes les lignes
     private getRowsForExport(): RentalResponse[] {
         return this.selection.selected.length ? this.selection.selected : this.dataSource.data;
     }
@@ -170,11 +164,11 @@ export class RentalComponent implements OnInit {
         return `${(r as any).clientFirstname ?? ''} ${(r as any).clientLastname ?? ''}`.trim();
     }
 
-    // ----- Export principal (CSV / XLSX / PDF) -----
+    // Export principal (CSV / XLSX / PDF)
     async export(format: 'csv' | 'xlsx' | 'pdf') {
         const rows = this.getRowsForExport();
 
-        // commentaire : mapping propre pour le RH (depuis RentalResponse)
+        // mapping pour le RH (depuis RentalResponse)
         const mapped = rows.map(r => ({
             'ID': r.id,
             'Client': this.getClientName(r),          // vient de RentalResponse

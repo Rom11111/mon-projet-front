@@ -102,7 +102,6 @@
                     <th mat-header-cell *matHeaderCellDef>Statut</th>
                     <td mat-cell *matCellDef="let r">
                         <!-- Classe de base 'badge' toujours présente -->
-                        <!-- + classe de couleur ajoutée dynamiquement via la map (voir .ts) -->
                         <span class="badge" [ngClass]="statusClassMap[r.status] || 'badge-default'">
                             {{ getStatusLabel(r.status) }}
                         </span>
@@ -140,6 +139,6 @@
                 [pageSizeOptions]="[5, 10, 20]"
                 showFirstLastButtons>
             </mat-paginator>
-        </div> <!-- ⬅️ fermeture du .container -->
+        </div>
     </mat-card>
 </section>
