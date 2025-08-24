@@ -8,7 +8,7 @@
     <mat-card class="card">
         <div class="container mt-4">
             <div class="table-header">
-                <!-- 🔎 À GAUCHE : champ de recherche -->
+                <!-- champ de recherche -->
                 <mat-form-field appearance="outline" class="search-field">
                     <mat-label>Rechercher un produit</mat-label>
                     <input
@@ -24,14 +24,14 @@
                     <mat-label>Catégories</mat-label>
                     <!-- multiple = sélection multiple ; [value] = valeurs actuelles -->
                     <mat-select multiple [value]="selectedCategoryIds" (selectionChange)="onCategoryChange($event.value)">
-                        <!-- On boucle sur la liste des catégories chargées -->
+                        <!-- boucle sur la liste des catégories chargées -->
                         <mat-option *ngFor="let c of categories" [value]="c.id">
                             {{ c.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <!-- À DROITE : bouton Ajouter + menu Download -->
+                <!-- bouton Ajouter + menu Download -->
                 <div class="header-actions">
                     <!-- visible uniquement pour TECH/ADMIN -->
                     <button *ngIf="isTechOrAdmin" mat-flat-button color="primary" routerLink="/ajout-produit">
@@ -105,12 +105,10 @@
                     <td mat-cell *matCellDef="let p">{{ p.name }}</td>
                 </ng-container>
 
-
                 <!-- Catégorie -->
                 <ng-container matColumnDef="category">
                     <th mat-header-cell *matHeaderCellDef> Catégorie </th>
                     <td mat-cell *matCellDef="let row">
-                        <!-- on est dans le scope, donc 'row' existe -->
                         {{ getCategoryName(row) }}
                     </td>
                 </ng-container>
@@ -154,8 +152,8 @@
 
                 <!-- Actions -->
                 <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Actions</th>
-                    <td mat-cell *matCellDef="let p">
+                    <th mat-header-cell *matHeaderCellDef class="actions-header" >Actions</th>
+                    <td mat-cell *matCellDef="let p" class="actions-cell">
                         <ng-container *ngIf="isTechOrAdmin">
                             <button mat-icon-button
                                     color="primary"
