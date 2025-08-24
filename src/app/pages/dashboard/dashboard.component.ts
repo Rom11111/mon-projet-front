@@ -96,7 +96,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        // Récupération du prénom
         this.userService.getCurrentUser().subscribe({
             next: user => this.firstName = user.firstname || 'Utilisateur',
             error: () => this.firstName = 'Utilisateur'
