@@ -60,24 +60,15 @@ export class MyRentalsComponent implements OnInit {
         });
     }
 
-    ngAfterViewInit(): void {
-        // On branche le paginator quand la vue est dispo
-        this.dataSource.paginator = this.paginator;
-    }
-
     // label lisible pour le statut venu du back (string)
+
     getStatusLabel(status: string): string {
         switch (status) {
-            case 'PENDING':
-                return 'En attente';
-            case 'APPROVED':
-                return 'Validée';
-            case 'REJECTED':
-                return 'Refusée';
-            case 'CANCELED':
-                return 'Annulée';
-            default:
-                return status;
+            case 'PENDING':  return 'En attente';
+            case 'APPROVED': return 'Validée';
+            case 'REJECTED': return 'Refusée';
+            case 'CANCELED': return 'Annulée';
+            default:         return status;
         }
     }
 
@@ -87,6 +78,12 @@ export class MyRentalsComponent implements OnInit {
         const days = Math.max(1, Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
         return rental.price * rental.quantity * days;
     }
+
+    ngAfterViewInit(): void {
+        // On branche le paginator quand la vue est dispo
+        this.dataSource.paginator = this.paginator;
+    }
+
 
     // Ouvre la modale de signalement
     openReportDialog(rental: any) {
