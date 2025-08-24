@@ -19,14 +19,14 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
         return true;
     }
 
-    // ✅ Si l'utilisateur possède l'un des rôles attendus → accès autorisé
+    // Si l'utilisateur possède l'un des rôles attendus → accès autorisé
     if (userRole && expectedRoles.includes(userRole)) {
         return true;
     }
 
-    /// ❌ Accès refusé → on notifie puis on redirige (choisis '/unauthorized' ou '/login')
+    /// Accès refusé → on notifie puis on redirige (choisis '/unauthorized' ou '/login')
     notify.show('Accès refusé', 'error');
-    router.navigateByUrl('/unauthorized'); // ou '/login' si tu préfères
+    router.navigateByUrl('/unauthorized');
     return false;
 };
 
